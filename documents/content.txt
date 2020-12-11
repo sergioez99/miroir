@@ -1,0 +1,7 @@
+run backend: 
+    > cd backend
+    > nodemon index.js
+
+run frontend:
+    > cd frontend
+    > ng serve -o

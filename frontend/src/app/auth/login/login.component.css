@@ -1,0 +1,26 @@
+.mir-login-button {
+    display: inline;
+    float: right;
+}
+
+.mir-login-box {
+    max-width: 30em;
+    margin: auto;
+}
+
+.mir-box-buttons {
+    padding-top: 1em;
+    ;
+}
+
+.mir-box-link {
+    text-align: right;
+}
+
+.mir-title {
+    text-align: center;
+}
+
+.mir-block {
+    display: block;
+}

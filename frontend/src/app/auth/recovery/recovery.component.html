@@ -1,0 +1,33 @@
+<article class="mir-recovery-box">
+    <h1 class="mir-title"> Recuperar contraseña </h1>
+    <form class="mir-recovery-form" [formGroup]="formRecovery" (ngSubmit)="recovery();">
+
+
+        <!-- INPUT: EMAIL -->
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+            <button mat-icon-button matSuffix>
+                    <mat-icon>alternate_email</mat-icon>
+                  </button>
+            <mat-hint>Introduzca su email</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRecovery.get('email').hasError('email');">
+                Por favor, introduce un email <strong>válido</strong>
+            </mat-error>
+            <mat-error *ngIf="formRecovery.get('email').hasError('required');">
+                Email es <strong>necesario</strong>
+            </mat-error>
+
+        </mat-form-field>
+        <!-- ------------ -->
+
+        <div class="mir-box-buttons">
+            <app-button-back></app-button-back>
+            <button class="mir-recovery-button" mat-raised-button color="accent" type="submit">Recuperar</button>
+        </div>
+    </form>
+
+
+</article>
