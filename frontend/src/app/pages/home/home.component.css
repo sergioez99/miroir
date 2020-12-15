@@ -1,0 +1,59 @@
+img{
+    max-height: 700px;
+}
+
+.stage {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    padding-block-end: 30px;
+    margin-top: 0px;
+}
+.box {
+    align-self: flex-end;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+   
+}
+.bounce-7 {
+    animation-name: bounce-7;
+    animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+}
+@keyframes bounce-7 {
+    0%   { transform: scale(1,1)      translateY(0); }
+    10%  { transform: scale(1.1,.9)   translateY(0); }
+    30%  { transform: scale(.9,1.1)   translateY(-25px); }
+    50%  { transform: scale(1.05,.95) translateY(0); }
+    57%  { transform: scale(1,1)      translateY(-7px); }
+    64%  { transform: scale(1,1)      translateY(0); }
+    100% { transform: scale(1,1)      translateY(0); }
+}
+
+.flex-container {
+    margin-left: 290px;
+    margin-top: 50px;
+    margin-bottom: 0;
+    display: flex;
+}
+h2{
+    width: 25%;
+    font-family: 'Bree Serif', serif;
+    font-size: 3.5em;
+    margin-bottom: 0px;;
+}
+p{
+    font-size: 1.5em;
+    margin-left: 290px;
+    margin-right: 290px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 400;
+    letter-spacing: .5px;
+    text-align: justify;
+    line-height : 25px;
+}
+
+#estatico{
+    background-attachment: fixed;
+    background-image: url("../../../assets/tienda.jpg");
+    height: 500px;
+}
