@@ -1,44 +1,44 @@
 const { Schema, model } = require('mongoose');
 
 // esquema de la base de datos
-const UsuarioSchema = Schema({
+const SuscripcionSchema = Schema({
 
-    email: {
+    tipo: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
-    password: {
+    nombre: {
         type: String,
-        required: true,
+        required: true
     },
-    rol: {
+    descripcion: {
         type: String,
-        required: true,
-        default: 'ROL_USUARIO'
+        required: true
     },
-    alta: {
-        type: Date,
+    duracion: {
+        type: Number,
         required: true,
-        default: Date.now
+    },
+    precio: {
+        type: Number,
+        required: true,
     },
     activo: {
         type: Boolean,
         default: true,
     },
 
-
-}, { collection: 'Usuarios' });
+}, { collection: 'Suscripciones' });
 
 // introducimos una modificacion del metodo toJson() para no enviar toda la información de la BD
 
-UsuarioSchema.method('toJSON', function() {
+SuscripcionSchema.method('toJSON', function() {
 
-    const { __v, _id, password, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
 
     object.uid = _id;
     return object;
 
 });
 
-module.exports = model('Usuario', UsuarioSchema);
+module.exports = model('Suscripcion', SuscripcionSchema);

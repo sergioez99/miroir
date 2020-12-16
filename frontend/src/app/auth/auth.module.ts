@@ -14,6 +14,7 @@ import { ButtonBackComponent } from '../commons/button-back/button-back.componen
 import { InputEmailComponent } from '../commons/input-email/input-email.component';
 
 
+
 @NgModule({
   declarations: [
     AuthLayoutComponent,
@@ -22,6 +23,7 @@ import { InputEmailComponent } from '../commons/input-email/input-email.componen
     RegisterComponent,
     InputEmailComponent,
     ButtonBackComponent,
+
 
   ],
   exports: [

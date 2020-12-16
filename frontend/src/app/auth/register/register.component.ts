@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import {CustomValidators} from '../../services/auth.password.repeat.service';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -47,18 +49,42 @@ export class RegisterComponent implements OnInit{
 
         console.log('Respuesta del servidor: ', res);
 
-        // coger el token y guardarlo en localStorage
-        // localStorage.setItem('token', res['token']);
-        // navegacion a dashboard con router
-        // this.router.navigateByUrl('/home');
+        Swal.fire({
+          title:'Usuario creado correctamente',
+          icon: 'success',
+          showCloseButton: true,
+          confirmButtonText: 'Iniciar Sesión'
+        }).then((result) => {
+          // navegacion a login con router
+          this.router.navigateByUrl('/login');
+        });
+
+
 
       }, (err) => {
-        console.warn('error rspuesta api:; ', err);
+        console.warn('error respuesta api:; ', err);
         // mostrar mensaje de alerta
+
+        Swal.fire({
+          title:'¡Error!',
+          text: err.error.msg,
+          icon: 'error',
+          showCloseButton: true,
+          confirmButtonText: 'Volver a intentar',
+          footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
+        });
+
+
       })
     }
 
+
+
   }
+
+
+
+
 /*
   campoValido(campo: string) {
 
@@ -73,6 +99,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterForm } from '../../interfaces/register-form.interface';
 import { validarQueSeanIguales, CustomValidators } from '../../services/auth.password.repeat.service';
+import { FooterComponent } from '../../commons/footer/footer.component';
 
 @Component({
   selector: 'app-register',

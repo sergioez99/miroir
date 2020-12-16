@@ -18,6 +18,8 @@ const obtenerUsuarios = async(req, res = response) => {
         desde = 0;
     const registropp = process.env.DOCSPERPAGES;
 
+
+
     try {
 
         let usuarios, total;
@@ -63,8 +65,6 @@ const crearUsuario = async(req, res) => {
     const { email, password } = req.body;
 
     try {
-        // ya averiguaremos como distinguir a los usuarios (tanto diferentes usuarios como el mismo usuario en distintas tiendas)
-        /*
         const exiteEmail = await Usuario.findOne({ email: email });
 
         if (exiteEmail) {
@@ -73,14 +73,11 @@ const crearUsuario = async(req, res) => {
                 msg: 'Email ya existe'
             });
         }
-        */
         // generar cadena aleatoria para el cifrado
         const salt = bcrypt.genSaltSync();
         // hacer un hash de la contraseña
         const cpassword = bcrypt.hashSync(password, salt);
 
-        /* --------------------------------------------------------
-            almacenar los datos en la BD */
 
         // extraer la variable alta
         const { alta, ...object } = req.body;
@@ -88,7 +85,7 @@ const crearUsuario = async(req, res) => {
         const usuario = new Usuario(object);
         usuario.password = cpassword;
 
-        // almacenarlo en la BD
+        // almacenar en la BD
         await usuario.save();
 
         res.json({
@@ -104,8 +101,6 @@ const crearUsuario = async(req, res) => {
             msg: 'error creando el usuario'
         });
     }
-
-
 }
 
 const actualizarUsuario = async(req, res = response) => {
@@ -148,8 +143,6 @@ const actualizarUsuario = async(req, res = response) => {
             msg: 'Error actualizando usuario'
         });
     }
-
-
 
 }
 

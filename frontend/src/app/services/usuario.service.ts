@@ -15,7 +15,7 @@ export class UsuarioService {
   constructor( private http: HttpClient ) { }
 
   login( formData: LoginForm) {
-    console.log('login desde Usuario.service', formData);
+    console.log('login desde Usuario.service: ', formData);
 
     return this.http.post(this.url+'/api/login', formData);
   }
@@ -23,6 +23,7 @@ export class UsuarioService {
   register( formData: LoginForm) {
     console.log('registro desde Usuario.service', formData);
 
-    return this.http.post(this.url+'/api/register', formData);
+    return this.http.post(this.url+'/api/usuarios', formData);
   }
+
 }
