@@ -1,28 +1,5 @@
-  /*ul {
-    float: right;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: transparent;
-  }
-  nav li {
-    display: inline-block;
-  }
-  nav li a {
-    height: 60px;
-    display: block;
-    color:  #b388ff;
-    text-align: center;
-    padding: 15px 18px;
-    text-decoration: none;
-    font-family: sans-serif;
-  }
-  nav li a:hover {
-    color: #fb9b02;
-  }*/
   nav{
-    background-color: rgba(43, 43, 43, 0.2);
+    background-color: rgb(43, 43, 43);
   }
   .navbar-light .navbar-brand {
     color: black;

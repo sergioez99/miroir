@@ -2,6 +2,23 @@ img{
     max-height: 700px;
 }
 
+.carousel{
+    width: 100px;
+}
+
+h2{ 
+    margin-left: 290px;
+    font-family: 'Bree Serif', serif;
+    font-size: 3.5em;
+    margin-bottom: 0px;
+    margin-top: 40px;
+}
+h3{
+    font-family: 'Bree Serif', serif;
+    font-size: 1.5em;
+}
+
+/*Decubre miroir y sombrerito*/
 .stage {
     display: flex;
     height: 100px;
@@ -30,18 +47,19 @@ img{
 }
 
 .flex-container {
-    margin-left: 290px;
     margin-top: 50px;
     margin-bottom: 0;
     display: flex;
 }
-h2{
+/*---*/
+
+#flex-h2{
     width: 25%;
-    font-family: 'Bree Serif', serif;
-    font-size: 3.5em;
-    margin-bottom: 0px;;
+    margin-top: 0;
 }
-p{
+
+/*Párrafo descubre miroir*/
+#descubre{
     font-size: 1.5em;
     margin-left: 290px;
     margin-right: 290px;
@@ -52,8 +70,31 @@ p{
     line-height : 25px;
 }
 
+/*Fondo estático div separador*/
 #estatico{
     background-attachment: fixed;
     background-image: url("../../../assets/tienda.jpg");
     height: 500px;
+}
+
+/*Tarjetas*/
+#tarjetas{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.card{
+    margin-top: 50px;
+    margin: 50px;
+    width: 22rem;
+}
+
+.btn{
+    background-color: #b388ff;
+    border-color: #b388ff;
+}
+
+.btn:hover{
+    background-color: #fb9b02;
+    border-color: #fb9b02;
 }

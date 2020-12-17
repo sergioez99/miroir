@@ -12,6 +12,7 @@ import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
 import { ButtonBackComponent } from '../commons/button-back/button-back.component';
 import { InputEmailComponent } from '../commons/input-email/input-email.component';
+import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { InputEmailComponent } from '../commons/input-email/input-email.componen
     RegisterComponent,
     InputEmailComponent,
     ButtonBackComponent,
+    RegistroempresaComponent,
 
   ],
   exports: [

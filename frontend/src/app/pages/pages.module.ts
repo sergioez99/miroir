@@ -11,6 +11,7 @@ import { FooterComponent } from '../commons/footer/footer.component';
 import { NavbarComponent } from '../commons/navbar/navbar.component';
 import { BaseLayoutComponent } from '../layouts/base-layout/base-layout.component';
 import { ButtonBackComponent } from '../commons/button-back/button-back.component';
+import { PlanesComponent } from './planes/planes.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ButtonBackComponent } from '../commons/button-back/button-back.componen
 
     NavbarComponent,
     FooterComponent,
+    PlanesComponent,
 
 
   ],
