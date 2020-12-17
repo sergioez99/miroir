@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from './material/material.module';
 
+import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,8 @@ import { MaterialModule } from './material/material.module';
 
     MaterialModule,
 
+    CarouselModule,
+    WavesModule
 
     // MatButtonModule,
   ],
