@@ -1,5 +1,5 @@
 /*
-    Ruta base: /api/usuarios
+    Ruta base: /api/clientes
 */
 
 const { Router } = require('express')
@@ -11,12 +11,12 @@ const { validarJWT } = require('../middleware/validar-jwt');
 const router = Router();
 
 const {
-    obtenerUsuarios,
-    crearUsuario,
-    actualizarUsuario,
-    borrarUsuario
+    obtenerClientes
+    crearCliente,
+    actualizarCliente,
+    borrarCliente
 
-} = require('../controllers/usuarios.controller');
+} = require('../controllers/clientes.controller');
 
 
 /* INICIO DE LAS RUTAS */
@@ -28,7 +28,7 @@ router.get('/', [
     check('desde', 'El desde debe ser un número').optional().isNumeric(),
     validarCampos,
 
-], obtenerUsuarios);
+], obtenerClientes);
 
 
 router.post('/', [
@@ -39,7 +39,7 @@ router.post('/', [
     check('activo', 'El estado debe ser true/false').optional().isBoolean(),
     validarCampos,
     validarRol
-], crearUsuario);
+], crearCliente);
 
 router.put('/:id', [
     validarJWT,
@@ -49,12 +49,12 @@ router.put('/:id', [
     check('activo', 'El estado debe ser true/false').optional().isBoolean(),
     validarCampos,
     validarRol
-], actualizarUsuario);
+], actualizarCliente);
 
 router.delete('/:id', [
     validarJWT,
     check('id', 'El identificador no es válido').isMongoId(),
     validarCampos
-], borrarUsuario);
+], borrarCliente);
 
 module.exports = router;

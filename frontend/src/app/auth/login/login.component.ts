@@ -38,10 +38,13 @@ export class LoginComponent implements OnInit {
         console.log('respuesta al subscribe:', res);
         // coger el token y guardarlo en localStorage
         localStorage.setItem('token', res['token']);
+        // decir que nos hemos logueado
+        this.usuarioService.setIsLogged(true);
         // navegacion a dashboard con router
         this.router.navigateByUrl('/home');
 
       }, (err) => {
+        this.usuarioService.setIsLogged(false);
         console.warn ('error respuesta api: ', err);
         // mostrar un mensaje de alerta
 

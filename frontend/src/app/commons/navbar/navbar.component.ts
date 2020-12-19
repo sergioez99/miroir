@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  // cuando lo construye
+  constructor( private usuarioService: UsuarioService) { }
 
+  // cada vez que se muestra por pantalla
   ngOnInit(): void {
   }
 
@@ -16,6 +19,10 @@ export class NavbarComponent implements OnInit {
     document.write('<div>dsñghasdfñlgkahñsdfglih</div>');
 
     return '"hola mis amigos"';
+  }
+
+  public getIsLoged (){
+    return this.usuarioService.getIsLogged();
   }
 
 }

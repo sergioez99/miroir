@@ -12,7 +12,19 @@ export class UsuarioService {
 
   private url = 'http://localhost:3000';
 
-  constructor( private http: HttpClient ) { }
+  private isLogged: boolean;
+
+  constructor( private http: HttpClient ) {
+    console.log('hola, soy el constructor de usuario service');
+    this.isLogged = false;
+  }
+
+  getIsLogged(){
+    return this.isLogged;
+  }
+  setIsLogged(value:boolean) {
+    this.isLogged = value;
+  }
 
   login( formData: LoginForm) {
     console.log('login desde Usuario.service: ', formData);
