@@ -62,9 +62,10 @@ const obtenerClientes = async(req, res = response) => {
 
 const crearCliente = async(req, res) => {
 
-    const { email, password } = req.body;
+    const { email, password, cif } = req.body;
 
     try {
+        // comprobar que email es unico
         const exiteEmail = await Cliente.findOne({ email: email });
 
         if (exiteEmail) {
@@ -73,6 +74,16 @@ const crearCliente = async(req, res) => {
                 msg: 'Email ya existe'
             });
         }
+        // comprobar que el cif es unico
+        const existeCif = await Cliente.findOne({ cif: cif });
+        if (existeCif) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El CIF ya existe'
+            });
+        }
+
+
         // generar cadena aleatoria para el cifrado
         const salt = bcrypt.genSaltSync();
         // hacer un hash de la contraseña
@@ -107,7 +118,7 @@ const actualizarCliente = async(req, res = response) => {
 
     // aunque venga el password aqui no se va a cambiar
     // si cambia el email, hay que comprobar que no exista en la BD
-    const { password, alta, email, ...object } = req.body;
+    const { password, alta, email, cif...object } = req.body;
     const uid = req.params.id;
 
     try {
@@ -126,6 +137,25 @@ const actualizarCliente = async(req, res = response) => {
         }
         // aqui ya se ha comprobado el email
         object.email = email;
+
+        // comprobar si se quiere modificar el CIF  de Cliente
+        const existeCif = await cliente.findOne({ cif: cif });
+
+        if (existeCif) {
+            // si existe, miramos que sea el suyo (que no lo esta cambiando)
+            if (existeCif._id != uid) {
+
+                return res.status(400).json({
+                    ok: false,
+                    msg: "CIF ya existe"
+                });
+            }
+        }
+        // aqui ya se ha comprobado el email
+        object.cif = cif;
+
+
+
         // new: true -> nos devuelve el Cliente actualizado
         const cliente = await Cliente.findByIdAndUpdate(uid, object, { new: true });
 
@@ -162,10 +192,7 @@ const borrarCliente = async(req, res = response) => {
             });
         }
 
-        // lo eliminamos y devolvemos el Cliente recien eliminado
-        // Remove -> se convierte en Modify en la BD
-        // Delete -> debería ser el utilizado...?
-        //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify 
+        // lo eliminamos y devolvemos el Cliente recien eliminado 
         const resultado = await cliente.findByIdAndDelete(uid);
 
         res.json({
