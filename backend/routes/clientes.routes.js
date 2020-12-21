@@ -11,7 +11,7 @@ const { validarJWT } = require('../middleware/validar-jwt');
 const router = Router();
 
 const {
-    obtenerClientes
+    obtenerClientes,
     crearCliente,
     actualizarCliente,
     borrarCliente

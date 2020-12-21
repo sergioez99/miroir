@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
 
 // esquema de la base de datos
-const UsuarioSchema = Schema({
+const ClienteSchema = Schema({
+
 
     email: {
         type: String,
@@ -22,12 +23,32 @@ const UsuarioSchema = Schema({
         default: true,
     },
 
+    nombre: {
+        type: String,
+        required: true,
+    },
+    nombreEmpresa: {
+        type: String,
+        required: true,
+    },
+    cif: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    telefono: {
+        type: Number,
+        required: true,
+    }
 
-}, { collection: 'Usuarios' });
+
+
+
+}, { collection: 'Clientes' });
 
 // introducimos una modificacion del metodo toJson() para no enviar toda la información de la BD
 
-UsuarioSchema.method('toJSON', function() {
+ClienteSchema.method('toJSON', function() {
 
     const { __v, _id, password, ...object } = this.toObject();
 
@@ -36,4 +57,4 @@ UsuarioSchema.method('toJSON', function() {
 
 });
 
-module.exports = model('Usuario', UsuarioSchema);
+module.exports = model('Cliente', ClienteSchema);
