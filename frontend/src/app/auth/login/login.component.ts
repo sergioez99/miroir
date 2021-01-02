@@ -28,12 +28,36 @@ export class LoginComponent implements OnInit {
     });
   }
 
+
+  login() {
+
+    this.formSubmit = true;
+
+    if (this.formLogin.valid) {
+      this.usuarioService.login(this.formLogin.value).then((response) => {
+
+        // navegacion a dashboard con router
+        this.router.navigateByUrl('/perfil');
+      }).catch((error) =>{
+
+        Swal.fire({
+          title: '¡Error!',
+          text: error.error.msg,
+          icon: 'error',
+          confirmButtonText: 'Volver a intentar',
+        });
+
+      });
+
+    }
+  }
+/*
   login() {
     this.formSubmit = true;
     console.log(this.formLogin);
     if (this.formLogin.valid) {
       console.log('enviar');
-      this.usuarioService.login(this.formLogin.value).subscribe( res => {
+      this.usuarioService.loginCall(this.formLogin.value).subscribe( res => {
 
         console.log('respuesta al subscribe:', res);
         // coger el token y guardarlo en localStorage
@@ -64,6 +88,6 @@ export class LoginComponent implements OnInit {
       console.warn('errores en el formulario');
     }
   }
-
+ */
 
 }

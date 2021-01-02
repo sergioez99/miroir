@@ -12,6 +12,8 @@ import { NavbarComponent } from '../commons/navbar/navbar.component';
 import { BaseLayoutComponent } from '../layouts/base-layout/base-layout.component';
 import { ButtonBackComponent } from '../commons/button-back/button-back.component';
 import { PlanesComponent } from './planes/planes.component';
+import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { PlanesComponent } from './planes/planes.component';
     NavbarComponent,
     FooterComponent,
     PlanesComponent,
+    AdminUsuariosComponent,
+    PerfilComponent,
 
 
   ],

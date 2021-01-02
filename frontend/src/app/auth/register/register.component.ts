@@ -45,9 +45,7 @@ export class RegisterComponent implements OnInit{
     if (this.formRegister.valid){
       console.log('enviar');
 
-      this.usuarioService.register(this.formRegister.value).subscribe( res => {
-
-        console.log('Respuesta del servidor: ', res);
+      this.usuarioService.registro(this.formRegister.value).then( res => {
 
         Swal.fire({
           title:'Usuario creado correctamente',
@@ -60,10 +58,7 @@ export class RegisterComponent implements OnInit{
         });
 
 
-
-      }, (err) => {
-        console.warn('error respuesta api:; ', err);
-        // mostrar mensaje de alerta
+      }).catch( err =>{
 
         Swal.fire({
           title:'¡Error!',
@@ -74,8 +69,7 @@ export class RegisterComponent implements OnInit{
           footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
         });
 
-
-      })
+      });
     }
 
 

@@ -15,10 +15,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  holaMundo(): string {
-    document.write('<div>dsñghasdfñlgkahñsdfglih</div>');
-
-    return '"hola mis amigos"';
+  public cerrarSesion (){
+    this.usuarioService.logout();
   }
 
   public getIsLoged (){

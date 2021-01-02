@@ -6,7 +6,7 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Email</mat-label>
             <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-            <button mat-icon-button matSuffix>
+            <button mat-icon-button matSuffix type="button">
                   <mat-icon>alternate_email</mat-icon>
                 </button>
             <mat-hint>Introduzca su email</mat-hint>
@@ -25,7 +25,7 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
             <mat-hint>Introduzca su contraseña</mat-hint>
@@ -41,7 +41,7 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
-            <button mat-icon-button matSuffix (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
             <mat-hint>Repita su contraseña</mat-hint>

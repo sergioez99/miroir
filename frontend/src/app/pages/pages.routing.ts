@@ -6,6 +6,8 @@ import { Probador01Component } from './probador01/probador01.component';
 import { HomeComponent } from './home/home.component';
 import { BaseLayoutComponent } from '../layouts/base-layout/base-layout.component';
 import { PlanesComponent } from './planes/planes.component';
+import { PerfilComponent } from './perfil/perfil.component';
+import { LoginGuard } from '../services/guards/login.guard';
 
 
 const routes: Routes = [
@@ -29,7 +31,15 @@ const routes: Routes = [
       { path: '', component: PlanesComponent },
       { path: '**', redirectTo: ''}
     ]
-  }
+  },
+  {
+    path: 'perfil', component: BaseLayoutComponent,
+    canActivate: [ LoginGuard ],
+    children: [
+      { path: '', component: PerfilComponent },
+      { path: '**', redirectTo: ''}
+    ]
+  },
 ];
 
 @NgModule({
