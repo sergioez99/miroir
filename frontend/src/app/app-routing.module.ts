@@ -8,6 +8,9 @@ import { AuthRoutingModule } from './auth/auth.routing';
 const routes: Routes = [
   //    /home               --> PagesRoutingModule
   //    /probador           --> PagesRoutingModule
+  {
+    path: '**', redirectTo:'home'
+  },
 ];
 
 @NgModule({
