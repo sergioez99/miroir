@@ -62,46 +62,90 @@ const obtenerUsuarios = async(req, res = response) => {
 
 const crearUsuario = async(req, res) => {
 
-    const { email, password } = req.body;
+        const { email, password } = req.body;
 
-    try {
-        const exiteEmail = await Usuario.findOne({ email: email });
+        try {
+            const exiteEmail = await Usuario.findOne({ email: email });
 
-        if (exiteEmail) {
+            if (exiteEmail) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Email ya existe'
+                });
+            }
+            // generar cadena aleatoria para el cifrado
+            const salt = bcrypt.genSaltSync();
+            // hacer un hash de la contraseña
+            const cpassword = bcrypt.hashSync(password, salt);
+
+
+            // extraer la variable alta
+            const { alta, ...object } = req.body;
+            // crear objeto
+            const usuario = new Usuario(object);
+            usuario.password = cpassword;
+
+            // almacenar en la BD
+            await usuario.save();
+
+            res.json({
+                ok: true,
+                msg: 'crear un usuario',
+                usuario
+            });
+
+        } catch (error) {
+            console.log(error);
             return res.status(400).json({
                 ok: false,
-                msg: 'Email ya existe'
+                msg: 'error creando el usuario'
             });
         }
-        // generar cadena aleatoria para el cifrado
-        const salt = bcrypt.genSaltSync();
-        // hacer un hash de la contraseña
-        const cpassword = bcrypt.hashSync(password, salt);
-
-
-        // extraer la variable alta
-        const { alta, ...object } = req.body;
-        // crear objeto
-        const usuario = new Usuario(object);
-        usuario.password = cpassword;
-
-        // almacenar en la BD
-        await usuario.save();
-
-        res.json({
-            ok: true,
-            msg: 'crear un usuario',
-            usuario
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            ok: false,
-            msg: 'error creando el usuario'
-        });
     }
-}
+    /* Actualizar usuario 1.0
+    const actualizarUsuario = async(req, res = response) => {
+
+        // aunque venga el password aqui no se va a cambiar
+        // si cambia el email, hay que comprobar que no exista en la BD
+        const { password, alta, email, ...object } = req.body;
+        const uid = req.params.id;
+
+        try {
+            // comprobar si existe o no existe el usuario
+            const existeEmail = await Usuario.findOne({ email: email });
+
+            if (existeEmail) {
+                // si existe, miramos que sea el suyo (que no lo esta cambiando)
+                if (existeEmail._id != uid) {
+
+                    return res.status(400).json({
+                        ok: false,
+                        msg: "Email ya existe"
+                    });
+                }
+            }
+            // aqui ya se ha comprobado el email
+            object.email = email;
+            // new: true -> nos devuelve el usuario actualizado
+            const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
+
+            res.json({
+                ok: true,
+                msg: 'actualizarUsuario',
+                usuario
+            });
+
+        } catch (error) {
+            console.log(error);
+
+            res.status(400).json({
+                ok: false,
+                msg: 'Error actualizando usuario'
+            });
+        }
+
+    } 
+    */
 
 const actualizarUsuario = async(req, res = response) => {
 
@@ -126,6 +170,7 @@ const actualizarUsuario = async(req, res = response) => {
         }
         // aqui ya se ha comprobado el email
         object.email = email;
+
         // new: true -> nos devuelve el usuario actualizado
         const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
 

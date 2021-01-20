@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UsuarioService } from '../../services/usuario.service';
+// import { UsuarioService } from '../../services/usuario.service';
 import {CustomValidators} from '../../services/auth.password.repeat.service';
+import {AuthService} from '../../services/auth.service';
 
 import Swal from 'sweetalert2';
 
@@ -22,7 +23,7 @@ export class RegisterComponent implements OnInit{
 
 
   constructor( private fb: FormBuilder,
-               private usuarioService: UsuarioService,
+               private authService: AuthService,
                private router: Router) {  }
 
   ngOnInit(): void {
@@ -45,7 +46,7 @@ export class RegisterComponent implements OnInit{
     if (this.formRegister.valid){
       console.log('enviar');
 
-      this.usuarioService.registro(this.formRegister.value).then( res => {
+      this.authService.registro(this.formRegister.value).then( res => {
 
         Swal.fire({
           title:'Usuario creado correctamente',
@@ -94,6 +95,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterForm } from '../../interfaces/register-form.interface';
 import { validarQueSeanIguales, CustomValidators } from '../../services/auth.password.repeat.service';
 import { FooterComponent } from '../../commons/footer/footer.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',

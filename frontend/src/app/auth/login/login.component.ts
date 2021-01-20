@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UsuarioService } from '../../services/usuario.service';
+// import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,13 +19,14 @@ export class LoginComponent implements OnInit {
   public hide = true;
 
   constructor( private fb: FormBuilder,
-               private usuarioService: UsuarioService,
+               private authService: AuthService,
                private router: Router) {  }
 
   ngOnInit(): void {
     this.formLogin = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      remember: [false],
     });
   }
 
@@ -34,7 +36,7 @@ export class LoginComponent implements OnInit {
     this.formSubmit = true;
 
     if (this.formLogin.valid) {
-      this.usuarioService.login(this.formLogin.value).then((response) => {
+      this.authService.login(this.formLogin.value).then((response) => {
 
         // navegacion a dashboard con router
         this.router.navigateByUrl('/perfil');

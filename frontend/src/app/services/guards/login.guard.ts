@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UsuarioService } from '../usuario.service';
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { UsuarioService } from '../usuario.service';
 export class LoginGuard implements CanActivate {
 
   constructor( private router:Router,
-               private usuarioService:UsuarioService ) { }
+               private authService: AuthService ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -20,7 +20,7 @@ export class LoginGuard implements CanActivate {
       console.log('guard, ¿estás logueado?');
 
       return new Promise<boolean> ( (resolve, reject) => {
-        this.usuarioService.validarToken().then( (res)=> {
+        this.authService.validarToken().then( (res)=> {
 
           console.log('estoy logueado');
           resolve(true);

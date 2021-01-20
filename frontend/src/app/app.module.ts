@@ -11,11 +11,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 
 import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
-// import { ComponenteComponent } from './asdf/componente/componente.component';
+import { SidebarComponent } from './commons/sidebar/sidebar.component';
+import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
   declarations: [
     AppComponent,
+    // SidebarComponent,
     // ComponenteComponent,
 
   ],
@@ -29,7 +31,8 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
     MaterialModule,
 
     CarouselModule,
-    WavesModule
+    WavesModule,
+
 
     // MatButtonModule,
   ],

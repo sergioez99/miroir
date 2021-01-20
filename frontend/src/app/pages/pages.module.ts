@@ -14,6 +14,12 @@ import { ButtonBackComponent } from '../commons/button-back/button-back.componen
 import { PlanesComponent } from './planes/planes.component';
 import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { MaterialModule } from '../material/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PerfilAdminComponent } from './perfil/perfil-admin/perfil-admin.component';
+
+import { SidebarModule } from 'ng-sidebar';
+import { SidebarComponent } from '../commons/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +33,9 @@ import { PerfilComponent } from './perfil/perfil.component';
     PlanesComponent,
     AdminUsuariosComponent,
     PerfilComponent,
+    PerfilAdminComponent,
+
+    SidebarComponent
 
 
   ],
@@ -37,12 +46,17 @@ import { PerfilComponent } from './perfil/perfil.component';
 
     NavbarComponent,
     FooterComponent,
+    ReactiveFormsModule,
   ],
   imports: [
     CommonModule,
     RouterModule,
     CarouselModule,
-    WavesModule
+    WavesModule,
+    MaterialModule,
+    ReactiveFormsModule,
+
+    SidebarModule.forRoot()
   ],
 })
 export class PagesModule { }

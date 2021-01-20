@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuarioService } from '../../services/usuario.service';
+// import { UsuarioService } from '../../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,18 +10,18 @@ import { UsuarioService } from '../../services/usuario.service';
 export class NavbarComponent implements OnInit {
 
   // cuando lo construye
-  constructor( private usuarioService: UsuarioService) { }
+  constructor( private authService: AuthService) { }
 
   // cada vez que se muestra por pantalla
   ngOnInit(): void {
   }
 
   public cerrarSesion (){
-    this.usuarioService.logout();
+    this.authService.logout();
   }
 
   public getIsLoged (){
-    return this.usuarioService.getIsLogged();
+    return this.authService.getIsLogged();
   }
 
 }

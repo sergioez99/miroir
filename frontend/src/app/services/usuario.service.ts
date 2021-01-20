@@ -1,145 +1,138 @@
-
-// aqui crearemos la conexion con backend para hacer el inicio de sesion, por ejemplo
+// en este servicio guardaremos los datos del usuario que usaran el resto de componentes.
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoginForm } from '../interfaces/login-form.interface';
+import { AuthService } from './auth.service';
+import { UsuarioForm } from '../interfaces/usuario-form.interface';
+import { ApiService } from './api.service';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService{
 
-  private url = 'http://localhost:3000';
+  private rol :string;
+  private token :string;
+  private id :string;
 
-  private isLogged: boolean;
+  private usuario;
 
-  constructor( private http: HttpClient ) {
-    console.log('hola, soy el constructor de usuario service');
-    this.isLogged = false;
+  constructor( private apiService :ApiService) {
 
-    this.validarToken().then( () =>{} ).catch( ()=>{} );
+
+  }
+
+  login(guardar :boolean) {
+
+    if (guardar) {
+      localStorage.setItem('rol', this.rol);
+      localStorage.setItem('usuario', this.usuario['uid']);
+      localStorage.setItem('token', this.token);
+    }
+  }
+
+  inicializar (usuarioRecibido, tokenRecibido? :string){
+
+    // introducir los valores del usuario logueado
+    this.usuario = usuarioRecibido;
+
+    this.rol = this.usuario['rol'];
+    this.id = this.usuario['uid'];
+
+    if (tokenRecibido){
+      this.actualizarToken(tokenRecibido);
+    }
+
   }
 
 
+  actualizarToken (tokenRecibido: string){
 
+    this.token = tokenRecibido;
 
-  private setIsLogged(value:boolean) {
-    this.isLogged = value;
+    if(localStorage.getItem('token')){
+      localStorage.setItem('token', this.token);
+    }
+
   }
 
-  private registerCall( formData: LoginForm) {
-    console.log('registro desde Usuario.service', formData);
+  actualizarMedidas(formData) :Promise<any>{
 
-    return this.http.post(this.url+'/api/usuarios', formData);
-  }
-  private loginCall( formData: LoginForm) {
-    console.log('login desde Usuario.service: ', formData);
-
-    return this.http.post(this.url+'/api/login', formData);
-  }
-  private tokenCall (token: string) {
-
-    const headers = new HttpHeaders({
-      'x-token': token,
-    });
-
-    return this.http.post(this.url + '/api/login/token','',{ headers: headers });
-  }
-
-  validarToken () : Promise<any>{
-
-    const key = 'token';
-    const token = localStorage.getItem(key);
-    console.log('validando token, ', token);
 
     return new Promise ( (resolve, reject) => {
 
-      if(token != null){
 
-        this.tokenCall(token).subscribe( (res) => {
-          // token valido
-          console.log(res);
-          // guardamos el token actualizado que ha devuelto el backend
-          localStorage.setItem(key, res['nuevotoken']);
+     console.log('estamos modificando las medidas del usuario: ', formData);
 
-          this.setIsLogged(true);
-
-          resolve(true);
-
-        }, (err) =>{
-
-          console.log(err);
-          // quitamos el token caducado
-          localStorage.removeItem(key);
-
-          this.setIsLogged(false);
-
-          reject(err);
-
-        });
-
-      } else {
-        reject(false);
-      }
-
-    });
+     let form :UsuarioForm = {
+       email: this.usuario['email'],
+       id: this.usuario['uid'],
+       altura: formData.altura,
+       peso: formData.peso,
+       pecho: formData.pecho,
+       cintura: formData.cintura,
+       cadera: formData.cadera
+     };
 
 
-  }
+     console.log(form);
 
-  login (formData: LoginForm) : Promise<any>{
+     this.apiService.actualizarMedidasCall(this.token, this.id, form).subscribe( (res) => {
 
-    return new Promise( (resolve, reject) => {
+        // medidas modificadas correctamente
+        console.log(res);
 
-      this.loginCall(formData).subscribe(res => {
-
-        console.log('respuesta al subscribe:', res);
-        // coger el token y guardarlo en localStorage
-        localStorage.setItem('token', res['token']);
-        // decir que nos hemos logueado
-        this.setIsLogged(true);
-
+        this.usuario = res['usuario'];
         resolve(true);
 
-      }, (err) => {
-        this.setIsLogged(false);
-        console.warn ('error respuesta api: ', err);
-        // mostrar un mensaje de alerta
-        reject(err);
-      });
-    });
-  }
+      }, (err) =>{
 
-  registro (formData:LoginForm) :Promise<any>{
-
-    return new Promise( (resolve, reject) =>{
-
-      this.registerCall(formData).subscribe(res => {
-
-        console.log('Respuesta del servidor: ', res);
-        resolve(true);
-
-      }, (err)=> {
-
-        console.warn('error respuesta api:; ', err);
+        console.error(err);
         reject(err);
 
       });
+
+
     });
+
+
+
   }
 
-  logout () {
-
-    localStorage.removeItem('token');
-    this.setIsLogged(false);
+  getID (){
+    return this.usuario['uid'];
   }
 
-  getIsLogged(){
-    return this.isLogged;
+  getRol (){
+    return this.rol;
   }
 
+  getToken (){
+
+    if (!this.token) {
+      this.token = localStorage.getItem('token');
+    }
+
+    return this.token;
 
 
+  }
+
+  getPeso() {
+    return this.usuario['peso'];
+  }
+  getAltura() {
+    return this.usuario['altura'];
+  }
+  getPecho() {
+    return this.usuario['pecho'];
+  }
+  getCintura() {
+    return this.usuario['cintura'];
+  }
+  getCadera() {
+    return this.usuario['cadera'];
+  }
 
 }

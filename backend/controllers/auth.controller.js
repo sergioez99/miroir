@@ -42,8 +42,9 @@ const login = async(req, res = response) => {
             ok: true,
             msg: 'login',
             id: _id,
-            rol,
-            token
+            rol: rol,
+            token: token,
+            usuario: usuarioDB
         });
 
     } catch (error) {
@@ -80,7 +81,8 @@ const token = async(req, res = response) => {
         res.json({
             ok: true,
             msg: 'Token',
-            nuevotoken
+            token: nuevotoken,
+            usuario: usuarioDB
         });
 
     } catch (error) {

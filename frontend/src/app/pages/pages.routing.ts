@@ -8,6 +8,8 @@ import { BaseLayoutComponent } from '../layouts/base-layout/base-layout.componen
 import { PlanesComponent } from './planes/planes.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { LoginGuard } from '../services/guards/login.guard';
+import { PerfilAdminComponent } from './perfil/perfil-admin/perfil-admin.component';
+import { AdminGuard } from '../services/guards/admin.guard';
 
 
 const routes: Routes = [
@@ -37,8 +39,12 @@ const routes: Routes = [
     canActivate: [ LoginGuard ],
     children: [
       { path: '', component: PerfilComponent },
+      { path:'admin', component:PerfilAdminComponent, canActivate:[AdminGuard]},
       { path: '**', redirectTo: ''}
     ]
+  },
+  {
+    path: '**', redirectTo:'home'
   },
 ];
 
