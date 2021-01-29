@@ -1,7 +1,6 @@
 // en este servicio guardaremos los datos del usuario que usaran el resto de componentes.
 
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { UsuarioForm } from '../interfaces/usuario-form.interface';
 import { ApiService } from './api.service';
 
@@ -17,6 +16,10 @@ export class UsuarioService{
   private id :string;
 
   private usuario;
+
+  private rol_admin = 'ROL_ADMIN';
+  private rol_cliente = 'ROL_CLIENTE';
+  private rol_usuario = 'ROL_USUARIO';
 
   constructor( private apiService :ApiService) {
 
@@ -107,6 +110,17 @@ export class UsuarioService{
   getRol (){
     return this.rol;
   }
+
+  isAdmin (){
+    return this.rol == this.rol_admin;
+  }
+  isCliente (){
+    return this.rol == this.rol_cliente;
+  }
+  isUsuario (){
+    return this.rol == this.rol_usuario;
+  }
+
 
   getToken (){
 

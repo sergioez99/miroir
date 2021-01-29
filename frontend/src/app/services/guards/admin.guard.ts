@@ -8,7 +8,8 @@ import { UsuarioService } from '../usuario.service';
 })
 export class AdminGuard implements CanActivate {
 
-  constructor( private usuarioService :UsuarioService ) { }
+  constructor( private usuarioService :UsuarioService,
+               private router:Router) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -16,11 +17,16 @@ export class AdminGuard implements CanActivate {
 
 
       console.log('admin guard: ', this.usuarioService.getRol());
-      if(this.usuarioService.getRol() == 'ROL_ADMIN'){
+      console.log('admin guard: ¿puedo entrar? ', this.usuarioService.isAdmin());
+
+      if( this.usuarioService.isAdmin() ){
         return true;
       }
-
-      return false;
+      else{
+        return this.router.createUrlTree(
+          ['/notauth', { message: 'you do not have the permission to enter' }]
+        );
+      }
 
 
   }

@@ -1,14 +1,12 @@
 <mat-sidenav-container>
     <mat-sidenav opened mode="side">
         <mat-nav-list>
-            <a mat-list-item [routerLink]="['usuarios']">Usuarios</a>
-            <a mat-list-item [routerLink]="['prendas']">Prendas</a>
+            <a mat-list-item [routerLink]="['page-one']">Page One</a>
+            <a mat-list-item [routerLink]="['page-two']">Page Two</a>
             <a mat-list-item [routerLink]="['page-three']">Page Three</a>
         </mat-nav-list>
     </mat-sidenav>
-
     <mat-sidenav-content>
         <p>perfil-admin works!</p>
-        <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

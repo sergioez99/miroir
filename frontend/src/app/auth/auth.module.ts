@@ -10,9 +10,10 @@ import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.componen
 import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
-import { ButtonBackComponent } from '../commons/button-back/button-back.component';
-import { InputEmailComponent } from '../commons/input-email/input-email.component';
+// import { ButtonBackComponent } from '../commons/button-back/button-back.component';
+// import { InputEmailComponent } from '../commons/input-email/input-email.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
+import { ElementosComunesModule } from '../commons/elementos-comunes.module';
 
 
 
@@ -22,8 +23,8 @@ import { RegistroempresaComponent } from './registroempresa/registroempresa.comp
     LoginComponent,
     RecoveryComponent,
     RegisterComponent,
-    InputEmailComponent,
-    ButtonBackComponent,
+    // InputEmailComponent,
+    // ButtonBackComponent,
     RegistroempresaComponent,
 
 
@@ -45,7 +46,8 @@ import { RegistroempresaComponent } from './registroempresa/registroempresa.comp
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MaterialModule,
+
+    ElementosComunesModule,
 
 
   ]
