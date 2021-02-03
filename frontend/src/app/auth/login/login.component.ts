@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 // import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
 
   constructor( private fb: FormBuilder,
                private authService: AuthService,
-               private router: Router) {  }
+               private router: Router,
+               private usuarioService :UsuarioService) {  }
 
   ngOnInit(): void {
     this.formLogin = this.fb.group({
@@ -38,8 +40,21 @@ export class LoginComponent implements OnInit {
     if (this.formLogin.valid) {
       this.authService.login(this.formLogin.value).then((response) => {
 
-        // navegacion a dashboard con router
-        this.router.navigateByUrl('/perfil');
+        // navegacion en función del tipo de usuario
+
+        switch ( this.usuarioService.getRol() ){
+
+          case 'ROL_USUARIO':
+            this.router.navigateByUrl('/perfil/usuario');
+            break;
+          case 'ROL_CLIENTE':
+            this.router.navigateByUrl('/perfil/cliente');
+            break;
+          case 'ROL_ADMIN':
+            this.router.navigateByUrl('/admin');
+            break;
+        }
+
       }).catch((error) =>{
 
         Swal.fire({

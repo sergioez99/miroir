@@ -11,15 +11,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 
 import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
-import { SidebarComponent } from './commons/sidebar/sidebar.component';
-import { SidebarModule } from 'ng-sidebar';
-import { NotAuthComponent } from './commons/not-auth/not-auth.component';
-import { PerfilLayoutComponent } from './layouts/perfil-layout/perfil-layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PerfilLayoutComponent,
 
   ],
   imports: [
@@ -34,8 +29,6 @@ import { PerfilLayoutComponent } from './layouts/perfil-layout/perfil-layout.com
     CarouselModule,
     WavesModule,
 
-
-    // MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

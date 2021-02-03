@@ -10,7 +10,6 @@ import { AuthService } from '../auth.service';
 export class PerfilGuard implements CanActivate, CanActivateChild {
 
   constructor( private router:Router,
-               private usuarioService: UsuarioService,
                private authService :AuthService ) { }
 
 
@@ -40,8 +39,22 @@ export class PerfilGuard implements CanActivate, CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
+      return new Promise<boolean> ( (resolve, reject) => {
+        this.authService.validarToken().then( (res)=> {
 
-      // console.log('buscando nuevamente la ruta ', childRoute);
+          console.log('estoy logueado');
+          resolve(true);
+
+        }).catch( (error) => {
+
+          console.log('token no valido');
+          this.router.navigateByUrl('/login');
+          reject(false);
+
+        });
+      });
+
+  /*     // console.log('buscando nuevamente la ruta ', childRoute);
       // console.log('buscando ruta completa: ', state.url);
       let ruta;
 
@@ -96,7 +109,7 @@ export class PerfilGuard implements CanActivate, CanActivateChild {
       }
       else {
         this.router.navigateByUrl('/perfil');
-      }
+      } */
 
   }
 

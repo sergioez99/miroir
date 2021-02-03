@@ -12,8 +12,16 @@ import { PerfilUsuarioComponent } from './perfil/perfil-usuario/perfil-usuario.c
 import { NotAuthComponent } from './perfil/not-auth/not-auth.component';
 import { PerfilGuard } from '../services/guards/perfil.guard';
 import { PerfilLayoutComponent } from '../layouts/perfil-layout/perfil-layout.component';
-import { UsuariosAdminComponent } from './perfil/perfil-admin/usuarios-admin/usuarios-admin.component';
-import { PrendasAdminComponent } from './perfil/perfil-admin/prendas-admin/prendas-admin.component';
+import { UsuariosComponent } from './admin/usuarios/usuarios.component';
+import { UsuarioComponent } from './admin/usuario/usuario.component';
+import { PrendasComponent } from './admin/prendas/prendas.component';
+import { PrendaComponent } from './admin/prenda/prenda.component';
+import { ClientesComponent } from './admin/clientes/clientes.component';
+import { ClienteComponent } from './admin/cliente/cliente.component';
+import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
+import { ClienteGuard } from '../services/guards/cliente.guard';
+import { UsuarioGuard } from '../services/guards/usuario.guard';
+import { AdminGuard } from '../services/guards/admin.guard';
 
 
 const routes: Routes = [
@@ -39,20 +47,44 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'perfil', component: BaseLayoutComponent,
+    path: 'perfil', component: PerfilLayoutComponent,
     canActivate: [ PerfilGuard ],
     canActivateChild: [ PerfilGuard ],
     children: [
       { path: '', component: NotAuthComponent },
-      { path:'admin', component:PerfilAdminComponent,
-        children:[
-          { path:'usuarios', component: UsuariosAdminComponent },
-          { path:'prendas', component: PrendasAdminComponent },
-          { path: '**', redirectTo: '' }
-        ]},
-      { path:'cliente', component:PerfilClienteComponent,},
-      { path:'usuario', component:PerfilUsuarioComponent,},
+      { path:'cliente', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],
+        children: [
+          { path: '', component: PerfilClienteComponent },
+          { path:'prendas', component: PrendasComponent },
+          { path:'prendas/prenda/:uid', component: PrendaComponent },
+          { path: '**', component: NotAuthComponent }
+        ]
+      },
+      { path:'usuario', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
+        children: [
+          { path: '', component: PerfilUsuarioComponent },
+          { path: 'activar', component: ActivarCuentaComponent },
+        ]
+      },
+
       { path: '**', redirectTo: ''}
+    ]
+  },
+
+
+
+
+
+  { path:'admin', component: PerfilLayoutComponent, canActivate: [ AdminGuard ], canActivateChild: [ AdminGuard ],
+    children:[
+      { path: '', component: NotAuthComponent },
+      { path:'usuarios', component: UsuariosComponent },
+      { path:'usuarios/usuario/:uid', component: UsuarioComponent },
+      { path:'prendas', component: PrendasComponent },
+      { path:'prendas/prenda/:uid', component: PrendaComponent },
+      { path:'clientes', component: ClientesComponent },
+      { path:'clientes/cliente/:uid', component: ClienteComponent },
+      { path: '**', redirectTo: '' }
     ]
   },
 

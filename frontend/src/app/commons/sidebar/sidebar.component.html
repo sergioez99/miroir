@@ -1,23 +1,8 @@
-<p>Sidebar component work!</p>
+<mat-nav-list *ngFor='let item of menu'>
 
-<aside>
-    probando cosas
-</aside>
+    <a mat-list-item [routerLink]="item.url">
+        <span class="material-icons">{{item.icono}}</span>
+        <span>{{item.titulo}}</span>
+    </a>
 
-<!--
-<ng-sidebar-container class="sidebar_container">
-
-    <ng-sidebar [(opened)]="_opened">
-        <p>Sidebar contents</p>
-
-        <a closeSidebar>Closes the sidebar</a>
-    </ng-sidebar>
-
-    <div ng-sidebar-content>
-        <button (click)="_toggleSidebar()">Toggle sidebar</button>
-
-
-    </div>
-
-</ng-sidebar-container>
- -->
+</mat-nav-list>

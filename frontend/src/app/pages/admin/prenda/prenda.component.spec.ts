@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrendasAdminComponent } from './prendas-admin.component';
+import { PrendaComponent } from './prenda.component';
 
-describe('PrendasAdminComponent', () => {
-  let component: PrendasAdminComponent;
-  let fixture: ComponentFixture<PrendasAdminComponent>;
+describe('PrendaComponent', () => {
+  let component: PrendaComponent;
+  let fixture: ComponentFixture<PrendaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PrendasAdminComponent ]
+      declarations: [ PrendaComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PrendasAdminComponent);
+    fixture = TestBed.createComponent(PrendaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
