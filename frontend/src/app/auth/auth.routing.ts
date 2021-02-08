@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
+import { RegisterClienteComponent } from './register-cliente/register-cliente.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,13 @@ const routes: Routes = [
     path: 'registro', component: AuthLayoutComponent,
     children: [
       { path: '', component: RegistroempresaComponent },
+      { path: '**', redirectTo: ''}
+    ]
+  },
+  {
+    path: 'registro-cliente', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: RegisterClienteComponent },
       { path: '**', redirectTo: ''}
     ]
   },
