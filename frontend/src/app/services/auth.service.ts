@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { UsuarioService } from './usuario.service';
+import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,15 @@ export class AuthService {
 
   }
 
-  login (formData: LoginForm) : Promise<any>{
+  login (formData :LoginForm) :Promise<any>{
+
+    return new Promise ( (resolve, reject) => {
+
+      resolve(true);
+    });
+  }
+
+  loginUsuario (formData: LoginForm) : Promise<any>{
 
     return new Promise( (resolve, reject) => {
 
@@ -101,6 +110,27 @@ export class AuthService {
 
       });
     });
+  }
+
+  registroCliente (formData :RegisterClientForm) :Promise<any>{
+
+    return new Promise ( (resolve, reject) => {
+
+
+      this.apiService.registerClientCall(formData).subscribe(res => {
+
+        console.log('Respuesta de backend al intentar crear un cliente: ', res);
+        resolve(true);
+
+      }, (err) =>{
+        console.log('da error y creo que es por el formulario: ', formData);
+        console.warn('error respuesta api: ', err);
+        reject(err);
+
+      });
+
+    });
+
   }
 
   logout () {

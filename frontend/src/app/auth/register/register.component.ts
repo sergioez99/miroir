@@ -36,6 +36,7 @@ export class RegisterComponent implements OnInit{
     this.formRegister.get('passwordRepeat').setValidators(
       CustomValidators.equals(this.formRegister.get('password'))
     );
+
   }
 
 

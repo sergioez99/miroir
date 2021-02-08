@@ -62,7 +62,9 @@ const obtenerClientes = async(req, res = response) => {
 
 const crearCliente = async(req, res) => {
 
-    const { email, password, cif } = req.body;
+    console.log('llegamos a la funcion?');
+
+    const { email, password } = req.body;
 
     try {
         // comprobar que email es unico
@@ -72,14 +74,6 @@ const crearCliente = async(req, res) => {
             return res.status(400).json({
                 ok: false,
                 msg: 'Email ya existe'
-            });
-        }
-        // comprobar que el cif es unico
-        const existeCif = await Cliente.findOne({ cif: cif });
-        if (existeCif) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'El CIF ya existe'
             });
         }
 

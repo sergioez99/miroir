@@ -31,7 +31,7 @@ const ClienteSchema = Schema({
         type: String,
         required: true,
     },
-    cif: {
+    nif: {
         type: String,
         required: true,
         unique: true,

@@ -27,13 +27,13 @@ export class RegisterClienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.formRegistroCliente = this.fb.group({
-      nombre: [''],
+      nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email] ],
       password: ['', Validators.required],
       passwordRepeat: ['', [Validators.required] ],
-      nombreEmpresa: [''],
+      nombreEmpresa: ['', Validators.required],
       nif: ['', [Validators.required] ],
-      telefono: [''],
+      telefono: ['', Validators.required],
       terminos: [false, [Validators.required] ],
     });
 
@@ -48,6 +48,31 @@ export class RegisterClienteComponent implements OnInit {
     if(this.terminos){
       if(this.formRegistroCliente.valid){
         console.log('formulario de registro de cliente válido');
+
+        this.authService.registroCliente(this.formRegistroCliente.value).then( res => {
+
+          Swal.fire({
+            title:'Usuario creado correctamente',
+            icon: 'success',
+            showCloseButton: true,
+            confirmButtonText: 'Iniciar Sesión'
+          }).then((result) => {
+            // navegacion a login con router
+            this.router.navigateByUrl('/login');
+          });
+
+        }).catch( err =>{
+
+          Swal.fire({
+            title:'¡Error!',
+            text: err.error.msg,
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonText: 'Volver a intentar',
+            footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
+          });
+
+        });
 
       }
       else{
