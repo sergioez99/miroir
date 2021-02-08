@@ -13,29 +13,32 @@ const OAuth2 = google.auth.OAuth2;
 
 const verificarEmail = async(req, res = response) => {
     try {
+        console.log('token: ', req.params.token);
         //buscamos el token de verificacion
-        const token = await Token.findOne({ token: req.body.token });
+        const token = await Token.findOne({ token: req.params.token });
 
-        if (!token){ 
-            return res.status(400).json({ 
-                type: 'not-verified', 
+        if (!token) {
+            return res.status(400).json({
+                type: 'not-verified',
                 msg: 'We were unable to find a valid token. Your token may have expired.' + req.body.token
             });
         }
         //y su usuario asociado
-        const usuario = await Usuario.findOne({ _id: token._userId, email: req.body.email });
+        const { uid, rol, ...object } = jwt.verify(token.token, process.env.JWTSECRET);
+        const usuario = await Usuario.findById(uid);
+        // const usuario = await Usuario.findOne({ _id: token._userId, email: req.body.email });
 
-        if (!usuario){
-            return res.status(400).json({ 
+        if (!usuario) {
+            return res.status(400).json({
                 msg: 'We were unable to find a user for this token.'
             });
-        } 
-        if (usuario.validado){
-            return res.status(400).json({ 
-                type: 'already-verified', 
-                msg: 'This user has already been verified.' 
+        }
+        if (usuario.validado) {
+            return res.status(400).json({
+                type: 'already-verified',
+                msg: 'This user has already been verified.'
             });
-        } 
+        }
         //cambiamos el estado de validado a verdadero y lo guardamos
         usuario.validado = true;
         await usuario.save();
@@ -55,23 +58,23 @@ const verificarEmail = async(req, res = response) => {
     }
 }
 
-const reenviarToken = async(req, res = response) =>{
+const reenviarToken = async(req, res = response) => {
     try {
         //buscamos el usuario
         const usuario = await Usuario.findOne({ email: req.body.email });
 
-        if (!usuario){
-            return res.status(400).json({ 
+        if (!usuario) {
+            return res.status(400).json({
                 msg: 'We were unable to find a user for this email.'
             });
-        } 
-        if (usuario.validado){
-            return res.status(400).json({ 
-                type: 'already-verified', 
-                msg: 'This user has already been verified.' 
+        }
+        if (usuario.validado) {
+            return res.status(400).json({
+                type: 'already-verified',
+                msg: 'This user has already been verified.'
             });
-        } 
-        
+        }
+
         //volvemos a crear el token de verificacion
         const verificationToken = await generarJWT(usuario._id, usuario.rol);
         const token = new Token(object);
@@ -108,11 +111,11 @@ const reenviarToken = async(req, res = response) =>{
                 rejectUnauthorized: false
             }
         });
-        var mailOptions = { 
-            from: 'insight.abp@gmail.com', 
-            to: email, 
-            subject: 'Verificación de tu cuenta en Miroir', 
-            text: '¡Hola, bienvenido a Miroir!,\n\n' + 'Por favor, para verificar su cuenta haga click en este enlace: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + verificationToken + '.\n' 
+        var mailOptions = {
+            from: 'insight.abp@gmail.com',
+            to: email,
+            subject: 'Verificación de tu cuenta en Miroir',
+            text: '¡Hola, bienvenido a Miroir!,\n\n' + 'Por favor, para verificar su cuenta haga click en este enlace: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + verificationToken + '.\n'
         };
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);

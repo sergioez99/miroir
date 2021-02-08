@@ -55,7 +55,7 @@ export class RegisterComponent implements OnInit{
           confirmButtonText: 'Iniciar Sesión'
         }).then((result) => {
           // navegacion a login con router
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl('/verificacion');
         });
 
 

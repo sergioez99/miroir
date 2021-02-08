@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
+import { VerificacionComponent } from './verificacion/verificacion.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,8 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
+  { path: 'verificacion/:token', component: VerificacionComponent,  },
+  { path: 'verificado', component: VerificacionComponent },
 ];
 
 @NgModule({

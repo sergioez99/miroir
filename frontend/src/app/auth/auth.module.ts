@@ -14,7 +14,8 @@ import { RegisterComponent } from './register/register.component';
 // import { InputEmailComponent } from '../commons/input-email/input-email.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
-import { VerificationComponent } from './verification/verification.component';
+import { VerificacionComponent } from './verificacion/verificacion.component';
+import { VerificadoComponent } from './verificado/verificado.component';
 
 
 
@@ -27,7 +28,8 @@ import { VerificationComponent } from './verification/verification.component';
     // InputEmailComponent,
     // ButtonBackComponent,
     RegistroempresaComponent,
-    VerificationComponent,
+    VerificacionComponent,
+    VerificadoComponent,
 
 
   ],
