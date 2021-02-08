@@ -1,0 +1,13 @@
+<p>dashboard works!</p>
+
+<app-progressbar [valor]="10" (nombreEvento)="algo( $event )">
+
+</app-progressbar>
+<a [href]="url"> Enlace </a>
+
+<br><br><br>
+
+<div class="d-flex justify-content-center">
+    <app-pagination (cambiarPagina)="cambiarPagina( $event )" [totalRegistros]="totalregistros" [registroActual]="posicionactual+1" [registrosPorPagina]="registrosporpagina">
+    </app-pagination>
+</div>
