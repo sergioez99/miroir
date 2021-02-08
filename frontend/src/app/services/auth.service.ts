@@ -84,7 +84,7 @@ export class AuthService {
       });
     });
   }
-
+  
   registro (formData:LoginForm) :Promise<any>{
 
     return new Promise( (resolve, reject) =>{

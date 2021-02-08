@@ -14,6 +14,7 @@ import { RegisterComponent } from './register/register.component';
 // import { InputEmailComponent } from '../commons/input-email/input-email.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
+import { VerificationComponent } from './verification/verification.component';
 
 
 
@@ -26,6 +27,7 @@ import { ElementosComunesModule } from '../commons/elementos-comunes.module';
     // InputEmailComponent,
     // ButtonBackComponent,
     RegistroempresaComponent,
+    VerificationComponent,
 
 
   ],

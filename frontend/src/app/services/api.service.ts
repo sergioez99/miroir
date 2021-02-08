@@ -14,6 +14,15 @@ export class ApiService {
   constructor( private http: HttpClient ) { }
 
 
+  verificationCall( token: string){
+
+    return this.http.post(this.url+'/api/verificacion/confirmacion', token);
+  }
+
+  reenviarCall(){
+
+    return this.http.get(this.url+'/api/verificacion/reenviar');
+  }
 
   registerCall( formData: LoginForm) {
     // console.log('registro desde registerCall', formData);
