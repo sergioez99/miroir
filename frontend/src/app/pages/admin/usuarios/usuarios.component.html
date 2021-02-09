@@ -44,8 +44,8 @@
                                 <th>Cintura</th>
                                 <th>Rol</th>
                                 <th>Alta</th>
-                                <!--<th class="text-center">Activo</th>
-                                <th class="text-center">Acción</th>-->
+                                <!--<th class="text-center">Activo</th>-->
+                                <th class="text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,10 +60,10 @@
                                 <td>{{usuario.alta | date : 'dd/MM/yyyy'}}</td>
                                 <!--<td class="text-center">
                                     <i class="fa fa-check text-success" *ngIf="usuario.activo"></i>
-                                    <i class="fa fa-times text-danger" *ngIf="!usuario.activo"></i></td>
+                                    <i class="fa fa-times text-danger" *ngIf="!usuario.activo"></i></td>-->
                                 <td class="text-center">
-                                    <i class="fa fa-pencil-alt text-success fa-lg mr-5 micursor" [routerLink]="['/admin/usuarios/usuario', usuario.uid]"></i>
-                                    <i class="fa fa-trash text-danger fa-lg micursor" (click)="eliminarUsuario(usuario.uid, usuario.nombre, usuario.apellidos)"></i></td>-->
+                                    <span class="material-icons" [routerLink]="['/admin/usuarios/usuario', usuario.uid]">edit</span>
+                                    <span class="material-icons" (click)="eliminarUsuario(usuario.uid, usuario.email)">delete</span></td>
                             </tr>
                         </tbody>
                     </table>

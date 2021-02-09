@@ -61,21 +61,21 @@ export class UsuariosComponent implements OnInit {
     this.cargarUsuarios(this.ultimaBusqueda);
   }
 
-  /*eliminarUsuario( uid: string, nombre: string, apellidos: string) {
+  eliminarUsuario( uid: string, email: string) {
     // Comprobar que no me borro a mi mismo
-    if (uid === this.ususuarioService.getID) {
+    if (uid === this.ususuarioService.getID()) {
       Swal.fire({icon: 'warning', title: 'Oops...', text: 'No puedes eliminar tu propio usuario',});
       return;
     }
     // Solo los admin pueden borrar usuarios
-    if (this.ususuarioService.getRol !== 'ROL_ADMIN') {
+    if (this.ususuarioService.getRol() !== 'ROL_ADMIN') {
       Swal.fire({icon: 'warning', title: 'Oops...', text: 'No tienes permisos para realizar esta acción',});
       return;
     }
 
     Swal.fire({
       title: 'Eliminar usuario',
-      text: `Al eliminar al usuario '${nombre} ${apellidos}' se perderán todos los datos asociados. ¿Desea continuar?`,
+      text: `Al eliminar al usuario '${email}' se perderán todos los datos asociados. ¿Desea continuar?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -93,5 +93,5 @@ export class UsuariosComponent implements OnInit {
               })
           }
       });
-  }*/
+  }
 }
