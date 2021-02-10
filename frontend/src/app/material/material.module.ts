@@ -10,6 +10,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 
 import {MatSelectModule} from '@angular/material/select';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatSidenavModule,
     MatListModule,
     MatSelectModule,
+    MatToolbarModule,
+    MatButtonToggleModule,
 
 
   ],
@@ -39,6 +43,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatSidenavModule,
     MatListModule,
     MatSelectModule,
+    MatToolbarModule,
+    MatButtonToggleModule,
   ],
 })
 export class MaterialModule { }

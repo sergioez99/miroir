@@ -11,6 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
 import { RegisterClienteComponent } from './register-cliente/register-cliente.component';
+import { RegisterUsuarioComponent } from './register-usuario/register-usuario.component';
 
 
 
@@ -24,6 +25,7 @@ import { RegisterClienteComponent } from './register-cliente/register-cliente.co
     // ButtonBackComponent,
     RegistroempresaComponent,
     RegisterClienteComponent,
+    RegisterUsuarioComponent,
 
 
   ],

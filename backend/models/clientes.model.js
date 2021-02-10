@@ -34,12 +34,16 @@ const ClienteSchema = Schema({
     nif: {
         type: String,
         required: true,
-        unique: true,
     },
     telefono: {
         type: Number,
         required: true,
-    }
+    },
+    rol: {
+        type: String,
+        required: true,
+        default: 'ROL_CLIENTE'
+    },
 
 
 

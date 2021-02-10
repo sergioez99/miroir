@@ -60,12 +60,27 @@ export class AuthService {
 
 
   }
+  login (formData: LoginForm) : Promise<any>{
 
-  login (formData :LoginForm) :Promise<any>{
+    return new Promise( (resolve, reject) => {
 
-    return new Promise ( (resolve, reject) => {
+      this.apiService.loginCall(formData).subscribe(res => {
 
-      resolve(true);
+        console.log('respuesta al subscribe:', res);
+
+        // decir que nos hemos logueado
+        this.usuarioService.inicializar(res['usuario'], res['token']);
+        this.usuarioService.login(formData.remember);
+        this.setIsLogged(true);
+
+        resolve(true);
+
+      }, (err) => {
+        this.setIsLogged(false);
+        console.warn ('error respuesta api: ', err);
+        // mostrar un mensaje de alerta
+        reject(err);
+      });
     });
   }
 

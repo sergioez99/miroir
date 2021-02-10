@@ -1,9 +1,9 @@
-.mir-login-button {
+.mir-register-button {
     display: inline;
     float: right;
 }
 
-.mir-login-box {
+.mir-register-box {
     max-width: 30em;
     margin: auto;
 }

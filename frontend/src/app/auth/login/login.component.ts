@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
 
         // navegacion en función del tipo de usuario
 
+        console.log('pues no redirige bien.. ', this.usuarioService.getRol());
         switch ( this.usuarioService.getRol() ){
 
           case 'ROL_USUARIO':

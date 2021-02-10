@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const Cliente = require('../models/clientes.model');
+const Usuario = require('../models/usuarios.model');
 
 
 const obtenerClientes = async(req, res = response) => {
@@ -68,9 +69,13 @@ const crearCliente = async(req, res) => {
 
     try {
         // comprobar que email es unico
-        const exiteEmail = await Cliente.findOne({ email: email });
+        let existeEmail = await Cliente.findOne({ email: email });
 
-        if (exiteEmail) {
+        if (!existeEmail) {
+            existeEmail = await Usuario.findOne({ email: email });
+        }
+
+        if (existeEmail) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Email ya existe'

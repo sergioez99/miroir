@@ -1,72 +1,29 @@
-<article class="mir-register-box">
-    <h1 class="mir-title"> Crea tu cuenta </h1>
-    <form class="mir-register-form" [formGroup]="formRegister" (ngSubmit)="registrarse();">
+<div class="mir-caja_toggle">
+    <mat-button-toggle-group class="mir-toggle" #group="matButtonToggleGroup" [(ngModel)]='formulario' onChange="cambiar" aria-label="Formulario de usuario o cliente">
 
-        <!-- INPUT: EMAIL -->
-        <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Email</mat-label>
-            <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-            <button mat-icon-button matSuffix type="button">
-                  <mat-icon>alternate_email</mat-icon>
-                </button>
-            <mat-hint>Introduzca su email</mat-hint>
+        <mat-button-toggle class="mir-button_toggle" value="0" aria-label="Formulario Usuario">
+            <mat-label>Usuario</mat-label>
+        </mat-button-toggle>
 
-            <!-- ERRORES -->
-            <mat-error *ngIf="formRegister.get('email').hasError('email');">
-                Por favor, introduce un email <strong>válido</strong>
-            </mat-error>
-            <mat-error *ngIf="formRegister.get('email').hasError('required');">
-                Email es <strong>necesario</strong>
-            </mat-error>
+        <mat-button-toggle class="mir-button_toggle" value="1" aria-label="Formulario Cliente">
+            <span>Cliente</span>
+        </mat-button-toggle>
 
-        </mat-form-field>
-        <!-- ------------ -->
-        <!-- INPUT: PASSWORD -->
-        <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
-            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-hint>Introduzca su contraseña</mat-hint>
+    </mat-button-toggle-group>
+</div>
+<div *ngIf='formulario == 0' class="mir-caja_formulario">
+    <div class="mir-caja_explicacion_usuario">
+        <h1>Registrarse como Usuario</h1>
+        <p> La cuenta de usuario permite crear un avatar personalizado con tus medidas. </p>
+    </div>
 
-            <!-- ERRORES -->
-            <mat-error *ngIf="formRegister.get('password').hasError('required');">
-                Contraseña <strong>necesaria</strong>
-            </mat-error>
+    <app-register-usuario></app-register-usuario>
 
-        </mat-form-field>
-        <!-- ------------ -->
-        <!-- INPUT: PASSWORD REPETIR -->
-        <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
-            <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-              <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-            <mat-hint>Repita su contraseña</mat-hint>
+</div>
 
-            <!-- ERRORES -->
-            <mat-error *ngIf="formRegister.get('passwordRepeat').hasError('required');">
-                Contraseña <strong>necesaria</strong>
-            </mat-error>
-            <mat-error *ngIf="formRegister.get('passwordRepeat').hasError('notEquals')">
-                La contraseña <strong>no coincide</strong>
-            </mat-error>
+<div *ngIf='formulario == 1' class="mir-caja_formulario">
+    <h1>Registrarse como Cliente</h1>
+    <p> La cuenta de cliente te permitirá incluir el probador virtual en tu tienda. </p>
+    <app-register-cliente></app-register-cliente>
 
-        </mat-form-field>
-        <!-- ------------ -->
-
-
-
-        <div class="mir-box-link">
-            <a routerLink="/login">¿Ya tienes cuenta?</a>
-        </div>
-        <div class="mir-box-buttons">
-            <app-button-back></app-button-back>
-            <button class="mir-register-button" mat-raised-button color="accent" type="submit">Registrarse</button>
-        </div>
-    </form>
-
-
-</article>
+</div>
