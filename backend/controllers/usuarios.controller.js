@@ -4,11 +4,24 @@ const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuarios.model');
 
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
 
 const obtenerUsuarios = async(req, res = response) => {
 
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+        //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
+
     //encontrar un unico usuario
     const id = req.query.id;
+    await sleep(100);
 
 
     // paginacion
@@ -22,6 +35,7 @@ const obtenerUsuarios = async(req, res = response) => {
 
     try {
 
+
         let usuarios, total;
         // busqueda de un unico usuario
         if (id) {
@@ -33,11 +47,19 @@ const obtenerUsuarios = async(req, res = response) => {
             ]);
             // busqueda de varios usuarios
         } else {
-            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
-            [usuarios, total] = await Promise.all([
-                Usuario.find({}).skip(desde).limit(registropp),
-                Usuario.countDocuments()
-            ]);
+
+            if (texto) {
+                [usuarios, total] = await Promise.all([
+                    Usuario.find({ $or: [{ email: textoBusqueda }, { rol: textoBusqueda }] }).skip(desde).limit(registropp),
+                    Usuario.countDocuments({ $or: [{ email: textoBusqueda }, { rol: textoBusqueda }] })
+                ]);
+            } else{
+                // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                [usuarios, total] = await Promise.all([
+                    Usuario.find({}).skip(desde).limit(registropp),
+                    Usuario.countDocuments()
+                ]);
+            }   
         }
 
         res.json({

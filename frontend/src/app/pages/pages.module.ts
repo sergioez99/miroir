@@ -26,6 +26,8 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { PrendasComponent } from './admin/prendas/prendas.component';
 import { PrendaComponent } from './admin/prenda/prenda.component';
 import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
+import { PaginationComponent } from '../components/pagination/pagination.component';
+import { ProgressbarComponent } from '../components/progressbar/progressbar.component'
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.
     PrendasComponent,
     PrendaComponent,
     ActivarCuentaComponent,
+    PaginationComponent,
+    ProgressbarComponent
 
 
   ],
