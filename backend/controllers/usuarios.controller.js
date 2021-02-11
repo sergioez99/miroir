@@ -29,9 +29,7 @@ const obtenerUsuarios = async(req, res = response) => {
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
-
-
+    const registropp = Number(process.env.DOCSPERPAGE);
 
     try {
 
@@ -53,13 +51,13 @@ const obtenerUsuarios = async(req, res = response) => {
                     Usuario.find({ $or: [{ email: textoBusqueda }, { rol: textoBusqueda }] }).skip(desde).limit(registropp),
                     Usuario.countDocuments({ $or: [{ email: textoBusqueda }, { rol: textoBusqueda }] })
                 ]);
-            } else{
+            } else {
                 // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
                 [usuarios, total] = await Promise.all([
                     Usuario.find({}).skip(desde).limit(registropp),
                     Usuario.countDocuments()
                 ]);
-            }   
+            }
         }
 
         res.json({
