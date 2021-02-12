@@ -52,10 +52,11 @@ export class RegisterComponent implements OnInit{
           title:'Usuario creado correctamente',
           icon: 'success',
           showCloseButton: true,
-          confirmButtonText: 'Iniciar Sesión'
+          confirmButtonText: 'Aceptar'
         }).then((result) => {
           // navegacion a login con router
-          this.router.navigateByUrl('/verificacion');
+            localStorage.setItem('email', this.formRegister.value.email);
+            this.router.navigateByUrl('/verificacion');
         });
 
 

@@ -135,8 +135,10 @@ const crearUsuario = async(req, res) => {
                     from: 'insight.abp@gmail.com', 
                     to: email, 
                     subject: 'Verificación de tu cuenta en Miroir', 
-                    text: '¡Hola, bienvenido a Miroir!,\n\n' + 'Por favor, para verificar su cuenta haga click en este enlace: \nhttp:\/\/' + req.headers.host + '\/api/verificacion\/' + verificationToken + '.\n' 
-                };
+                    html: {
+                        path: "controllers/interfazemail/email.html"
+                    }
+                }
                 transporter.sendMail(mailOptions, (error, response) => {
                     error ? console.log(error) : console.log(response);
                     transporter.close();

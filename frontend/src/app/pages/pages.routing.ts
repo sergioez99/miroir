@@ -18,7 +18,6 @@ import { PrendasComponent } from './admin/prendas/prendas.component';
 import { PrendaComponent } from './admin/prenda/prenda.component';
 import { ClientesComponent } from './admin/clientes/clientes.component';
 import { ClienteComponent } from './admin/cliente/cliente.component';
-import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
@@ -62,8 +61,7 @@ const routes: Routes = [
       },
       { path:'usuario', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
         children: [
-          { path: '', component: PerfilUsuarioComponent },
-          { path: 'activar', component: ActivarCuentaComponent },
+          { path: '', component: PerfilUsuarioComponent }
         ]
       },
 

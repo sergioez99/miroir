@@ -92,6 +92,7 @@ export class AuthService {
       this.apiService.registerCall(formData).subscribe(res => {
 
         console.log('Respuesta del servidor: ', res);
+        
         resolve(true);
 
       }, (err)=> {

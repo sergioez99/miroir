@@ -38,8 +38,18 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
-  { path: 'verificacion/:token', component: VerificacionComponent,  },
-  { path: 'verificado', component: VerificacionComponent },
+  { path: 'verificacion', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: VerificacionComponent },
+      { path: '**', redirectTo: ''}
+    ]
+  },
+  { path: 'verificado', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: VerificacionComponent },
+      { path: '**', redirectTo: ''}
+    ]
+ },
 ];
 
 @NgModule({

@@ -17,14 +17,10 @@ const {
 
 } = require('../controllers/verificacion.controller');
 
-router.get('/:token',[
-], verificarEmail);
-
-router.get('/reenviar',[
-    //validarJWT,
-    check('email', 'El argumento email es obligatorio').not().isEmpty(),
-    check('email', 'El argumento email debe ser un email').isEmail(),
-    validarCampos
+router.get('/reenviar/:email',[
 ], reenviarToken);
+
+router.get('/verificar/:token',[
+], verificarEmail);
 
 module.exports = router;

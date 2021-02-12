@@ -60,8 +60,8 @@ const verificarEmail = async(req, res = response) => {
 
 const reenviarToken = async(req, res = response) => {
     try {
-        //buscamos el usuario
-        const usuario = await Usuario.findOne({ email: req.body.email });
+        const email = req.params.email;
+        const usuario = await Usuario.findOne( {email: req.params.email });
 
         if (!usuario) {
             return res.status(400).json({
@@ -77,7 +77,7 @@ const reenviarToken = async(req, res = response) => {
 
         //volvemos a crear el token de verificacion
         const verificationToken = await generarJWT(usuario._id, usuario.rol);
-        const token = new Token(object);
+        const token = new Token();
         token.token = verificationToken;
 
         const oauth2Client = new OAuth2(
@@ -115,7 +115,9 @@ const reenviarToken = async(req, res = response) => {
             from: 'insight.abp@gmail.com',
             to: email,
             subject: 'Verificación de tu cuenta en Miroir',
-            text: '¡Hola, bienvenido a Miroir!,\n\n' + 'Por favor, para verificar su cuenta haga click en este enlace: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + verificationToken + '.\n'
+            html: {
+                path: 'controllers/interfazemail/email.html'
+            }
         };
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
