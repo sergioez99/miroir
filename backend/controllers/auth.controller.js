@@ -25,6 +25,7 @@ const login = async(req, res = response) => {
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
+                error: 1,
                 msg: 'Usuario o contraseña incorrectos',
                 token: ''
             });
@@ -36,13 +37,27 @@ const login = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
+                error: 1,
                 msg: 'Usuario o contraseña incorrectos',
                 token: ''
             });
         }
         // usuario y contraseña correctos
 
-        const { _id, rol } = usuarioDB;
+        const { _id, rol, validado } = usuarioDB;
+
+        console.log('validado: ', validado);
+
+        // comprobar que el email ha sido validado
+        if (!validado) {
+            return res.status(400).json({
+                ok: false,
+                errorCod: 2,
+                msg: 'El email no ha sido validado',
+                token: ''
+            });
+        }
+
         // creamos el token
         const token = await generarJWT(usuarioDB._id, usuarioDB.rol);
 
@@ -59,6 +74,7 @@ const login = async(req, res = response) => {
         console.log(error);
         return res.status(400).json({
             ok: false,
+            error: 0,
             msg: 'Error en login',
             token: ''
         });

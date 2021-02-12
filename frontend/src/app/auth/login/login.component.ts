@@ -58,12 +58,42 @@ export class LoginComponent implements OnInit {
 
       }).catch((error) =>{
 
-        Swal.fire({
-          title: '¡Error!',
-          text: error.error.msg,
-          icon: 'error',
-          confirmButtonText: 'Volver a intentar',
-        });
+        console.log('error en login');
+        console.log(error.error.error);
+
+        if (error.error.errorCod == 2){
+
+          // aqui el email del usuario no ha sido validado
+          Swal.fire({
+            title: 'Ups, Parece que tu email no ha sido validado',
+            text: '¿Quieres que te lo volvamos a enviar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Envíamelo`,
+            cancelButtonText: `Volver`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+              // aquí hay que hacer la llamada al servicio para reenviar el email
+
+
+              Swal.fire('¡Enviado!',
+                        'Ya hemos enviado otro email a su correo. <br> Por favor, valide su cuenta en inténtelo de nuevo.',
+                        'success');
+            }
+          });
+
+        }
+        else{
+          Swal.fire({
+            title: '¡Error!',
+            text: error.error.msg,
+            icon: 'error',
+            confirmButtonText: 'Volver a intentar',
+          });
+        }
+
+
 
       });
 

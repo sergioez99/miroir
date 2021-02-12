@@ -20,7 +20,11 @@ const ClienteSchema = Schema({
     },
     activo: {
         type: Boolean,
-        default: true,
+        default: false,
+    },
+    validado: {
+        type: Boolean,
+        default: false,
     },
 
     nombre: {

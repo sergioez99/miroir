@@ -75,6 +75,7 @@ export class AuthService {
 
         resolve(true);
 
+
       }, (err) => {
         this.setIsLogged(false);
         console.warn ('error respuesta api: ', err);
