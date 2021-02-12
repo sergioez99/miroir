@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
+const fs = require('fs');
 
 const verificarEmail = async(req, res = response) => {
     try {
@@ -111,13 +112,29 @@ const reenviarToken = async(req, res = response) => {
                 rejectUnauthorized: false
             }
         });
+
+        //var file = new File('../assets/templates/email.html');
+        var file;
+        fs.readFile('assets/templates/email.html', 'utf8', function(err,data){
+            if(err) console.log(err)
+            file = data;
+        })
+
+        var link = 'https://miroir.ovh/verificado/'+verificationToken;
+        var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
+        '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?<h3>' +
+        '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
+        '<p><a href="'+link+'" class="btn btn-primary">Verificarme</a></p>' +
+        '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:'+link+'<h4>';
+        file.replace('KKMENSAJEPERSONALIZADOKK', mensaje);
+        
+        console.log(file);
+
         var mailOptions = {
             from: 'insight.abp@gmail.com',
             to: email,
             subject: 'Verificación de tu cuenta en Miroir',
-            html: {
-                path: 'controllers/interfazemail/email.html'
-            }
+            html: file
         };
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
