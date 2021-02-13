@@ -1,26 +1,31 @@
-.mir-register-button {
-    display: inline;
-    float: right;
-}
-
-.mir-register-box {
+.mir-caja_formulario {
     max-width: 30em;
     margin: auto;
+    padding: 10vh 1vh 5vh 1vh;
 }
 
-.mir-box-buttons {
-    padding-top: 1em;
-    ;
+.mir-caja_explicacion_usuario {
+    padding: 0 0 5vh 0;
 }
 
-.mir-box-link {
-    text-align: right;
-}
-
-.mir-title {
+.mir-caja_toggle {
+    width: 100%;
+    background-color: rgb(43, 43, 43);
     text-align: center;
 }
 
-.mir-block {
-    display: block;
+.mir-toggle {
+    width: 50%;
+}
+
+.mir-button_toggle {
+    min-width: 50%;
+    background-color: #b388ff;
+    border-color: #b388ff;
+    color: whitesmoke;
+}
+
+.mir-button_toggle:hover {
+    background-color: #fb9b02;
+    border-color: #fb9b02;
 }

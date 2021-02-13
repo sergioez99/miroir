@@ -1,16 +1,50 @@
-<!--<p>navbar works!</p>
+<!--
 <nav>
-    <li><img src="assets/Miroir M.png" alt="logo miroir" height="60"></li>
-    <ul>
+    <mat-toolbar color="primary">
+        <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+        <span>My App</span>
+        <span class="example-spacer"></span>
+        <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+        <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>share</mat-icon>
+    </button>
+    </mat-toolbar>
+</nav>
 
-        <li><a href="/home">Inicio</a></li>
-        <li><a href="/login">Iniciar sesión</a></li>
-        <li><a href="/registrarse">Registro</a></li>
-        <li><a href="/probador01">Demo probador</a></li>
-    </ul>
+<nav class="mir-background">
+    <mat-toolbar class="mir-background">
+        <a routerLink="/home"><img src="assets/Miroir banner.png" alt="Miroir" class="mir-logo"></a>
+        <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar>
+</nav>
 
-</nav>-->
+ <mat-toolbar color="primary">
+    <mat-toolbar>
+        <button mat-icon-button>
+      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+    </button>
+        <h1>SimpleCRM</h1>
+        <span class="menu-spacer"></span>
+        <div>
+            <a *ngIf='this.getIsLoged()==false' mat-button [routerLink]="'/login'"> Iniciar Sesión </a>
+            <a *ngIf='this.getIsLoged()==false' mat-button [routerLink]="'/registro'"> Registrarse </a>
+            <a mat-button [routerLink]="'/planes'"> Planes </a>
+            <a mat-button [routerLink]="'/create-activity'"> Create Activity </a>
 
+        </div>
+    </mat-toolbar>
+
+</mat-toolbar> -->
+
+
+
+<!--  NAVBAR INICIAL DE PAULA Y SERGIO -->
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
         <a class="navbar-brand" routerLink="/home"><img src="assets/Miroir banner.png" alt="logo miroir" width="90"></a>

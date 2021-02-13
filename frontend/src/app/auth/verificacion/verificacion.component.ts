@@ -24,7 +24,7 @@ export class VerificacionComponent implements OnInit {
               }
 
   ngOnInit(): void {
-    
+
   }
 
   reenviarCorreo(){
@@ -34,6 +34,12 @@ export class VerificacionComponent implements OnInit {
 
     this.verificacionService.reenviarEmail(this.email).then((response) =>{
 
+      Swal.fire({
+        title: 'Se ha reenviado el email con exito',
+        text: 'Por favor, revise su bandeja de entrada y verifique el email antes de iniciar sesión.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
 
 
     }).catch((error) =>{

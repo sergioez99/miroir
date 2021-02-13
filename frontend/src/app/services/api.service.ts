@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { MedidasForm } from '../interfaces/usuario-medidas-form.interface';
 import { UsuarioForm } from '../interfaces/usuario-form.interface';
+import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,12 @@ export class ApiService {
     // console.log('registro desde registerCall', formData);
 
     return this.http.post(this.url+'/api/usuarios', formData);
+  }
+
+  registerClientCall( formData: RegisterClientForm) {
+    console.log('registro desde registerClienteCall', formData);
+
+    return this.http.post(this.url+'/api/clientes', formData);
   }
 
   loginCall( formData: LoginForm) {

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Token = require('../models/validaciontoken.model');
 const Usuario = require('../models/usuarios.model');
+const Cliente = require('../models/clientes.model');
 
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
@@ -11,6 +12,7 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
+const clientesModel = require('../models/clientes.model');
 
 const verificarEmail = async(req, res = response) => {
     try {
@@ -59,10 +61,24 @@ const verificarEmail = async(req, res = response) => {
     }
 }
 
+
 const reenviarToken = async(req, res = response) => {
     try {
+
+        //var file = new File('../assets/templates/email.html');
+        var file;
+        fs.readFile('assets/templates/email.html', 'utf8', function(err, data) {
+            if (err) console.log(err)
+            file = data;
+        });
+
+
         const email = req.params.email;
-        const usuario = await Usuario.findOne( {email: req.params.email });
+        let usuario = await Usuario.findOne({ email: email });
+
+        if (!usuario) {
+            usuario = await Cliente.findOne({ email: email })
+        }
 
         if (!usuario) {
             return res.status(400).json({
@@ -75,6 +91,8 @@ const reenviarToken = async(req, res = response) => {
                 msg: 'This user has already been verified.'
             });
         }
+
+
 
         //volvemos a crear el token de verificacion
         const verificationToken = await generarJWT(usuario._id, usuario.rol);
@@ -113,22 +131,17 @@ const reenviarToken = async(req, res = response) => {
             }
         });
 
-        //var file = new File('../assets/templates/email.html');
-        var file;
-        fs.readFile('assets/templates/email.html', 'utf8', function(err,data){
-            if(err) console.log(err)
-            file = data;
-        })
 
-        var link = 'https://miroir.ovh/verificado/'+verificationToken;
-        var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
-        '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?<h3>' +
-        '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
-        '<p><a href="'+link+'" class="btn btn-primary">Verificarme</a></p>' +
-        '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:'+link+'<h4>';
-        file.replace('KKMENSAJEPERSONALIZADOKK', mensaje);
-        
-        console.log(file);
+
+        var link = 'https://miroir.ovh/verificado/' + verificationToken;
+        var mensaje = '<h2>¡Hola,' + usuario.email + '<h2>' +
+            '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?<h3>' +
+            '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
+            '<p><a href="' + link + '" class="btn btn-primary">Verificarme</a></p>' +
+            '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:' + link + '<h4>';
+        file = file.replace('KKMENSAJEPERSONALIZADOKK', mensaje);
+
+        // console.log(file);
 
         var mailOptions = {
             from: 'insight.abp@gmail.com',
@@ -139,6 +152,13 @@ const reenviarToken = async(req, res = response) => {
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
             transporter.close();
+
+
+        });
+
+        res.json({
+            ok: true,
+            msg: 'email reenviado'
         });
 
 
@@ -150,6 +170,8 @@ const reenviarToken = async(req, res = response) => {
         });
     }
 }
+
+
 
 module.exports = {
     verificarEmail,
