@@ -53,12 +53,14 @@ export class RegisterClienteComponent implements OnInit {
 
           Swal.fire({
             title:'Usuario creado correctamente',
+            text: 'Le hemos enviado un email de confirmación. <br> Por favor, revise su bendeja de entrada.',
             icon: 'success',
             showCloseButton: true,
-            confirmButtonText: 'Iniciar Sesión'
+            confirmButtonText: 'Aceptar'
           }).then((result) => {
             // navegacion a login con router
-            this.router.navigateByUrl('/login');
+            localStorage.setItem('email', this.formRegistroCliente.value.email);
+            this.router.navigateByUrl('/verificacion');
           });
 
         }).catch( err =>{

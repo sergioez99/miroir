@@ -117,6 +117,7 @@ export class AuthService {
       this.apiService.registerCall(formData).subscribe(res => {
 
         console.log('Respuesta del servidor: ', res);
+
         resolve(true);
 
       }, (err)=> {
@@ -132,14 +133,23 @@ export class AuthService {
 
     return new Promise ( (resolve, reject) => {
 
+      let form :RegisterClientForm = {
+        email: formData.email,
+        password: formData.password,
+        nombre: formData.nombre,
+        nombreEmpresa: formData.nombreEmpresa,
+        nif: formData.nif,
+        telefono: formData.telefono,
+      };
 
-      this.apiService.registerClientCall(formData).subscribe(res => {
+
+      this.apiService.registerClientCall(form).subscribe(res => {
 
         console.log('Respuesta de backend al intentar crear un cliente: ', res);
         resolve(true);
 
       }, (err) =>{
-        console.log('da error y creo que es por el formulario: ', formData);
+        console.log('da error y creo que es por el formulario: ', form);
         console.warn('error respuesta api: ', err);
         reject(err);
 

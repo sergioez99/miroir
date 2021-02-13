@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-// import { UsuarioService } from '../../services/usuario.service';
+import { VerificacionService } from '../../services/verificacion.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioService } from '../../services/usuario.service';
@@ -22,7 +22,8 @@ export class LoginComponent implements OnInit {
   constructor( private fb: FormBuilder,
                private authService: AuthService,
                private router: Router,
-               private usuarioService :UsuarioService) {  }
+               private usuarioService :UsuarioService,
+               private verificacionService :VerificacionService) {  }
 
   ngOnInit(): void {
     this.formLogin = this.fb.group({
@@ -42,7 +43,6 @@ export class LoginComponent implements OnInit {
 
         // navegacion en función del tipo de usuario
 
-        console.log('pues no redirige bien.. ', this.usuarioService.getRol());
         switch ( this.usuarioService.getRol() ){
 
           case 'ROL_USUARIO':
@@ -59,7 +59,6 @@ export class LoginComponent implements OnInit {
       }).catch((error) =>{
 
         console.log('error en login');
-        console.log(error.error.error);
 
         if (error.error.errorCod == 2){
 
@@ -75,11 +74,26 @@ export class LoginComponent implements OnInit {
             if (result.isConfirmed) {
 
               // aquí hay que hacer la llamada al servicio para reenviar el email
+              this.verificacionService.reenviarEmail(this.formLogin.value.email).then( (response) => {
+
+                Swal.fire('¡Enviado!',
+                          'Ya hemos enviado otro email a su correo. <br> Por favor, valide su cuenta en inténtelo de nuevo.',
+                          'success');
+              }).catch( (error) => {
+
+                console.log( 'error reenviando email: ', error);
+
+                Swal.fire({
+                  title: '¡Error!',
+                  text: 'Parece que ha habido algun error en el reenvio. Inténtelo más tarde.',
+                  icon: 'error',
+                  confirmButtonText: 'Volver',
+                });
+
+              });
 
 
-              Swal.fire('¡Enviado!',
-                        'Ya hemos enviado otro email a su correo. <br> Por favor, valide su cuenta en inténtelo de nuevo.',
-                        'success');
+
             }
           });
 

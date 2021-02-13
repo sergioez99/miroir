@@ -50,6 +50,10 @@ const UsuarioSchema = Schema({
         type: Number,
         default: 50,
     },
+    validado: {
+        type: Boolean,
+        default: false,
+    }
 
 
 }, { collection: 'Usuarios' });

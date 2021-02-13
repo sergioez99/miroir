@@ -4,12 +4,18 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { MaterialModule } from '../material/material.module';
+
 import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.component';
 import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
+// import { ButtonBackComponent } from '../commons/button-back/button-back.component';
+// import { InputEmailComponent } from '../commons/input-email/input-email.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
+import { VerificacionComponent } from './verificacion/verificacion.component';
+import { VerificadoComponent } from './verificado/verificado.component';
 import { RegisterClienteComponent } from './register-cliente/register-cliente.component';
 import { RegisterUsuarioComponent } from './register-usuario/register-usuario.component';
 
@@ -21,11 +27,12 @@ import { RegisterUsuarioComponent } from './register-usuario/register-usuario.co
     LoginComponent,
     RecoveryComponent,
     RegisterComponent,
-    // InputEmailComponent,
-    // ButtonBackComponent,
-    RegistroempresaComponent,
     RegisterClienteComponent,
     RegisterUsuarioComponent,
+    // InputEmailComponent,
+    // ButtonBackComponent,
+    VerificacionComponent,
+    VerificadoComponent,
 
 
   ],

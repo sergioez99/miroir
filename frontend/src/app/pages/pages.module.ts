@@ -25,7 +25,6 @@ import { UsuarioComponent } from './admin/usuario/usuario.component';
 import { ClienteComponent } from './admin/cliente/cliente.component';
 import { PrendasComponent } from './admin/prendas/prendas.component';
 import { PrendaComponent } from './admin/prenda/prenda.component';
-import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +45,6 @@ import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.
     ClienteComponent,
     PrendasComponent,
     PrendaComponent,
-    ActivarCuentaComponent,
 
 
   ],

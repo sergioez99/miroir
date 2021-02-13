@@ -1,6 +1,4 @@
-import { group } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 
 @Component({
@@ -19,6 +17,8 @@ export class RegisterComponent implements OnInit{
 
 
 }
+
+
 
 
 
