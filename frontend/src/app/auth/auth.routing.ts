@@ -8,19 +8,14 @@ import { RecoveryComponent } from './recovery/recovery.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { VerificacionComponent } from './verificacion/verificacion.component';
+import { VerificadoComponent } from './verificado/verificado.component';
+import { CambiarpasswordComponent } from './cambiarpassword/cambiarpassword.component';
 
 const routes: Routes = [
   {
     path: 'login', component: AuthLayoutComponent,
     children: [
       { path: '', component: LoginComponent },
-      { path: '**', redirectTo: ''}
-    ]
-  },
-  {
-    path: 'recovery', component: AuthLayoutComponent,
-    children: [
-      { path: '', component: RecoveryComponent },
       { path: '**', redirectTo: ''}
     ]
   },
@@ -46,7 +41,19 @@ const routes: Routes = [
   },
   { path: 'verificado', component: AuthLayoutComponent,
     children: [
-      { path: '', component: VerificacionComponent },
+      { path: '', component: VerificadoComponent },
+      { path: '**', redirectTo: ''}
+    ]
+ },
+ { path: 'recuperar', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: RecoveryComponent },
+      { path: '**', redirectTo: ''}
+    ]
+ },
+ { path: 'cambiarpassword', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: CambiarpasswordComponent },
       { path: '**', redirectTo: ''}
     ]
  },

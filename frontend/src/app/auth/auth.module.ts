@@ -16,6 +16,7 @@ import { RegistroempresaComponent } from './registroempresa/registroempresa.comp
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
 import { VerificacionComponent } from './verificacion/verificacion.component';
 import { VerificadoComponent } from './verificado/verificado.component';
+import { CambiarpasswordComponent } from './cambiarpassword/cambiarpassword.component';
 
 
 
@@ -30,6 +31,7 @@ import { VerificadoComponent } from './verificado/verificado.component';
     RegistroempresaComponent,
     VerificacionComponent,
     VerificadoComponent,
+    CambiarpasswordComponent,
 
 
   ],
