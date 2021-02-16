@@ -99,7 +99,7 @@ const crearUsuario = async(req, res) => {
                 file = data;
             });
 
-            let exiteEmail = await Usuario.findOne({ email: email });
+            let existeEmail = await Usuario.findOne({ email: email });
 
             if (!existeEmail) {
                 existeEmail = await Cliente.findOne({ email: email });
