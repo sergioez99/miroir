@@ -139,32 +139,34 @@ const crearUsuario = async(req, res) => {
             );
 
             oauth2Client.setCredentials({
-                refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
+                //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
+                refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
             });
             const accessToken = oauth2Client.getAccessToken()
 
             // guardamos el token de verificacion del email
             await token.save();
-            // Enviamos el email al usuario
-            var transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true,
-                auth: {
-                    type: 'OAuth2',
-                    user: 'insight.abp@gmail.com',
-                    password: 'MiroirInsightABP',
-                    clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                    clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                    refreshToken: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0",
-                    accessToken: accessToken
-                },
-                tls: {
-                    rejectUnauthorized: false
-                }
-            });
+                // Enviamos el email al usuario
+                var transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        type: 'OAuth2',
+                        user: 'insight.abp@gmail.com',
+                        password: 'MiroirInsightABP',
+                        clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
+                        clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
+                        refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                        accessToken: accessToken
+                    },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
+                });
 
-            var link = 'https://miroir.ovh/verificado/' + verificationToken;
+            //var link = 'https://miroir.ovh/verificado/' + verificationToken;
+            var link = 'http://localhost:4200/verificado/'+verificationToken;
             var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
                 '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
                 '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +

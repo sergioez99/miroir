@@ -5,17 +5,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 // import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
 import { RecuperacionService } from '../../services/recuperacion.service';
+import {CustomValidators} from '../../services/auth.password.repeat.service';
 
 @Component({
-  selector: 'app-recovery',
-  templateUrl: './recovery.component.html',
-  styleUrls: ['./recovery.component.css']
+  selector: 'app-cambiarpassword',
+  templateUrl: './cambiarpassword.component.html',
+  styleUrls: ['./cambiarpassword.component.css']
 })
-export class RecoveryComponent implements OnInit {
-
+export class CambiarpasswordComponent implements OnInit {
 
   public formRecovery: FormGroup | null = null;
   public formSubmit = false;
+
+  public hide = true;
+  public hideR = true;
 
   constructor( private fb: FormBuilder,
                private router: Router,
@@ -24,23 +27,31 @@ export class RecoveryComponent implements OnInit {
 
   ngOnInit(): void {
     this.formRecovery = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      passwordRepeat: ['', [Validators.required]]
     });
+
+    this.formRecovery.get('passwordRepeat').setValidators(
+      CustomValidators.equals(this.formRecovery.get('password'))
+    );
   }
 
-  recovery() {
-    localStorage.setItem(this.formRecovery.value.email, 'email')
+  cambiarpassword() {
 
-    this.recuperacionService.recuperarPassword(this.formRecovery.value.email.toString()).then((response) =>{
+    //this.formRecovery.controls.['email'].setValue(localStorage.getItem('email'));
+    this.formRecovery.patchValue({ email : localStorage.getItem('email')});
+    console.log(localStorage.getItem('email'));
+
+    this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
 
       Swal.fire({
-        title:'Email enviado correctamente',
+        title:'Contraseña cambiada correctamente',
         icon: 'success',
         showCloseButton: true,
         confirmButtonText: 'Aceptar'
       }).then((result) => {
-          //Aquí se podría poner una página de "reenviar email de recuperacion"
-          //this.router.navigateByUrl('/verificacion');
+          this.router.navigateByUrl('/login');
       });
 
     }).catch((error) =>{
@@ -52,5 +63,4 @@ export class RecoveryComponent implements OnInit {
       });
     });
   }
-
 }
