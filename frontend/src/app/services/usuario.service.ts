@@ -170,4 +170,45 @@ export class UsuarioService{
     return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
   }
 
+  actualizarMedidasUsuario(formData) :Promise<any>{
+    
+    return new Promise ( (resolve, reject) => {
+
+
+      console.log('estamos modificando las medidas del usuario: ', formData);
+ 
+      let form :UsuarioForm = {
+        email: this.usuario['email'],
+        id: this.usuario['uid'],
+        altura: formData.altura,
+        peso: formData.peso,
+        pecho: formData.pecho,
+        cintura: formData.cintura,
+        cadera: formData.cadera
+      };
+ 
+ 
+      console.log(form);
+ 
+      this.apiService.actualizarMedidasCall(this.token, this.id, form).subscribe( (res) => {
+ 
+         // medidas modificadas correctamente
+         console.log(res);
+ 
+         this.usuario = res['usuario'];
+         resolve(true);
+ 
+       }, (err) =>{
+ 
+         console.error(err);
+         reject(err);
+ 
+       });
+ 
+ 
+     });
+ 
+ 
+ 
+  }
 }

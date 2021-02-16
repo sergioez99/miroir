@@ -1,1 +1,58 @@
-<p>usuario works!</p>
+<section>
+    <h2> Probador virtual</h2>
+    <article>
+        <header>
+            <p>probador virtual con el avatar del usuario</p>
+        </header>
+        <p> aqui se visualizará el probador con el avatar para dar a los usuarios una vista previa del avatar con sus medidas.</p>
+    </article>
+
+    <!-- componente probador -->
+    <app-probador01></app-probador01>
+
+</section>
+
+<section>
+    <h2> Medidas del usuario </h2>
+    <article>
+        <header>
+            <p> Pruébate tu talla </p>
+        </header>
+
+        <div>
+
+            <form [formGroup]="formMedidas" (ngSubmit)="actualizarUsuario();">
+                <p> poner los datos para poder modificarlos directamente</p>
+
+                <div>
+                    <mat-slider thumbLabel formControlName="peso" min="10" max="200" step="1" [(ngModel)]=this.peso></mat-slider>
+                    <mat-label>Peso: {{this.peso}} kg</mat-label>
+                </div>
+
+                <div>
+                    <mat-slider thumbLabel formControlName="altura" min="100" max="200" step="1" [(ngModel)]=this.altura></mat-slider>
+                    <mat-label>Altura: {{this.altura}} cm</mat-label>
+                </div>
+
+                <div>
+                    <mat-slider thumbLabel formControlName="pecho" min="10" max="200" step="1" [(ngModel)]=this.pecho></mat-slider>
+                    <mat-label>Pecho: {{this.pecho}} cm</mat-label>
+                </div>
+
+                <div>
+                    <mat-slider thumbLabel formControlName="cintura" min="10" max="200" step="1" [(ngModel)]=this.cintura></mat-slider>
+                    <mat-label>Cintura: {{this.cintura}} cm</mat-label>
+                </div>
+
+                <div>
+                    <mat-slider thumbLabel formControlName="cadera" min="10" max="200" step="1" [(ngModel)]=this.cadera></mat-slider>
+                    <mat-label>Cadera: {{this.cadera}} cm</mat-label>
+                </div>
+
+                <button type="submit" mat-raised-button color="accent">Actualizar</button>
+            </form>
+
+        </div>
+
+    </article>
+</section>
