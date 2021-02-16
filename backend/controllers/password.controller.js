@@ -42,7 +42,7 @@ const recuperarPassword = async(req, res = response) => {
         );
 
         oauth2Client.setCredentials({
-            refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
+            refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
         });
         const accessToken = oauth2Client.getAccessToken()
 
@@ -57,7 +57,7 @@ const recuperarPassword = async(req, res = response) => {
                 password: 'MiroirInsightABP',
                 clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
                 clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                refreshToken: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0",
+                refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
                 accessToken: accessToken
             },
             tls: {
@@ -67,7 +67,7 @@ const recuperarPassword = async(req, res = response) => {
 
         //Mensaje personalizado + links
         //var link = 'https://miroir.ovh/recuperar/cambiarpassword';
-        var link = 'localhost:4200/cambiarpassword';
+        var link = 'http://localhost:4200/cambiarpassword';
         var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
         '<h3>¿Has olvidado tu contraseña?<h3>' +
         '<h4>Si es así, por favor, pulsa en el siguiente botón para obtener una contraseña nueva</h4>' +
@@ -87,6 +87,12 @@ const recuperarPassword = async(req, res = response) => {
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
             transporter.close();
+        });
+
+        res.json({
+            ok: true,
+            msg: 'enviado email',
+            usuario
         });
 
 
@@ -119,6 +125,11 @@ const cambiarPassword = async(req, res = response) => {
         usuario.password = cpassword;
         await usuario.save();
 
+        res.json({
+            ok: true,
+            msg: 'contraseña cambiada',
+            usuario
+        });
 
     } catch (error) {
         console.log(error);
