@@ -6,6 +6,12 @@ const Cliente = require('../models/clientes.model');
 const Usuario = require('../models/usuarios.model');
 const Token = require('../models/validaciontoken.model');
 
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
@@ -18,7 +24,14 @@ const obtenerClientes = async(req, res = response) => {
 
     //encontrar un unico Cliente
     const id = req.query.id;
+    await sleep(100);
 
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+        //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
@@ -37,16 +50,25 @@ const obtenerClientes = async(req, res = response) => {
 
             // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
             [clientes, total] = await Promise.all([
-                cliente.findById(id),
-                cliente.countDocuments()
+                Cliente.findById(id),
+                Cliente.countDocuments()
             ]);
             // busqueda de varios Clientes
         } else {
-            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
-            [clientes, total] = await Promise.all([
-                cliente.find({}).skip(desde).limit(registropp),
-                cliente.countDocuments()
-            ]);
+
+            if (texto) {
+                [clientes, total] = await Promise.all([
+                    Cliente.find({ $or: [{ email: textoBusqueda }, { nombre: textoBusqueda }, { nombreEmpresa: textoBusqueda }] }).skip(desde).limit(registropp),
+                    Cliente.countDocuments({ $or: [{ email: textoBusqueda }, { nombre: textoBusqueda }, { nombreEmpresa: textoBusqueda }] })
+                ]);
+            } else {
+                // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                [clientes, total] = await Promise.all([
+                    Cliente.find({}).skip(desde).limit(registropp),
+                    Cliente.countDocuments()
+
+                ]);
+            }
         }
 
         res.json({
@@ -254,7 +276,7 @@ const borrarCliente = async(req, res = response) => {
     try {
 
         // comprobamos que el Cliente existe
-        const existeCliente = await cliente.findById(uid);
+        const existeCliente = await Cliente.findById(uid);
 
         if (!existeCliente) {
             return res.status(400).json({
@@ -264,7 +286,7 @@ const borrarCliente = async(req, res = response) => {
         }
 
         // lo eliminamos y devolvemos el Cliente recien eliminado 
-        const resultado = await cliente.findByIdAndDelete(uid);
+        const resultado = await Cliente.findByIdAndDelete(uid);
 
         res.json({
             ok: true,
