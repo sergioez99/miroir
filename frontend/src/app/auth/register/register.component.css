@@ -1,7 +1,57 @@
 .mir-caja_formulario {
-    max-width: 30em;
     margin: auto;
-    padding: 10vh 1vh 5vh 1vh;
+
+    height: 100vh;
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #222;
+    font-weight: 400;
+    font-family: 'Montserrat';
+    background-image: url("../../../assets/fondo-registro.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-position: center center;
+    padding: 115px 0; 
+}
+
+.mir-caja_formulario{
+    padding: 25px;
+}
+
+
+.mir-caja_explicacion_usuario > p{
+    text-align: center;
+}
+
+h1 {
+    line-height: 1.66;
+    padding-top: 30px;
+    font-weight: 900;
+    color: #222;
+    font-family: 'Montserrat';
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px; 
+}
+
+.mir-caja_explicacion_usuario {
+    margin: auto;
+    margin-bottom: 30px;
+
+    background: #fff;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    padding: 50px 85px; 
+    width: 50vh;
 }
 
 .mir-caja_explicacion_usuario {
