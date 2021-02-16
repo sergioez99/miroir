@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
 import { UsuarioForm } from '../interfaces/usuario-form.interface';
 import { ApiService } from './api.service';
 
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { tap, map, catchError } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 
 @Injectable({
@@ -14,6 +20,7 @@ export class UsuarioService{
   private rol :string;
   private token :string;
   private id :string;
+  private email :string;
 
   private usuario;
 
@@ -21,10 +28,7 @@ export class UsuarioService{
   private rol_cliente = 'ROL_CLIENTE';
   private rol_usuario = 'ROL_USUARIO';
 
-  constructor( private apiService :ApiService) {
-
-
-  }
+  constructor( private apiService :ApiService, private http: HttpClient,private router: Router) { }
 
   login(guardar :boolean) {
 
@@ -147,6 +151,30 @@ export class UsuarioService{
   }
   getCadera() {
     return this.usuario['cadera'];
+  }
+
+  get cabeceras() {
+    return {
+      headers: {
+        'x-token': this.token
+      }};
+  }
+
+  cargarUsuarios( desde: number, textoBusqueda?: string ): Observable<object> {
+    if (!desde) { desde = 0;}
+    if (!textoBusqueda) {textoBusqueda = '';}
+    return this.http.get(`${environment.base_url}/usuarios/?desde=${desde}&texto=${textoBusqueda}` , this.cabeceras);
+  }
+
+  borrarUsuario( uid: string) {
+    if (!uid || uid === null) {uid = 'a'; }
+    return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
+  }
+  getEmail(){
+    return this.email;
+  }
+  setEmail(nuevo :string) {
+    this.email = nuevo;
   }
 
 }

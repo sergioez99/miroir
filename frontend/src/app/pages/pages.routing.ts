@@ -46,9 +46,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'perfil', component: PerfilLayoutComponent,
-    canActivate: [ PerfilGuard ],
-    canActivateChild: [ PerfilGuard ],
+    path: 'perfil', component: PerfilLayoutComponent, canActivate: [ PerfilGuard ], canActivateChild: [ PerfilGuard ],
     children: [
       { path: '', component: NotAuthComponent },
       { path:'cliente', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],

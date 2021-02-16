@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Token = require('../models/validaciontoken.model');
 const Usuario = require('../models/usuarios.model');
+const Cliente = require('../models/clientes.model');
 
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
@@ -11,6 +12,7 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
+const clientesModel = require('../models/clientes.model');
 
 const verificarEmail = async(req, res = response) => {
     try {
@@ -59,6 +61,7 @@ const verificarEmail = async(req, res = response) => {
     }
 }
 
+
 const reenviarToken = async(req, res = response) => {
     try {
         //var file = new File('../assets/templates/email.html');
@@ -68,7 +71,11 @@ const reenviarToken = async(req, res = response) => {
             file = data;
         })
         const email = req.params.email;
-        const usuario = await Usuario.findOne( {email: req.params.email });
+        let usuario = await Usuario.findOne({ email: email });
+
+        if (!usuario) {
+            usuario = await Cliente.findOne({ email: email })
+        }
 
         if (!usuario) {
             return res.status(400).json({
@@ -81,6 +88,8 @@ const reenviarToken = async(req, res = response) => {
                 msg: 'This user has already been verified.'
             });
         }
+
+
 
         //volvemos a crear el token de verificacion
         const verificationToken = await generarJWT(usuario._id, usuario.rol);
@@ -138,6 +147,13 @@ const reenviarToken = async(req, res = response) => {
         transporter.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
             transporter.close();
+
+
+        });
+
+        res.json({
+            ok: true,
+            msg: 'email reenviado'
         });
 
 
@@ -149,6 +165,8 @@ const reenviarToken = async(req, res = response) => {
         });
     }
 }
+
+
 
 module.exports = {
     verificarEmail,

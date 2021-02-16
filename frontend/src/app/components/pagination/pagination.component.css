@@ -1,0 +1,52 @@
+div.card-body{
+    border: 1px solid #e6d2ff;
+    background-color: #FCFCFC;
+    border-radius: 10px;
+}
+
+.page-link{
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.page-item{
+    color: #292929;
+    
+}
+
+.page-item.active .page-link{
+    background-color: #b388ff;
+    border: 1px solid #e6d2ff;
+    color:  white;
+}
+
+.page-item:hover .page-link{
+    background-color: #f4ebff;
+    color: #292929;
+}
+
+.page-item.disabled .page-link{
+    background-color:#F9F9F9;
+    color: #D8D8D8
+}
+
+div.ng-star-inserted{
+    font-size: 15px;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+
+span.page-link{
+    color: #292929;
+    margin: 0;
+    
+}
+
+span.material-icons{
+    vertical-align:middle;
+}
+
+.col-sm-4{
+    padding-left: 0;
+}
+

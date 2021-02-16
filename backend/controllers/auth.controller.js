@@ -2,8 +2,11 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuarios.model');
+const Cliente = require('../models/clientes.model');
+
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
+
 
 const login = async(req, res = response) => {
 
@@ -12,11 +15,17 @@ const login = async(req, res = response) => {
     try {
 
         // comprobar que existe el usuario
-        const usuarioDB = await Usuario.findOne({ email });
+        let usuarioDB = await Usuario.findOne({ email });
+
+        // probar en la base de datos de clientes
+        if (!usuarioDB) {
+            usuarioDB = await Cliente.findOne({ email });
+        }
 
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
+                error: 1,
                 msg: 'Usuario o contraseña incorrectos',
                 token: ''
             });
@@ -28,13 +37,27 @@ const login = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
+                error: 1,
                 msg: 'Usuario o contraseña incorrectos',
                 token: ''
             });
         }
         // usuario y contraseña correctos
 
-        const { _id, rol } = usuarioDB;
+        const { _id, rol, validado } = usuarioDB;
+
+        console.log('validado: ', validado);
+
+        // comprobar que el email ha sido validado
+        if (!validado) {
+            return res.status(400).json({
+                ok: false,
+                errorCod: 2,
+                msg: 'El email no ha sido validado',
+                token: ''
+            });
+        }
+
         // creamos el token
         const token = await generarJWT(usuarioDB._id, usuarioDB.rol);
 
@@ -51,11 +74,13 @@ const login = async(req, res = response) => {
         console.log(error);
         return res.status(400).json({
             ok: false,
+            error: 0,
             msg: 'Error en login',
             token: ''
         });
     }
 }
+
 
 const token = async(req, res = response) => {
 
@@ -65,8 +90,16 @@ const token = async(req, res = response) => {
         // verify no consigue la informacion tanto si el token no es válido, como si está caducado
         const { uid, rol, ...object } = jwt.verify(token, process.env.JWTSECRET);
 
+        let usuarioDB;
+
+        if (rol == 'ROL_CLIENTE') {
+            usuarioDB = await Cliente.findById(uid);
+        } else if (rol == "ROL_USUARIO" || rol == 'ROL_ADMIN') {
+            usuarioDB = await Usuario.findById(uid);
+        }
+
+
         // comprobacion de existencia de usuario
-        const usuarioDB = await Usuario.findById(uid);
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
