@@ -39,7 +39,7 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
-  { path: 'verificado', component: AuthLayoutComponent,
+  { path: 'verificado/:token', component: AuthLayoutComponent,
     children: [
       { path: '', component: VerificadoComponent },
       { path: '**', redirectTo: ''}

@@ -25,7 +25,7 @@ export class ApiService {
 
   verificationCall( token: string){
 
-    return this.http.get(this.url+'/api/verificacion/verificar'+token );
+    return this.http.get(this.url+'/api/verificacion/verificar/'+token );
   }
 
   reenviarCall(email: string){
