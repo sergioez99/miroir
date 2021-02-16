@@ -1,16 +1,18 @@
+<div class="main">
 <article class="mir-login-box">
+    <div class="signup-content">
     <h1 class="mir-title"> Inicia Sesión </h1>
     <form class="mir-login-form" [formGroup]="formLogin" (ngSubmit)="login();">
 
 
-        <div class="mir-box-link">
-            <a routerLink="/registrarse">¿Aún no tienes cuenta?</a>
+        <div class="mir-box-link"> ¿Aún no tienes cuenta?
+            <a class="loginhere-link" routerLink="/registrarse">Regístrate</a>
         </div>
 
         <!-- INPUT: EMAIL -->
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Email</mat-label>
-            <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+            <input type="email" matInput formControlName="email" class="form-input" placeholder="ejemplo@email.com">
             <button mat-icon-button matSuffix type="button">
                       <mat-icon>alternate_email</mat-icon>
                     </button>
@@ -21,7 +23,7 @@
                 Por favor, introduce un email <strong>válido</strong>
             </mat-error>
             <mat-error *ngIf="formLogin.get('email').hasError('required');">
-                Email es <strong>necesario</strong>
+                Email  <strong>necesario</strong>
             </mat-error>
 
         </mat-form-field>
@@ -45,18 +47,21 @@
 
         <mat-checkbox matInput formControlName="remember"> Recuérdame </mat-checkbox>
 
+        
+
+
+        <div class="mir-box-buttons">
+            <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Login</button>
+            <!--<app-button-back ></app-button-back>-->
+        </div>
+
         <div class="mir-box-link">
             <a routerLink="/recovery">Recuperar contraseña</a>
         </div>
 
 
-        <div class="mir-box-buttons">
-            <app-button-back></app-button-back>
-            <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Login</button>
-        </div>
-
-
     </form>
 
-
+</div>
 </article>
+</div>

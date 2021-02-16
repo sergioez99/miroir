@@ -6,7 +6,7 @@
                 <div class="col">
                     <div class="row justify-content-end">
                         <div class="float-right">
-                            <button class="btn btn-primary nuevo-usu" routerLink="/admin/usuarios/usuario/nuevo">Nuevo</button>
+                            <button class="btn btn-primary nuevo-usu" routerLink="/admin/usuarios/usuario/nuevo"><span class="material-icons">person_add</span></button>
                         </div>
                     </div>
                 </div>
@@ -14,7 +14,7 @@
                     <div class="row justify-content-between">
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input #txtBuscar type="text" class="form-control " (keyup)="cargarUsuarios(txtBuscar.value)" id="fname" placeholder="Buscar">
+                                <input #txtBuscar type="text" class="form-control" (keyup)="cargarUsuarios(txtBuscar.value)" id="fname" placeholder="Buscar">
                                 <div class="input-group-append">
                                     <span class="input-group-text micursor" (click)="txtBuscar.value ='';cargarUsuarios(txtBuscar.value)"><span class="material-icons">clear</span></span>
                                 </div>
