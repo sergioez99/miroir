@@ -17,17 +17,17 @@ export class LoginGuard implements CanActivate {
 
 
       // comprobar si el usuario ha iniciado o no sesion...
-      console.log('guard, ¿estás logueado?');
+      // console.log('guard, ¿estás logueado?');
 
       return new Promise<boolean> ( (resolve, reject) => {
         this.authService.validarToken().then( (res)=> {
 
-          console.log('estoy logueado');
+          // console.log('estoy logueado');
           resolve(true);
 
         }).catch( (error) => {
 
-          console.log('token no valido');
+          // console.log('token no valido');
           // aqui el token no es correcto o ha caducado o lo que sea
           this.router.navigateByUrl('/login');
           reject(false);

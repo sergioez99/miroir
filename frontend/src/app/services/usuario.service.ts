@@ -20,6 +20,7 @@ export class UsuarioService{
   private rol :string;
   private token :string;
   private id :string;
+  private email :string;
 
   private usuario;
 
@@ -168,6 +169,12 @@ export class UsuarioService{
   borrarUsuario( uid: string) {
     if (!uid || uid === null) {uid = 'a'; }
     return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
+  }
+  getEmail(){
+    return this.email;
+  }
+  setEmail(nuevo :string) {
+    this.email = nuevo;
   }
 
 }

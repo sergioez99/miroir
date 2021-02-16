@@ -27,8 +27,9 @@ req.query
 */
 
 app.use('/api/usuarios', require('./routes/usuarios.routes'));
-// app.use('/api/clientes', require('./routes/clientes.routes'));
+app.use('/api/clientes', require('./routes/clientes.routes'));
 app.use('/api/login', require('./routes/auth.routes'));
+app.use('/api/verificacion', require('./routes/verificacion.routes'));
 
 /*
 app.use('/api/usuarios', require('./routes/usuarios.routes'));

@@ -14,6 +14,10 @@ import { RegisterComponent } from './register/register.component';
 // import { InputEmailComponent } from '../commons/input-email/input-email.component';
 import { RegistroempresaComponent } from './registroempresa/registroempresa.component';
 import { ElementosComunesModule } from '../commons/elementos-comunes.module';
+import { VerificacionComponent } from './verificacion/verificacion.component';
+import { VerificadoComponent } from './verificado/verificado.component';
+import { RegisterClienteComponent } from './register-cliente/register-cliente.component';
+import { RegisterUsuarioComponent } from './register-usuario/register-usuario.component';
 
 
 
@@ -23,9 +27,12 @@ import { ElementosComunesModule } from '../commons/elementos-comunes.module';
     LoginComponent,
     RecoveryComponent,
     RegisterComponent,
+    RegisterClienteComponent,
+    RegisterUsuarioComponent,
     // InputEmailComponent,
     // ButtonBackComponent,
-    RegistroempresaComponent,
+    VerificacionComponent,
+    VerificadoComponent,
 
 
   ],

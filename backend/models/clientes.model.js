@@ -20,7 +20,11 @@ const ClienteSchema = Schema({
     },
     activo: {
         type: Boolean,
-        default: true,
+        default: false,
+    },
+    validado: {
+        type: Boolean,
+        default: false,
     },
 
     nombre: {
@@ -31,15 +35,19 @@ const ClienteSchema = Schema({
         type: String,
         required: true,
     },
-    cif: {
+    nif: {
         type: String,
         required: true,
-        unique: true,
     },
     telefono: {
         type: Number,
         required: true,
-    }
+    },
+    rol: {
+        type: String,
+        required: true,
+        default: 'ROL_CLIENTE'
+    },
 
 
 

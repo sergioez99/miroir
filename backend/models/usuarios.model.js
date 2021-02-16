@@ -26,6 +26,10 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: true,
     },
+    validado: {
+        type: Boolean,
+        default: false,
+    },
     peso: {
         type: Number,
         default: 70,
@@ -46,6 +50,10 @@ const UsuarioSchema = Schema({
         type: Number,
         default: 50,
     },
+    validado: {
+        type: Boolean,
+        default: false,
+    }
 
 
 }, { collection: 'Usuarios' });

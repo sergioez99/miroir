@@ -1,6 +1,6 @@
 export interface RegisterForm {
   email: string;
   password: string;
-  passwordRepeat: string,
+  passwordRepeat: string;
 
 }
