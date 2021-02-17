@@ -1,12 +1,12 @@
 <div class="mir-caja_toggle">
     <mat-button-toggle-group class="mir-toggle" #group="matButtonToggleGroup" [(ngModel)]='formulario' onChange="cambiar" aria-label="Formulario de usuario o cliente">
-
+        
         <mat-button-toggle class="mir-button_toggle" value="0" aria-label="Formulario Usuario">
-            <mat-label>Usuario</mat-label>
+            <mat-label class="letras">Usuario</mat-label>
         </mat-button-toggle>
 
         <mat-button-toggle class="mir-button_toggle" value="1" aria-label="Formulario Cliente">
-            <span>Cliente</span>
+            <span class="letras">Cliente</span>
         </mat-button-toggle>
 
     </mat-button-toggle-group>
