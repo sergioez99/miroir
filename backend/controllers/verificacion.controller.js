@@ -28,8 +28,12 @@ const verificarEmail = async(req, res = response) => {
         }
         //y su usuario asociado
         const { uid, rol, ...object } = jwt.verify(token.token, process.env.JWTSECRET);
-        const usuario = await Usuario.findById(uid);
+        var usuario = await Usuario.findById(uid);
         // const usuario = await Usuario.findOne({ _id: token._userId, email: req.body.email });
+
+        if (!usuario) {
+            usuario = await Cliente.findById(uid);
+        }
 
         if (!usuario) {
             return res.status(400).json({
@@ -129,7 +133,8 @@ const reenviarToken = async(req, res = response) => {
         });
 
 
-        var link = 'https://miroir.ovh/verificado/'+verificationToken;
+        //var link = 'https://miroir.ovh/verificado/'+verificationToken;
+        var link = 'http://localhost:4200/verificado/'+verificationToken;
         var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
         '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?<h3>' +
         '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +

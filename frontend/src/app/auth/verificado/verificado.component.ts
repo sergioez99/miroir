@@ -22,13 +22,23 @@ export class VerificadoComponent implements OnInit {
     this.verificarToken();
   }
 
-  //Esto va en la otra web
   verificarToken() {
     this.token = this.route.snapshot.params['token'];
 
+    console.log(this.token);
+
     this.verificacionService.verificarEmail(this.token).then((response) => {
 
-      this.router.navigateByUrl('/login');
+      Swal.fire({
+        title:'Tu cuenta se ha verificado correctamente',
+        icon: 'success',
+        showCloseButton: true,
+        confirmButtonText: 'Aceptar'
+      }).then((result) => {
+        this.router.navigateByUrl('/login');
+      });
+
+      
 
     }).catch((error) =>{
 
