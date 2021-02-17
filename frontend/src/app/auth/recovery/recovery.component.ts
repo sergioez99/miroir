@@ -29,7 +29,8 @@ export class RecoveryComponent implements OnInit {
   }
 
   recovery() {
-    localStorage.setItem(this.formRecovery.value.email, 'email')
+    //localStorage.setItem(this.formRecovery.value.email, 'email')
+    localStorage.setItem('email', this.formRecovery.value.email);
 
     this.recuperacionService.recuperarPassword(this.formRecovery.value.email.toString()).then((response) =>{
 
