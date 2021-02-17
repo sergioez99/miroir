@@ -58,13 +58,17 @@
         <!-- ------------ -->
 
 
-
-        <div class="mir-box-link">
-            <a routerLink="/login">¿Ya tienes cuenta?</a>
-        </div>
+        <mat-checkbox class="example-margin mir-box-link" formControlName="terminos" [(ngModel)]="terminos">
+            Acepte nuestros
+            <a routerLink="#" class="loginhere-link">Términos y condiciones</a> para poder continuar
+        </mat-checkbox>
+        
         <div class="mir-box-buttons">
-            <app-button-back></app-button-back>
-            <button class="mir-register-button" mat-raised-button color="accent" type="submit">Registrarse</button>
+            <!--<app-button-back></app-button-back>-->
+            <button class="mir-register-button" mat-raised-button color="accent" [disabled]="!terminos" type="submit">Registrarse</button>
+        </div>
+        <div class="mir-box-link"> ¿Ya tienes cuenta?
+            <a routerLink="/login" class="loginhere-link">Inicia sesión</a>
         </div>
     </form>
 
