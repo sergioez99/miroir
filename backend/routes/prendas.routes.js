@@ -29,6 +29,8 @@ router.get('/', [
     validarCampos,
 
 ], obtenerPrendas);
+
+
 router.post('/', [
 
     check('identificador', 'El identificador es obligatorio').not().isEmpty(),

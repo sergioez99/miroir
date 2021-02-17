@@ -31,6 +31,7 @@ app.use('/api/clientes', require('./routes/clientes.routes'));
 app.use('/api/login', require('./routes/auth.routes'));
 app.use('/api/verificacion', require('./routes/verificacion.routes'));
 app.use('/api/recuperar', require('./routes/password.routes'));
+app.use('/api/prendas', require('./routes/prendas.routes'));
 
 /*
 app.use('/api/usuarios', require('./routes/usuarios.routes'));

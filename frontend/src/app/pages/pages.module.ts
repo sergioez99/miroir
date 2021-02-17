@@ -60,6 +60,7 @@ import { ProgressbarComponent } from '../components/progressbar/progressbar.comp
     Probador01Component,
     HomeComponent,
 
+
     ReactiveFormsModule,
   ],
   imports: [

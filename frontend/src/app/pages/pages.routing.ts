@@ -45,6 +45,15 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
+  /*
+  {
+    path: 'prendas', component: BaseLayoutComponent,
+    children: [
+      { path: '', component: PrendasComponent },
+      { path: '**', redirectTo: ''}
+    ]
+  },
+  */
   {
     path: 'perfil', component: PerfilLayoutComponent, canActivate: [ PerfilGuard ], canActivateChild: [ PerfilGuard ],
     children: [

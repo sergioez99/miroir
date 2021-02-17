@@ -4,28 +4,37 @@ const bcrypt = require('bcryptjs');
 
 const Prenda = require('../models/prendas.model');
 
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
 
 const obtenerPrendas = async(req, res = response) => {
 
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+        //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
+
     //encontrar una unica prenda
     const id = req.query.id;
-
+    await sleep(100);
 
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
-
-
+    const registropp = Number(process.env.DOCSPERPAGES);
 
     try {
 
         let prendas, total;
         // busqueda de una unica prenda
         if (id) {
-
             // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
             [prendas, total] = await Promise.all([
                 Prenda.findById(id),
@@ -33,24 +42,29 @@ const obtenerPrendas = async(req, res = response) => {
             ]);
             // busqueda de varias prendas
         } else {
-            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
-            [prendas, total] = await Promise.all([
-                Prenda.find({}).skip(desde).limit(registropp),
-                Prenda.countDocuments()
-            ]);
+            if (texto) {
+                [prendas, total] = await Promise.all([
+                    Prenda.find({ $or: [{ nombre: textoBusqueda }, { desc: textoBusqueda }] }).skip(desde).limit(registropp),
+                    Prenda.countDocuments({ $or: [{ nombre: textoBusqueda }, { desc: textoBusqueda }] })
+                ]);
+            } else {
+                // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                [prendas, total] = await Promise.all([
+                    Prenda.find({}).skip(desde).limit(registropp),
+                    Prenda.countDocuments()
+                ]);
+            }
         }
-
         res.json({
             ok: true,
             msg: 'getPrendas',
-            usuarios,
+            prendas,
             page: {
                 desde,
                 registropp,
                 total
             }
         });
-
     } catch (error) {
         console.log(error);
         return res.status(400).json({
@@ -116,7 +130,7 @@ const actualizarPrenda = async(req, res = response) => {
         }
         // aqui ya se ha comprobado el identificador
         object.identificador = identificador;
-        // new: true -> nos devuelve el usuario actualizado
+        // new: true -> nos devuelve la prenda actualizada
         const prenda = await Prenda.findByIdAndUpdate(uid, object, { new: true });
 
         res.json({
@@ -141,7 +155,7 @@ const borrarPrenda = async(req, res = response) => {
     const uid = req.params.id;
     try {
 
-        // comprobamos que el usuario existe
+        // comprobamos que la prenda existe
         const existePrenda = await Prenda.findById(uid);
 
         if (!existePrenda) {
@@ -151,10 +165,6 @@ const borrarPrenda = async(req, res = response) => {
             });
         }
 
-        // lo eliminamos y devolvemos el usuario recien eliminado
-        // Remove -> se convierte en Modify en la BD
-        // Delete -> debería ser el utilizado...?
-        //DeprecationWarning: Mongoose: findOneAndUpdate() and findOneAndDelete() without the useFindAndModify option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify 
         const resultado = await Prenda.findByIdAndDelete(uid);
 
         res.json({
