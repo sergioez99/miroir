@@ -14,10 +14,18 @@ export class ApiService {
 
   constructor( private http: HttpClient ) { }
 
+  recuperacionCall(email: string){
+
+    return this.http.get(this.url+'/api/recuperar/'+email );
+  }
+
+  cambiarpasswordCall(formData){
+    return this.http.post(this.url+'/api/recuperar/cambiarpassword', formData);
+  }
 
   verificationCall( token: string){
 
-    return this.http.get(this.url+'/api/verificacion/verificar'+token );
+    return this.http.get(this.url+'/api/verificacion/verificar/'+token );
   }
 
   reenviarCall(email: string){
