@@ -21,6 +21,7 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
+import { SceneComponent } from './scene/scene.component';
 
 
 const routes: Routes = [
@@ -83,6 +84,13 @@ const routes: Routes = [
       { path: '**', redirectTo: '' }
     ]
   },
+  {
+    path: 'scene', component: BaseLayoutComponent,
+    children: [
+      { path: '', component: SceneComponent },
+      { path: '**', redirectTo: ''}
+    ]
+  }
 
 ];
 
