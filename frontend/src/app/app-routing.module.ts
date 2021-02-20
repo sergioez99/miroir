@@ -6,6 +6,7 @@ import { AuthRoutingModule } from './auth/auth.routing';
 import { NotAuthComponent } from './commons/not-auth/not-auth.component';
 
 
+
 const routes: Routes = [
   //    /home               --> PagesRoutingModule
   //    /probador           --> PagesRoutingModule

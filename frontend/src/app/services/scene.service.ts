@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import fragmentShaderSrc from '../../../assets/toucan-fragment-shader.glsl';
-import vertexShaderSrc from '../../../assets/toucan-vertex-shader.glsl';
+import fragmentShaderSrc from '../../assets/toucan-fragment-shader.glsl';
+import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
 
 import * as matrix from 'gl-matrix';
 
@@ -74,6 +74,47 @@ export class SceneService{
         return true;
     }
 
+    initialiseWebGLContext(canvas: HTMLCanvasElement) {
+        // Try to grab the standard context. If it fails, fallback to experimental.
+        this._renderingContext = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        // If we don't have a GL context, give up now... only continue if WebGL is available and working...
+        if (!this.gl) {
+            alert('Unable to initialize WebGL. Your browser may not support it.');
+            return;
+        }
+        // *** set width, height and initialise the webgl canvas ***
+          this.setWebGLCanvasDimensions(canvas);
+          this.initialiseWebGLCanvas();
+          // initialise shaders into WebGL
+          let shaderProgram = this.initializeShaders();
+  
+          this.programInfo = {
+              program: shaderProgram,
+              attribLocations: {
+                vertexPosition: this.gl.getAttribLocation(
+                  shaderProgram,
+                  'aVertexPosition'
+                ),
+                vertexColor: this.gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+              },
+              uniformLocations: {
+                projectionMatrix: this.gl.getUniformLocation(
+                  shaderProgram,
+                  'uProjectionMatrix'
+                ),
+                modelViewMatrix: this.gl.getUniformLocation(
+                  shaderProgram,
+                  'uModelViewMatrix'
+                ),
+              },
+          };
+          // initalise the buffers to define what we want to draw
+          this.buffers = this.initialiseBuffers();
+          // prepare the scene to display content
+          this.prepareScene();
+          return this.gl;
+      }
+
     initializeShaders(): WebGLProgram {
         // 1. Create the shader program
         let shaderProgram = this.gl.createProgram();
@@ -109,6 +150,131 @@ export class SceneService{
         }
         // 6. return shader
         return shaderProgram;
+    }
+
+    initialiseWebGLCanvas() {
+        // Set clear colour to black, fully opaque
+        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // Enable depth testing
+        this.gl.enable(this.gl.DEPTH_TEST);
+        // Near things obscure far things
+        this.gl.depthFunc(this.gl.LEQUAL);
+        // Clear the colour as well as the depth buffer.
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    }
+
+    prepareScene() {
+        this.resizeWebGLCanvas();
+        this.updateWebGLCanvas();
+        // move the camera position a bit backwards to a position where 
+        // we can observe the content that will be drawn from a distance
+        matrix.mat4.translate(
+          this.modelViewMatrix, // destination matrix
+          this.modelViewMatrix, // matrix to translate
+          [0.0, 0.0, -6.0]      // amount to translate
+        );
+        // tell WebGL how to pull out the positions from the position
+        // buffer into the vertexPosition attribute
+        this.bindVertexPosition(this.programInfo, this.buffers);
+        // tell WebGL how to pull out the colors from the color buffer
+        // into the vertexColor attribute.
+        this.bindVertexColor(this.programInfo, this.buffers);
+        // tell WebGL to use our program when drawing
+        this.gl.useProgram(this.programInfo.program);
+        // set the shader uniforms
+        this.gl.uniformMatrix4fv(
+          this.programInfo.uniformLocations.projectionMatrix,
+          false,
+          this.projectionMatrix
+        );
+        this.gl.uniformMatrix4fv(
+          this.programInfo.uniformLocations.modelViewMatrix,
+          false,
+          this.modelViewMatrix
+        );
+    }
+
+    resizeWebGLCanvas() {
+        const width = this.clientCanvas.clientWidth;
+        const height = this.clientCanvas.clientHeight;
+        if (this.gl.canvas.width !== width || this.gl.canvas.height !== height) {
+          this.gl.canvas.width = width;
+          this.gl.canvas.height = height;
+        }
+    }
+
+    setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
+        // set width and height based on canvas width and height - good practice to use clientWidth and clientHeight
+        this.gl.canvas.width = canvas.clientWidth;
+        this.gl.canvas.height = canvas.clientHeight;
+    }
+
+    updateViewport() {
+        if (this.gl) {
+          this.gl.viewport(
+            0,
+            0,
+            this.gl.drawingBufferWidth,
+            this.gl.drawingBufferHeight
+          );
+          this.initialiseWebGLCanvas();
+        } 
+        else {
+          alert(
+            'Error! WebGL has not been initialised! Ignoring updateViewport() call...'
+          );
+        }
+    }
+
+    updateWebGLCanvas() {
+        this.initialiseWebGLCanvas();
+        this.aspect = this.clientCanvas.clientWidth / this.clientCanvas.clientHeight;
+        this.projectionMatrix = matrix.mat4.create();
+        matrix.mat4.perspective(
+          this.projectionMatrix,
+          this.fieldOfView,
+          this.aspect,
+          this.zNear,
+          this.zFar
+        );
+        // Set the drawing position to the "identity" point, which is the center of the scene.
+        this.modelViewMatrix = matrix.mat4.create();
+    }
+
+    bindVertexColor(programInfo: any, buffers: any) {
+        const bufferSize = 4;
+        const type = this.gl.FLOAT;
+        const normalize = false;
+        const stride = 0;
+        const offset = 0;
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.color);
+        this.gl.vertexAttribPointer(
+          programInfo.attribLocations.vertexColor,
+          bufferSize,
+          type,
+          normalize,
+          stride,
+          offset
+        );
+        this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+    }
+
+    bindVertexPosition(programInfo: any, buffers: any) {
+        const bufferSize = 2;
+        const type = this.gl.FLOAT;
+        const normalize = false;
+        const stride = 0;
+        const offset = 0;
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
+        this.gl.vertexAttribPointer(
+          programInfo.attribLocations.vertexPosition,
+          bufferSize,
+          type,
+          normalize,
+          stride,
+          offset
+        );
+        this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
     }
 
     initialiseBuffers(): any {
@@ -154,172 +320,4 @@ export class SceneService{
             color: colorBuffer,
         };
     }
-
-    bindVertexPosition(programInfo: any, buffers: any) {
-        const bufferSize = 2;
-        const type = this.gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
-        this.gl.vertexAttribPointer(
-          programInfo.attribLocations.vertexPosition,
-          bufferSize,
-          type,
-          normalize,
-          stride,
-          offset
-        );
-        this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-    }
-
-    bindVertexColor(programInfo: any, buffers: any) {
-        const bufferSize = 4;
-        const type = this.gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.color);
-        this.gl.vertexAttribPointer(
-          programInfo.attribLocations.vertexColor,
-          bufferSize,
-          type,
-          normalize,
-          stride,
-          offset
-        );
-        this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-    }
-
-    initialiseWebGLContext(canvas: HTMLCanvasElement) {
-      // Try to grab the standard context. If it fails, fallback to experimental.
-      this._renderingContext = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      // If we don't have a GL context, give up now... only continue if WebGL is available and working...
-      if (!this.gl) {
-          alert('Unable to initialize WebGL. Your browser may not support it.');
-          return;
-      }
-      // *** set width, height and initialise the webgl canvas ***
-        this.setWebGLCanvasDimensions(canvas);
-        this.initialiseWebGLCanvas();
-        // initialise shaders into WebGL
-        let shaderProgram = this.initializeShaders();
-
-        this.programInfo = {
-            program: shaderProgram,
-            attribLocations: {
-              vertexPosition: this.gl.getAttribLocation(
-                shaderProgram,
-                'aVertexPosition'
-              ),
-              vertexColor: this.gl.getAttribLocation(shaderProgram, 'aVertexColor'),
-            },
-            uniformLocations: {
-              projectionMatrix: this.gl.getUniformLocation(
-                shaderProgram,
-                'uProjectionMatrix'
-              ),
-              modelViewMatrix: this.gl.getUniformLocation(
-                shaderProgram,
-                'uModelViewMatrix'
-              ),
-            },
-        };
-        // initalise the buffers to define what we want to draw
-        this.buffers = this.initialiseBuffers();
-        // prepare the scene to display content
-        this.prepareScene();
-        return this.gl;
-    }
-
-    resizeWebGLCanvas() {
-        const width = this.clientCanvas.clientWidth;
-        const height = this.clientCanvas.clientHeight;
-        if (this.gl.canvas.width !== width || this.gl.canvas.height !== height) {
-          this.gl.canvas.width = width;
-          this.gl.canvas.height = height;
-        }
-    }
-
-    updateWebGLCanvas() {
-        this.initialiseWebGLCanvas();
-        this.aspect = this.clientCanvas.clientWidth / this.clientCanvas.clientHeight;
-        this.projectionMatrix = matrix.mat4.create();
-        matrix.mat4.perspective(
-          this.projectionMatrix,
-          this.fieldOfView,
-          this.aspect,
-          this.zNear,
-          this.zFar
-        );
-        // Set the drawing position to the "identity" point, which is the center of the scene.
-        this.modelViewMatrix = matrix.mat4.create();
-    }
-
-    setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
-        // set width and height based on canvas width and height - good practice to use clientWidth and clientHeight
-        this.gl.canvas.width = canvas.clientWidth;
-        this.gl.canvas.height = canvas.clientHeight;
-    }
-
-    initialiseWebGLCanvas() {
-        // Set clear colour to black, fully opaque
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        // Enable depth testing
-        this.gl.enable(this.gl.DEPTH_TEST);
-        // Near things obscure far things
-        this.gl.depthFunc(this.gl.LEQUAL);
-        // Clear the colour as well as the depth buffer.
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    }
-
-    prepareScene() {
-        this.resizeWebGLCanvas();
-        this.updateWebGLCanvas();
-        // move the camera position a bit backwards to a position where 
-        // we can observe the content that will be drawn from a distance
-        matrix.mat4.translate(
-          this.modelViewMatrix, // destination matrix
-          this.modelViewMatrix, // matrix to translate
-          [0.0, 0.0, -6.0]      // amount to translate
-        );
-        // tell WebGL how to pull out the positions from the position
-        // buffer into the vertexPosition attribute
-        this.bindVertexPosition(this.programInfo, this.buffers);
-        // tell WebGL how to pull out the colors from the color buffer
-        // into the vertexColor attribute.
-        this.bindVertexColor(this.programInfo, this.buffers);
-        // tell WebGL to use our program when drawing
-        this.gl.useProgram(this.programInfo.program);
-        // set the shader uniforms
-        this.gl.uniformMatrix4fv(
-          this.programInfo.uniformLocations.projectionMatrix,
-          false,
-          this.projectionMatrix
-        );
-        this.gl.uniformMatrix4fv(
-          this.programInfo.uniformLocations.modelViewMatrix,
-          false,
-          this.modelViewMatrix
-        );
-    }
-
-    updateViewport() {
-        if (this.gl) {
-          this.gl.viewport(
-            0,
-            0,
-            this.gl.drawingBufferWidth,
-            this.gl.drawingBufferHeight
-          );
-          this.initialiseWebGLCanvas();
-        } 
-        else {
-          alert(
-            'Error! WebGL has not been initialised! Ignoring updateViewport() call...'
-          );
-        }
-    }
-    
-
 }
