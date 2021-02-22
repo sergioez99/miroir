@@ -3,31 +3,26 @@ import { GLSLConstants } from '../../assets/GLSLConstants';
 import fragmentShaderSrc from '../../assets/toucan-fragment-shader.glsl';
 import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
+
 @Injectable({
   providedIn: 'root',
 })
+
 export class WebGLService {
-  /**
-   * The underlying {@link RenderingContext}.
-   */
+
+  //Contexto del canvas
   private renderingContext: RenderingContext;
 
-  /**
-   * Gets the {@link renderingContext} as a {@link WebGLRenderingContext}.
-   */
   private get gl(): WebGLRenderingContext {
     return this.renderingContext as WebGLRenderingContext;
   }
 
-  /**
-   * Gets the {@link gl.canvas} as a {@link Element} client.
-   */
   private get clientCanvas(): Element {
     return this.gl.canvas as Element
   }
   
 
-  private fieldOfView = (45 * Math.PI) / 180; // in radians
+  private fieldOfView = (45 * Math.PI) / 180; // radianes
   private aspect = 1;
   private zNear = 0.1;
   private zFar = 100.0;
@@ -36,21 +31,18 @@ export class WebGLService {
   private buffers: any
   private programInfo: any
 
-  /**
-   * Creates a new instance of the {@link WebGLService} class.
-   */
+  private cubeRotation = 0.0;
+
+  private then = 0;
+
   constructor() {}
 
-  /**
-   * Initialises a new {@link WebGLRenderingContext} as part of this service from the {@link canvas} provided.
-   * @param canvas - the {@link HTMLCanvasElement}
-   */
+  //Inicializamos el canvas HTML con el context 
   initialiseWebGLContext(canvas: HTMLCanvasElement): WebGLRenderingContext {
-    // Try to grab the standard context. If it fails, fallback to experimental.
+    // Iniciacializamos el contexto
     this.renderingContext =
       canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-    // If we don't have a GL context, give up now... only continue if WebGL is available and working...
     if (!this.gl) {
       alert('Unable to initialize WebGL. Your browser may not support it.');
       return;
@@ -60,10 +52,10 @@ export class WebGLService {
 
     this.initialiseWebGLCanvas();
 
-    // initialise shaders into WebGL
+    // Inicializamos los shaders
     let shaderProgram = this.initializeShaders();
 
-    // set up programInfo for buffers
+    // Preparamos la información que le vamos a pasar a los buffers de los shaders
     this.programInfo = {
       program: shaderProgram,
       attribLocations: {
@@ -84,11 +76,10 @@ export class WebGLService {
         ),
       },
     };
-
-    // initalise the buffers to define what we want to draw
+    // Inicializamos los buffers con lo que queremos dibujar
     this.buffers = this.initialiseBuffers();
 
-    // prepare the scene to display content
+    // Prepramos la escena para dibujar el contenido
     this.prepareScene();
 
     return this.gl
@@ -164,13 +155,21 @@ export class WebGLService {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
-    // move the camera position a bit backwards to a position where 
-    // we can observe the content that will be drawn from a distance
-    matrix.mat4.translate(
-      this.modelViewMatrix, // destination matrix
-      this.modelViewMatrix, // matrix to translate
-      [0.0, 0.0, -6.0]      // amount to translate
-    ); 
+    //Preparamos la animación de rotación
+    //transformaciones
+    //matrix.mat4.perspective(this.modelViewMatrix, this.fieldOfView, this.aspect, this.zNear, this.zFar);
+    matrix.mat4.translate(this.modelViewMatrix,     // destination matrix
+      this.modelViewMatrix,     // matrix to translate
+      [-0.0, 0.0, -6.0]);  // amount to translate
+    matrix.mat4.rotate(this.modelViewMatrix,  // destination matrix
+      this.modelViewMatrix,  // matrix to rotate
+      this.cubeRotation,     // amount to rotate in radians
+      [0, 0, 1]);       // axis to rotate around (Z)
+    matrix.mat4.rotate(this.modelViewMatrix,  // destination matrix
+      this.modelViewMatrix,  // matrix to rotate
+      this.cubeRotation * .7,// amount to rotate in radians
+      [0, 1, 0]);       // axis to rotate around (X)
+
 
     // tell WebGL how to pull out the positions from the position
     // buffer into the vertexPosition attribute
@@ -179,6 +178,8 @@ export class WebGLService {
     // tell WebGL how to pull out the colors from the color buffer
     // into the vertexColor attribute.
     this.bindVertexColor(this.programInfo, this.buffers);
+
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
     // tell WebGL to use our program when drawing
     this.gl.useProgram(this.programInfo.program);
@@ -194,6 +195,8 @@ export class WebGLService {
       false,
       this.modelViewMatrix
     );
+
+    this.cubeRotation = this.cubeRotation + 0.01;
   }
 
   /**
@@ -244,6 +247,14 @@ z`   *
    */
   updateWebGLCanvas() {
     this.initialiseWebGLCanvas();
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+    this.gl.clearDepth(1.0);                 // Clear everything
+    this.gl.enable(this.gl.DEPTH_TEST);           // Enable depth testing
+    this.gl.depthFunc(this.gl.LEQUAL);            // Near things obscure far things
+
+    // Clear the canvas before we start drawing on it.
+
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     // Our field of view is 45 degrees, with a width/height ratio of 640:480. 
     // We only want to see objects  between 0.1 units and 100 units away from the camera. 
@@ -290,7 +301,7 @@ z`   *
    * buffer into the vertexPosition attribute
    */
   private bindVertexPosition(programInfo: any, buffers: any) {
-    const bufferSize = 2;
+    const bufferSize = 3;
     const type = this.gl.FLOAT;
     const normalize = false;
     const stride = 0;
@@ -356,12 +367,43 @@ z`   *
     // bind the buffer to WebGL and tell it to accept an ARRAY of data
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
-    // create an array of positions for the square.
+    // create an array of positions for the square. (Es un cubo ahora)
     const positions = new Float32Array([
-       1.0,  1.0, 
-      -1.0,  1.0, 
-       1.0, -1.0, 
-      -1.0, -1.0
+       // Cara delantera
+        -1.0, -1.0,  1.0,
+        1.0, -1.0,  1.0,
+        1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+
+      // Cara trasera
+        -1.0, -1.0, -1.0,
+        -1.0,  1.0, -1.0,
+        1.0,  1.0, -1.0,
+        1.0, -1.0, -1.0,
+
+      // Top face
+        -1.0,  1.0, -1.0,
+        -1.0,  1.0,  1.0,
+        1.0,  1.0,  1.0,
+        1.0,  1.0, -1.0,
+
+      // Bottom face
+        -1.0, -1.0, -1.0,
+        1.0, -1.0, -1.0,
+        1.0, -1.0,  1.0,
+        -1.0, -1.0,  1.0,
+
+      // Right face
+        1.0, -1.0, -1.0,
+        1.0,  1.0, -1.0,
+        1.0,  1.0,  1.0,
+        1.0, -1.0,  1.0,
+
+      // Left face
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0,  1.0, -1.0
     ]);
 
     // set the list of positions into WebGL to build the
@@ -374,25 +416,53 @@ z`   *
       this.gl.STATIC_DRAW
     );
 
-    // Set up the colors for the vertices
-    let colors = new Uint16Array([
-      1.0, 1.0, 1.0, 1.0, // white
-      1.0, 0.0, 0.0, 1.0, // red
-      0.0, 1.0, 0.0, 1.0, // green
-      0.0, 0.0, 1.0, 1.0, // blue
-    ]);
+    const indexBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
+    var cubeVertexIndices = new Uint16Array([
+      0,  1,  2,      0,  2,  3,    // enfrente
+      4,  5,  6,      4,  6,  7,    // atrás
+      8,  9,  10,     8,  10, 11,   // arriba
+      12, 13, 14,     12, 14, 15,   // fondo
+      16, 17, 18,     16, 18, 19,   // derecha
+      20, 21, 22,     20, 22, 23    // izquierda
+    ]);
+    
+    // Ahora enviamos el elemento arreglo a  GL
+    
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
+        new Uint16Array(cubeVertexIndices), this.gl.STATIC_DRAW);
+
+
+    // Set up the colors for the vertices
+    const faceColors = [
+      [1.0,  1.0,  1.0,  1.0],    // Front face: white
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [0.0,  1.0,  0.0,  1.0],    // Top face: green
+      [0.0,  0.0,  1.0,  1.0],    // Bottom face: blue
+      [1.0,  1.0,  0.0,  1.0],    // Right face: yellow
+      [1.0,  0.0,  1.0,  1.0],    // Left face: purple
+    ];
+  
+    // Convert the array of colors into a table for all the vertices.
+  
+    var colors = [];
+  
+    for (var j = 0; j < faceColors.length; ++j) {
+      const c = faceColors[j];
+  
+      // Repeat each color four times for the four vertices of the face
+      colors = colors.concat(c, c, c, c);
+    }
+  
     const colorBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
-      new Float32Array(colors),
-      this.gl.STATIC_DRAW
-    );
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
 
     return {
       position: positionBuffer,
       color: colorBuffer,
+      indices: indexBuffer,
     };
   }
 

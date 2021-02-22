@@ -33,25 +33,24 @@ export class SceneComponent implements OnInit, AfterViewInit {
       drawSceneInterval.subscribe(() => {
         this.drawScene();
       });
+      
+     
     }
 
     ngOnInit(): void {
       
     }
 
+   
+
     private drawScene() {
       // prepare the scene and update the viewport
       this.webglService.updateViewport();
       this.webglService.prepareScene();
       // draw the scene
+      const vertexCount = 36;
+      const type = this.gl.UNSIGNED_SHORT;
       const offset = 0;
-      const vertexCount = 4;
-      this.gl.drawArrays(
-        this.gl.TRIANGLE_STRIP,
-        offset,
-        vertexCount
-      );
+      this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
     }
-    
-
 }
