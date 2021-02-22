@@ -23,7 +23,7 @@ const obtenerPrendas = async(req, res = response) => {
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
+    const registropp = Number(process.env.DOCSPERPAGE);
 
 
 
@@ -44,13 +44,11 @@ const obtenerPrendas = async(req, res = response) => {
             // busqueda de varias prendas
         } else {
             if (texto) {
-                console.log(prendas);
-
 
                 [prendas, total] = await Promise.all([
 
                     Prenda.find({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] }).skip(desde).limit(registropp),
-                    Prenda.countDocuments({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }, , { rol: textoBusqueda }] })
+                    Prenda.countDocuments({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] })
                 ]);
 
             } else {
@@ -62,7 +60,6 @@ const obtenerPrendas = async(req, res = response) => {
             }
 
         }
-        console.log(prendas);
         res.json({
             ok: true,
             msg: 'getPrendas',
@@ -82,6 +79,8 @@ const obtenerPrendas = async(req, res = response) => {
         });
     }
 }
+
+
 const crearPrenda = async(req, res) => {
 
     const { identificador, nombre } = req.body;
@@ -95,6 +94,16 @@ const crearPrenda = async(req, res) => {
                 msg: 'La prenda ya existe'
             });
         }
+
+        const prenda = new Prenda(req.body);
+
+        await prenda.save();
+
+        res.json({
+            ok: true,
+            msg: 'crear una prenda',
+            prenda
+        });
 
     } catch (error) {
         console.log(error);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormBuilder,Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 //para mensajes de alerta
 import Swal from 'sweetalert2';
 //importamos el servicio de la prenda
@@ -19,11 +20,14 @@ export class PrendaComponent implements OnInit {
   tallas:string[] = ['S','M','L','XL'];
   toppingList: string[] = ['S','M', 'L', 'XL'];
 
+  uid;
+
 
   archivoASubir :Array<File>;
 
   constructor(private fb: FormBuilder,
-             private prendaService: PrendaService ) {  }
+             private prendaService: PrendaService,
+             private route: ActivatedRoute ) {  }
 
 
   ngOnInit(): void {
@@ -35,49 +39,54 @@ export class PrendaComponent implements OnInit {
       archivo:[null, Validators.required],
       identificador:['', Validators.required]
     })
+
+    // comprobar si en la url viene un 'nuevo' o un identificador
+    // si es 'nuevo', lo que hace hasta ahora
+    // si es un id, recuperar los datos de esa prenda y meterlos en los inputs
+    this.uid = this.route.snapshot.params['uid'];
+
+    console.log('Recuperar uid de la url: ',this.uid);
+
+    // recuperar de la BD los datos de esa prenda
+
+    // meter los datos de la prenda en el formulario
+
+   }
+
+   enviar(){
+     if(this.uid == 'nuevo'){
+      this.crearPrenda();
+     }
    }
 
    crearPrenda() {
-     //console.log(this.formPrenda.value);
-     //this.archivoASubir.forEach((archivo)=>{
-     // console.log(archivo);
-   // })
 
     if (this.formPrenda.valid) {
 
-/*
-     this.archivoASubir.forEach((archivo)=>{
-       console.log(archivo);
-     })
+      this.prendaService.crearPrenda(this.formPrenda.value).then( (res)=>{
 
-      this.archivoASubir.forEach( (archivo)=>{
-      });
-       for (var i = 0; i < this.archivoASubir.length; i++) {
-        this.formPrenda.append("uploads[]", this.archivoASubir[i], this.archivoASubir[i].name);
-      }
-      //Envía al servicio al formulario para que este se lo envie al backend con su promesica
-
-     // this.prendaService.cargarPrendas(this.formPrenda.value).then((response) => {
-
-     try{
-
-       if(this.prendaService.cargarPrendas(this.formPrenda.value)){
-          //Aquí entramos cuando va todo de luxe
         Swal.fire({
-        title: 'Has creado correctamente la prenda!',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-            });
-         }
-      }catch(error){
+          title:'Prenda creado correctamente',
+          text: 'Le hemos enviado un email de confirmación. <p> Por favor, revise su bendeja de entrada.</p>',
+          icon: 'success',
+          showCloseButton: true,
+          confirmButtonText: 'Aceptar'
+        });
+
+      }).catch( (error)=>{
+
+        console.log(error);
+
         Swal.fire({
-          title: '¡Error!',
+          title:'¡Error!',
           text: error.error.msg,
           icon: 'error',
+          showCloseButton: true,
           confirmButtonText: 'Volver a intentar',
+          footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
         });
-      };
-      */
+      });
+
     }
     else{
       Swal.fire({
@@ -89,6 +98,46 @@ export class PrendaComponent implements OnInit {
     }
 
   }
+
+/*   modificarPrenda() {
+
+    if (this.formPrenda.valid) {
+
+      this.prendaService.modificarPrenda(this.formPrenda.value).then( (res)=>{
+
+        Swal.fire({
+          title:'Prenda creado correctamente',
+          text: 'Le hemos enviado un email de confirmación. <p> Por favor, revise su bendeja de entrada.</p>',
+          icon: 'success',
+          showCloseButton: true,
+          confirmButtonText: 'Aceptar'
+        });
+
+      }).catch( (error)=>{
+
+        console.log(error);
+
+        Swal.fire({
+          title:'¡Error!',
+          text: error.error.msg,
+          icon: 'error',
+          showCloseButton: true,
+          confirmButtonText: 'Volver a intentar',
+          footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
+        });
+      });
+
+    }
+    else{
+      Swal.fire({
+        title: '¡Error!',
+        text: 'El formulario no se ha completado correctamente',
+        icon: 'error',
+        confirmButtonText: 'Volver a intentar',
+      });
+    }
+
+  } */
 
   cambioArchivo( element ){
 

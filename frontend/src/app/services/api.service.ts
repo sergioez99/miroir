@@ -70,4 +70,12 @@ export class ApiService {
 
     return this.http.put(this.url + '/api/usuarios/'+id, formData, { headers: headers });
   }
+
+  crearPrendaCall( formData, token) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.post(this.url+'/api/prendas', formData, { headers: headers });
+  }
 }

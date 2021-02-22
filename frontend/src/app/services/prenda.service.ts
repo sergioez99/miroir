@@ -24,95 +24,11 @@ export class PrendaService{
 
   private prenda;
 
-  private rol_admin = 'ROL_ADMIN';
-  private rol_cliente = 'ROL_CLIENTE';
-  private rol_usuario = 'ROL_USUARIO';
 
   constructor( private apiService :ApiService, private http: HttpClient,private router: Router,
     private usuarioService: UsuarioService) { }
 
 
-  inicializar (prendaRecibido, tokenRecibido? :string){
-
-    // introducir los valores del usuario logueado
-    this.prenda = prendaRecibido;
-
-    this.rol = this.prenda['rol'];
-    this.id = this.prenda['uid'];
-
-    if (tokenRecibido){
-      this.actualizarToken(tokenRecibido);
-    }
-
-  }
-
-
-  actualizarToken (tokenRecibido: string){
-
-    this.token = tokenRecibido;
-
-    if(localStorage.getItem('token')){
-      localStorage.setItem('token', this.token);
-    }
-
-  }
-
-  actualizarMedidas(formData) :Promise<any>{
-
-    return new Promise ( (resolve, reject) => {
-
-     console.log('estamos modificando la informacion de la prenda: ', formData);
-
-     let form :PrendaForm = {
-       id: this.prenda['uid'],
-       nombre: formData.nombre,
-       descripcion: formData.descripcion,
-       talla: formData.talla,
-       valido: formData.valido,
-
-     };
-
-     console.log(form);
-
-     this.apiService.actualizarMedidasCall(this.token, this.id, formData).subscribe( (res) => {
-
-        // medidas modificadas correctamente
-        console.log(res);
-
-        this.prenda = res['prenda'];
-        resolve(true);
-
-      }, (err) =>{
-
-        console.error(err);
-        reject(err);
-
-      });
-
-
-    });
-
-
-
-  }
-
-  getID (){
-    return this.prenda['uid'];
-  }
-
-  getRol (){
-    return this.rol;
-  }
-
-  isAdmin (){
-    return this.rol == this.rol_admin;
-  }
-  isCliente (){
-    return this.rol == this.rol_cliente;
-  }
-  isPrenda (){
-    return this.rol == this.rol_usuario;
-  }
 
   getToken (){
 
@@ -134,9 +50,6 @@ export class PrendaService{
   }
 
   cargarPrendas( desde: number, textoBusqueda?: string ): Observable<object> {
-   // debugger
-   //console.log("valor: "+desde + "texto busqueda es: "+textoBusqueda);
-
 
 
     if (!desde) { desde = 0;}
@@ -148,6 +61,31 @@ export class PrendaService{
   borrarPrenda( uid: string) {
     if (!uid || uid === null) {uid = 'a'; }
     return this.http.delete(`${environment.base_url}/prendas/${uid}` , this.cabeceras);
+  }
+
+  crearPrenda(formData) :Promise<any>{
+
+    let form :PrendaForm = {
+      identificador : formData.identificador,
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
+      talla: formData.talla,
+      objeto: formData.objeto,
+    };
+
+    return new Promise ( (resolve, reject)=>{
+
+      this.apiService.crearPrendaCall(form, this.usuarioService.getToken()).subscribe(res =>{
+
+        console.log('Respuesta del servidor: ', res);
+        resolve(true);
+
+      }, (error)=>{
+        console.warn('error respuesta api:; ', error);
+        reject(error);
+      });
+    });
+
   }
 
 }

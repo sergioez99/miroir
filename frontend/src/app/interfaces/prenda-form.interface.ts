@@ -1,9 +1,9 @@
 export interface PrendaForm {
 
-  id :string;
+  identificador :string;
   nombre :string;
   descripcion :string;
   talla :string[];
-  valido :boolean;
+  objeto :string;
 
 }

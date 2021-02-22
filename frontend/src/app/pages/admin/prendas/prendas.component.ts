@@ -5,6 +5,7 @@ import { Prenda } from '../../../models/prenda.model';
 import Swal from 'sweetalert2';
 
 import {} from '../../../services/prenda.service';
+import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-prendas',
@@ -22,7 +23,8 @@ export class PrendasComponent implements OnInit {
   private ultimaBusqueda = '';
   public listaPrendas: Prenda[] = [];
 
-  constructor( private prendaService: PrendaService) { }
+  constructor( private prendaService: PrendaService,
+               private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.cargarPrendas(this.ultimaBusqueda);
@@ -83,7 +85,7 @@ export class PrendasComponent implements OnInit {
     }
     */
     // Solo los admin pueden borrar prendas
-    if (this.prendaService.getRol() !== 'ROL_ADMIN') {
+    if (!this.usuarioService.isAdmin()) {
       Swal.fire({icon: 'warning', title: 'Oops...', text: 'No tienes permisos para realizar esta acción',});
       return;
     }

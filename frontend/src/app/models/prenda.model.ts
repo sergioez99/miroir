@@ -6,11 +6,10 @@ const base_url: string = environment.base_url;
 export class Prenda {
 
     constructor( public uid: string,
-                 public rol: string,
+                 public identificador: string,
                  public nombre?: string,
                  public descripcion?: string,
                  public talla?: string[],
-                 public activo?: boolean,
                  public imagen?: string)
                  {}
 /*
