@@ -4,7 +4,7 @@ import { FormBuilder,Validators } from '@angular/forms';
 //para mensajes de alerta
 import Swal from 'sweetalert2';
 //importamos el servicio de la prenda
-import {PrendaService} from '../../../services/prenda.service';
+import {PrendaService} from './../../../services/prenda.service';
 @Component({
   selector: 'app-prenda',
   templateUrl: './prenda.component.html',

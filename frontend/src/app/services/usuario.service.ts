@@ -133,8 +133,6 @@ export class UsuarioService{
     }
 
     return this.token;
-
-
   }
 
   getPeso() {

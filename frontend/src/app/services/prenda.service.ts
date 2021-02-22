@@ -135,6 +135,10 @@ export class PrendaService{
 
   cargarPrendas( desde: number, textoBusqueda?: string ): Observable<object> {
    // debugger
+   //console.log("valor: "+desde + "texto busqueda es: "+textoBusqueda);
+
+
+
     if (!desde) { desde = 0;}
     if (!textoBusqueda) {textoBusqueda = '';}
     return this.http.get(`${environment.base_url}/prendas/?desde=${desde}&texto=${textoBusqueda}` , this.cabeceras);

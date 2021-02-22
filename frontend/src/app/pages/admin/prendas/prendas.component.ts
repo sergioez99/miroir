@@ -30,13 +30,23 @@ export class PrendasComponent implements OnInit {
 
   cargarPrendas( textoBuscar: string ) {
     //debugger
+
+
+
     this.ultimaBusqueda = textoBuscar;
     this.loading = true;
     this.prendaService.cargarPrendas( this.posicionactual, textoBuscar )
       .subscribe( res => {
-        // Lo que nos llega lo asignamos a lista usuarios para renderizar la tabla
+
+        //console.log(res['prendas']);
+
+        // Lo que nos llega lo asignamos a lista de prendas para renderizar la tabla
         // Comprobamos si estamos en un apágina vacia, si es así entonces retrocedemos una página si se puede
         if (res['prendas'].length === 0) {
+
+
+
+
           if (this.posicionactual > 0) {
             this.posicionactual = this.posicionactual - this.registrosporpagina;
             if (this.posicionactual < 0) { this.posicionactual = 0};
