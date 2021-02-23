@@ -48,6 +48,9 @@ const ClienteSchema = Schema({
         required: true,
         default: 'ROL_CLIENTE'
     },
+    imagen: {
+        type: String,
+    },
 
 
 

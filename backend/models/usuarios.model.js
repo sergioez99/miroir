@@ -53,7 +53,10 @@ const UsuarioSchema = Schema({
     validado: {
         type: Boolean,
         default: false,
-    }
+    },
+    imagen: {
+        type: String,
+    },
 
 
 }, { collection: 'Usuarios' });
