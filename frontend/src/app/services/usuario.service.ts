@@ -73,6 +73,7 @@ export class UsuarioService{
 
      let form :UsuarioForm = {
        email: this.usuario['email'],
+       password:this.usuario['password'],//ATENCION
        id: this.usuario['uid'],
        altura: formData.altura,
        peso: formData.peso,
@@ -170,6 +171,10 @@ export class UsuarioService{
     return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
   }
 
+  cargarUsu( uid: string) {
+    return this.http.get(`${environment.base_url}/usuarios/?id=${uid}` , this.cabeceras);
+  }
+
   actualizarMedidasUsuario(formData) :Promise<any>{
     
     return new Promise ( (resolve, reject) => {
@@ -178,8 +183,11 @@ export class UsuarioService{
       console.log('estamos modificando las medidas del usuario: ', formData);
  
       let form :UsuarioForm = {
-        email: this.usuario['email'],
-        id: this.usuario['uid'],
+        //email: this.usuario['email'],
+        //id: this.usuario['uid'],
+        email: formData.email,
+        password: formData.password,
+        id: formData.uid,
         altura: formData.altura,
         peso: formData.peso,
         pecho: formData.pecho,
@@ -189,26 +197,41 @@ export class UsuarioService{
  
  
       console.log(form);
+
+      if(form.id!=='nuevo'){
+        this.apiService.actualizarMedidasUsuariosCall(this.token, form.id, form).subscribe( (res) => {
  
-      this.apiService.actualizarMedidasCall(this.token, this.id, form).subscribe( (res) => {
+          // medidas modificadas correctamente
+          console.log(res);
+  
+          this.usuario = res['usuario'];
+          resolve(true);
+  
+        }, (err) =>{
+  
+          console.error(err);
+          reject(err);
+  
+        });
+      }
+      else{
+        this.apiService.crearUsuarioCall(this.token, form.id, form).subscribe( (res) => {
  
-         // medidas modificadas correctamente
-         console.log(res);
- 
-         this.usuario = res['usuario'];
-         resolve(true);
- 
-       }, (err) =>{
- 
-         console.error(err);
-         reject(err);
- 
-       });
- 
- 
-     });
- 
- 
- 
+          // medidas modificadas correctamente
+          console.log(res);
+  
+          this.usuario = res['usuario'];
+          resolve(true);
+  
+        }, (err) =>{
+  
+          console.error(err);
+          reject(err);
+  
+        });
+      }
+    });
   }
+
+
 }

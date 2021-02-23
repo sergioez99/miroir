@@ -23,7 +23,21 @@
 
             <form [formGroup]="formMedidas" (ngSubmit)="actualizarUsuario();">
                 <p> poner los datos para poder modificarlos directamente</p>
+                <div *ngIf="this.isNew">
+                    <mat-form-field appearance="outline" class="mir-block">
+                        <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+                    </mat-form-field>
 
+                    <mat-form-field appearance="outline" class="mir-block">
+                        <mat-label>Contraseña</mat-label>
+                        <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
+                        <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        <mat-hint>Introduzca su contraseña</mat-hint>
+                    </mat-form-field>
+                </div>
+                
                 <div>
                     <mat-slider thumbLabel formControlName="peso" min="10" max="200" step="1" [(ngModel)]=this.peso></mat-slider>
                     <mat-label>Peso: {{this.peso}} kg</mat-label>

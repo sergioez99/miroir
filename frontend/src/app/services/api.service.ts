@@ -46,4 +46,27 @@ export class ApiService {
 
     return this.http.put(this.url + '/api/usuarios/'+id, formData, { headers: headers });
   }
+
+  actualizarMedidasUsuariosCall (token :string, id :string, formData :UsuarioForm){
+
+    // console.log ('Medidas desde Call: ', formData);
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    return this.http.put(this.url + '/api/usuarios/'+id, formData, { headers: headers });
+  }
+
+  crearUsuarioCall (token :string, id :string, formData :UsuarioForm){
+
+     console.log ('crear usuario call', formData);
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    return this.http.post(this.url + '/api/usuarios', formData,{ headers: headers });
+  }
+
 }
