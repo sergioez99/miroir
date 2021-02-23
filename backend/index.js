@@ -12,6 +12,8 @@ const app = express();
 //Para subir los archivos
 const fileUpload = require('express-fileupload');
 
+
+
 // llamar a nuestra cadena de conexion
 dbConnection();
 

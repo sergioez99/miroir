@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -126,10 +127,11 @@ export class UsuarioService{
   }
 
 
+
   getToken (){
 
     if (!this.token) {
-      this.token = localStorage.getItem('token');
+      this.token = localStorage.getItem('token') || '';
     }
 
     return this.token;
@@ -156,6 +158,10 @@ export class UsuarioService{
       headers: {
         'x-token': this.token
       }};
+  }
+  cargarUsuario( uid: string ) {
+   if(!uid){uid = ''}
+    return this.http.get(`${environment.base_url}/usuarios/?id=${uid}`, this.cabeceras);
   }
 
   cargarUsuarios( desde: number, textoBusqueda?: string ): Observable<object> {
