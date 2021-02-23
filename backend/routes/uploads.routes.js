@@ -17,7 +17,7 @@ router.get('/:tipo/:nombreArchivo', [
     validarJWT,
     check('nombreArchivo', 'El nombreArchivo debe ser un nombre de archivo válido').trim(),
     validarCampos
-], subirArchivo);
+], enviarArchivo);
 router.post('/:tipo/:id', [
     validarJWT,
     check('id', 'El id del archivo debe ser valido').isMongoId(),
