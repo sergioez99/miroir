@@ -1,26 +1,112 @@
-.mir-register-button {
-    display: inline;
-    float: right;
+.mir-caja_formulario {
+    margin: auto;
+
+    height: 100vh;
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #222;
+    font-weight: 400;
+    font-family: 'Montserrat';
+    background-image: url("../../../assets/fondo-registro.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-position: center center;
+    padding: 115px 0; 
 }
 
-.mir-register-box {
-    max-width: 30em;
+.mir-toggle{
+    align-content: center;
+    text-align: center;
+    align-items: center;
     margin: auto;
 }
-
-.mir-box-buttons {
-    padding-top: 1em;
-    ;
+.mir-button_toggle{
+    position: relative;
 }
 
-.mir-box-link {
-    text-align: right;
+.mir-caja_formulario{
+    padding: 25px;
 }
 
-.mir-title {
+.mir-button_toggle{
+    font-family: 'Montserrat';
+    font-size: 24px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.mir-caja_explicacion_usuario > p{
     text-align: center;
 }
 
-.mir-block {
-    display: block;
+.letras {
+    line-height: 1.66;
+    padding-top: 30px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    line-height: 1.66;
+    padding-top: 30px;
+    font-weight: 900;
+    color: #222;
+    font-family: 'Montserrat';
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px; 
+}
+
+.mir-caja_explicacion_usuario {
+    margin: auto;
+    margin-bottom: 30px;
+
+    background: #fff;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    padding: 50px 85px; 
+    width: 50vh;
+}
+
+.mir-caja_explicacion_usuario {
+    padding: 0 0 5vh 0;
+}
+
+.mir-caja_toggle {
+    width: 100%;
+    background-color: rgba(43, 43, 43, 1);
+    text-align: center;
+}
+
+.mir-toggle {
+    align-content: center;
+    border: none;
+}
+
+.mir-button_toggle {
+    min-width: 30%;
+    background-color: #b388ff;
+    border-color: #b388ff;
+    color: whitesmoke;
+}
+
+.mir-button_toggle:hover {
+    background-color: #fb9b02;
+    border-color: #fb9b02;
 }

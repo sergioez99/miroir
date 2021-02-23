@@ -28,6 +28,7 @@ export class PaginationComponent implements OnInit, OnChanges {
       this.paginaActual = 0;
       this.ultimaPagina = 0;
       this.listaPaginas = [];
+      
       return; 
     }
     // Definimos el registro hasta para mostrar en el mensaje
@@ -48,6 +49,7 @@ export class PaginationComponent implements OnInit, OnChanges {
     // inicializamos el array a vacio 
     this.listaPaginas = [];
     // Creamos un array con el número de páginas a mostrar desde-hasta
+    
     for (let index = desde; index <= hasta; index++)
              {
                 this.listaPaginas.push(index);

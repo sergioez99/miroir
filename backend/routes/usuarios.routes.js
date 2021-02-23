@@ -58,7 +58,7 @@ router.put('/:id', [
 ], actualizarUsuario);
 
 router.delete('/:id', [
-    validarJWT,
+    //validarJWT,
     check('id', 'El identificador no es válido').isMongoId(),
     validarCampos
 ], borrarUsuario);

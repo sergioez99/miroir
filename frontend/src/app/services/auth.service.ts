@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { UsuarioService } from './usuario.service';
+import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +60,32 @@ export class AuthService {
 
 
   }
-
   login (formData: LoginForm) : Promise<any>{
+
+    return new Promise( (resolve, reject) => {
+
+      this.apiService.loginCall(formData).subscribe(res => {
+
+        console.log('respuesta al subscribe:', res);
+
+        // decir que nos hemos logueado
+        this.usuarioService.inicializar(res['usuario'], res['token']);
+        this.usuarioService.login(formData.remember);
+        this.setIsLogged(true);
+
+        resolve(true);
+
+
+      }, (err) => {
+        this.setIsLogged(false);
+        console.warn ('error respuesta api: ', err);
+        // mostrar un mensaje de alerta
+        reject(err);
+      });
+    });
+  }
+
+  loginUsuario (formData: LoginForm) : Promise<any>{
 
     return new Promise( (resolve, reject) => {
 
@@ -92,6 +117,7 @@ export class AuthService {
       this.apiService.registerCall(formData).subscribe(res => {
 
         console.log('Respuesta del servidor: ', res);
+
         resolve(true);
 
       }, (err)=> {
@@ -101,6 +127,36 @@ export class AuthService {
 
       });
     });
+  }
+
+  registroCliente (formData :RegisterClientForm) :Promise<any>{
+
+    return new Promise ( (resolve, reject) => {
+
+      let form :RegisterClientForm = {
+        email: formData.email,
+        password: formData.password,
+        nombre: formData.nombre,
+        nombreEmpresa: formData.nombreEmpresa,
+        nif: formData.nif,
+        telefono: formData.telefono,
+      };
+
+
+      this.apiService.registerClientCall(form).subscribe(res => {
+
+        console.log('Respuesta de backend al intentar crear un cliente: ', res);
+        resolve(true);
+
+      }, (err) =>{
+        console.log('da error y creo que es por el formulario: ', form);
+        console.warn('error respuesta api: ', err);
+        reject(err);
+
+      });
+
+    });
+
   }
 
   logout () {
