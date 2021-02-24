@@ -91,8 +91,7 @@ class TCamera extends TEntity {
   }
 
   setPerspective(fovy, aspect, near, far) {
-      // fovy: Vertical field of view in radians;
-      // aspect: Aspect ratio. typically viewport width/height;
+      
       glMatrix.mat4.perspective(this.projection, fovy, aspect, this.cercano, this.lejano);
       this.isPerspective = true;
   }

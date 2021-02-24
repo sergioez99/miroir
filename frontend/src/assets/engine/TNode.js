@@ -108,10 +108,13 @@ class TNode {
     }
 
     recorrer (matrizAcum){
+      console.log("Empieza método recorrer");
       //falta un if que no entiendo
 
       this.transformMatrix = matrizAcum * mat4.translate(this.traslacion) * mat4.rotate(this.rotacion) * mat4.scale(this.escalado);
 
+      console.log(this.transformMatrix);
+      
       this.entidad.draw(transformMatrix);
 
       //para cada hijo recorrer(transformMatrix) esto no se :S      
@@ -138,8 +141,6 @@ class TNode {
     }
 
 }
-
-
 
 export {
     TNode,
