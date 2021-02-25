@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 // objeto de conexion
 const dbConnection = async() => {
     try {
-        await mongoose.connect(process.env.DBCONEXION, {
+        await mongoose.connect(process.env.DBCONNECTION, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
@@ -12,7 +12,6 @@ const dbConnection = async() => {
             userFindAndModify: false
         });
         console.log('DB online');
-
     } catch (error) {
         console.log(error);
         throw new Error('Error al iniciar la BD');
