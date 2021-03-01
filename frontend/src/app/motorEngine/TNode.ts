@@ -49,8 +49,6 @@ export class TNode {
         this.children.splice(this.children.indexOf(child), 1);
     }
 
-    
-
     getChildren(){
       return this.children;
     }
@@ -61,26 +59,15 @@ export class TNode {
     getTransformMatrix() {
       return this.transformMatrix;
     }
-    /*
-    setentidad(_entidad) {
-        let entidad = getentidad();
-        this.entidad = _entidad;
-        
-        // Se añade a luz y camara tambien
-        if (this.entidad instanceof TLight) {
-            entidad.Lights.push(this);
-        }
-        if (this.entidad instanceof TCamera) {
-            entidad.Views.push(this);
-        }
-        setentidad(entidad);
-        return this.entidad;
+    
+    setentidad(entidad) {
+        this.entidad = entidad;
     }
 
     getentidad() {
         return this.entidad;
     }
-    */
+    
     setpadre(_padre) {
       this.padre = _padre;
     }
@@ -127,7 +114,7 @@ export class TNode {
         }
       }
     }*/
-    /*
+    
     draw() {
       if (this.entidad && this.entidad != null) {
           this.entidad.beginDraw();
@@ -140,5 +127,5 @@ export class TNode {
       if (this.entidad && this.entidad != null) {
           this.entidad.endDraw();
       }
-    }*/
+    }
 }

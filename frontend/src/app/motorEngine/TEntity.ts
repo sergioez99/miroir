@@ -110,23 +110,63 @@ class ECamera extends TEntity {
       this.inferior = inferior;
   }
 
-  /*setPerspective(fovy, aspect, near, far) {
-      
-      glMatrix.mat4.perspective(this.projection, fovy, aspect, this.cercano, this.lejano);
-      this.isPerspective = true;
-  }
+    getesPerspectiva(){
+        return this.esPerspectiva;
+    }
+    setesPerspectiva(esP) {
+        this.esPerspectiva = esP;
+    }
 
-  setParallel(izquierda, derecha, inferior, superior, cercano, lejano) {
-      glMatrix.mat4.ortho(this.projection, izquierda, derecha, inferior, superior, cercano, lejano);
-      this.esPerspectiva = false;
-  }
+    getCercano() {
+        return this.cercano;
+    }
+    setCercano(c) {
+        this.cercano = c;
+    }
+
+    getLejano() {
+        return this.lejano;
+    }
+    setLejano(c) {
+        this.lejano = c;
+    }
+
+    getDerecha() {
+        return this.derecha;
+    }
+    setDerecha(c) {
+        this.derecha = c;
+    }
+
+    getIzq() {
+        return this.izquierda;
+    }
+    setIzq(c) {
+        this.izquierda = c;
+    }
+
+    getSup() {
+        return this.superior;
+    }
+    setSup(c) {
+        this.superior = c;
+    }
+
+    getInf() {
+        return this.inferior;
+    }
+    setInf(c) {
+        this.inferior = c;
+    }
+
+
 
   beginDraw() {
 
   }
 
   endDraw() {
-  }*/
+  }
 }
 
 /*class EModel extends TEntity {
