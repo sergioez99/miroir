@@ -24,7 +24,7 @@ const obtenerClientes = async(req, res = response) => {
 
     //encontrar un unico Cliente
     const id = req.query.id;
-    await sleep(100);
+    
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -32,7 +32,7 @@ const obtenerClientes = async(req, res = response) => {
         textoBusqueda = new RegExp(texto, 'i');
         //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
     }
-
+    await sleep(100);
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
     let desde = Number(req.query.desde) || 0;

@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./usuario.component.css']
 })
 export class UsuarioComponent implements OnInit {
-  public listaUsuarios: Usuario[] = [];
+  //public listaUsuarios: Usuario[] = [];
   public formMedidas: FormGroup | null = null;
   public isNew: boolean=false;
   private uid: string = '';
@@ -27,9 +27,9 @@ export class UsuarioComponent implements OnInit {
 
 
   constructor( private fb: FormBuilder,
-               private route: ActivatedRoute,
-               private usuarioService :UsuarioService,
-               private router: Router) { }
+    private route: ActivatedRoute,
+    private usuarioService :UsuarioService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.uid=this.route.snapshot.params['uid'];

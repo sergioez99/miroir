@@ -86,4 +86,9 @@ export class ClienteService {
     return this.http.delete(`${environment.base_url}/clientes/${uid}`);
   }
 
+  cargarCli( uid: string) {
+    console.log('entra en el servicio');
+    return this.http.get(`${environment.base_url}/clientes/?id=${uid}` , this.cabeceras);
+  }
+
 }
