@@ -1,4 +1,4 @@
-export class TEntity {
+class TEntity {
 
     getEntity() {
         return this;
@@ -10,6 +10,40 @@ export class TEntity {
     }
 }
 
-/*export {
+class TRecurso {
+
+    private nombre: string;
+    
+    constructor() {
+    }
+
+    getNombre() {
+        return this.nombre;
+    }
+
+    setNombre(nombre) {
+        this.nombre = nombre;
+    } 
+}
+
+class Malla {
+    private vertices: number[];
+    private normales: number[];
+    private coordtex: number[];
+    private indices: number[];
+    private texturas; //Textura[];
+
+    constructor(){
+
+    }
+
+    draw(){
+
+    }
+}
+
+export {
     TEntity,
-}*/
+    TRecurso,
+    Malla
+}
