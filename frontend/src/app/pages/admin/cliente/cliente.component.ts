@@ -31,15 +31,17 @@ export class ClienteComponent implements OnInit {
     console.log(this.uid);
 
     this.clienteService.cargarCli(this.uid)
-        .subscribe( res => {
+        .subscribe( (res) => {
+          console.log('nos responde: ');
           console.log(res);
           this.cargarFormulario(res);
         }, (err) => {
+          console.log('nos da error en el back');
           console.log(err);
     });
 
-    
-    
+
+
     this.formCliente = this.fb.group({
       uid:this.uid,//
       email: this.email,//
@@ -57,14 +59,14 @@ export class ClienteComponent implements OnInit {
     this.formCliente.get('nombre').setValue(res['clientes'].nombre);
     this.formCliente.get('NIF').setValue(res['clientes'].NIF);
     this.formCliente.get('telefono').setValue(res['clientes'].telefono);
-    
+
   }
 
   /*
   actualizarCliente(){
     if (this.formCliente.valid) {
 
-      
+
       this.clienteService.actualizarMedidasUsuario(this.formCliente.value).then((response) => {
 
         // medidas introducidas correctamente
@@ -96,7 +98,7 @@ export class ClienteComponent implements OnInit {
         confirmButtonText: 'Volver a intentar',
       });
     }
-  
+
   }
   */
 }

@@ -2,11 +2,12 @@ import { Injectable, SystemJsNgModuleLoader } from '@angular/core';
 import { ClienteForm } from '../interfaces/cliente-form.interface';
 import { ApiService } from './api.service';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { tap, map, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,10 @@ export class ClienteService {
 
   private cliente;
 
-  constructor( private apiService :ApiService, private http: HttpClient,private router: Router) { }
+  constructor( private apiService :ApiService,
+               private http: HttpClient,
+               private router: Router,
+               private usuarioService :UsuarioService) { }
 
   inicializar (clienteRecibido, tokenRecibido? :string){
 
@@ -76,19 +80,30 @@ export class ClienteService {
   }
 
   cargarClientes( desde: number, textoBusqueda?: string ): Observable<object> {
+
+    const headers = new HttpHeaders({
+      'x-token': this.usuarioService.getToken(),
+    });
     if (!desde) { desde = 0;}
     if (!textoBusqueda) {textoBusqueda = '';}
-    return this.http.get(`${environment.base_url}/clientes/?desde=${desde}&texto=${textoBusqueda}`);
+    return this.http.get(`${environment.base_url}/clientes/?desde=${desde}&texto=${textoBusqueda}`, { headers: headers });
   }
 
   borrarCliente( uid: string) {
+    const headers = new HttpHeaders({
+      'x-token': this.usuarioService.getToken(),
+    });
     if (!uid || uid === null) {uid = 'a'; }
-    return this.http.delete(`${environment.base_url}/clientes/${uid}`);
+    return this.http.delete(`${environment.base_url}/clientes/${uid}`, { headers: headers });
   }
 
   cargarCli( uid: string) {
+
+    const headers = new HttpHeaders({
+      'x-token': this.usuarioService.getToken(),
+    });
     console.log('entra en el servicio');
-    return this.http.get(`${environment.base_url}/clientes/?id=${uid}` , this.cabeceras);
+    return this.http.get(`${environment.base_url}/clientes/?id=${uid}` , { headers: headers });
   }
 
 }
