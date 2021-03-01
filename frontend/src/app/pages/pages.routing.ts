@@ -21,9 +21,13 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
+import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component';
 
 
 const routes: Routes = [
+  {
+    path: 'pruebas1', component: Pruebas1Component,
+  },
   {
     path: 'probador', component: BaseLayoutComponent,
     children: [
