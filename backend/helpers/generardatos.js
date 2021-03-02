@@ -2,6 +2,7 @@
 const { v4: uuidv4 } = require('uuid');
 const Dato = require('../models/datos.models');
 const Usuario = require('../models/usuarios.model');
+const Prenda = require('../models/prendas.model');
 const { response } = require("express");
 //para cargar las variables de entorno del configdb.js
 require('dotenv').config({ path: '../.env' });
@@ -98,7 +99,6 @@ const crearDatos = (req, res) => {
     } finally {}
 }
 
-
 const generarUsuarios = async(cantidad) => {
 
     console.log('vamos a crear un usuario: ', cantidad);
@@ -183,7 +183,61 @@ const generarUsuarios = async(cantidad) => {
 
 }
 
-module.exports = { generarUsuarios }
+const generarPrendas = async(cantidad) => {
+
+    console.log('vamos a crear una prenda: ', cantidad);
+
+    let id = ['id1', 'id2', 'id3'];
+    let nom = ['camiseta', 'camisa', 'sudadera', 'pantalon'];
+    let descr = ["camisa de verano", "camisa de invierno", "camisa de primavera", "camisa de otoño", "camiseta de verano", "camiseta de invierno", "camiseta de primavera", "camiseta de otoño", "sudadera de verano", "sudadera de invierno", "sudadera de primavera", "sudadera de otoño", "pantalon de verano", "pantalon de invierno", "pantalon de primavera", "pantalon de otoño"];
+    let ta = ["XS", "S", "M", "L", "XL"];
+
+    const ruta = './datosBaseParaGenerar/';
+
+    Promise.all([
+        leerFichero(ruta + 'identificador.json', id).then((res) => {
+            id = res;
+        }),
+        leerFichero(ruta + 'nombres.json', nom).then((res) => {
+            nombres = res;
+        }),
+
+    ]).then(() => {
+        console.log('FICHERO DE IDs:...................', id[0][0]);
+        console.log('FICHERO DE NOMBRES:....................', nombres[1][0]);
+
+    }).catch(error => {
+        console.log(error);
+
+    }).finally(async() => {
+
+        for (let i = 0; i < cantidad; i++) {
+
+            const identificador = (id[Math.floor((Math.random() * (id.length - 1)))]) + i;
+            const nombre = nom[Math.floor((Math.random() * (nom.length - 1)))][0];
+            const descripcion = descr[Math.round((Math.random()))];
+            const talla = ta[Math.round((Math.random()))];
+
+            const prendas = {
+                identificador: identificador,
+                nombre: nombre,
+                descripcion: descripcion,
+                talla: talla
+            };
+
+            try {
+                const nuevaPrenda = new Prenda(prendas);
+                await nuevaPrenda.save();
+                console.log('Prenda almacenada en la BD');
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+}
+
+module.exports = { generarUsuarios, generarPrendas }
 
 /* for (let index = 0; index < 1000; index++) {
     crearDatosUsuarios(index);
