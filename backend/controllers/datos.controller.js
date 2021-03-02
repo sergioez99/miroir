@@ -1,6 +1,7 @@
 const { response } = require("express");
 
 const { generarUsuarios, generarClientes, generarPrendas } = require('../helpers/generardatos');
+const { infoToken } = require('../helpers/infotoken');
 // const array_usuarios = ["601bf35586a6cf4e4c073c56", "60244194d9bca0360c5dac39"];
 
 const crearUsuarios = async(req, res) => {
