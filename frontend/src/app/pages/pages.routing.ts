@@ -21,6 +21,7 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
+import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 
 
 const routes: Routes = [
@@ -89,6 +90,7 @@ const routes: Routes = [
       { path:'prendas/prenda/:uid', component: PrendaComponent },
       { path:'clientes', component: ClientesComponent },
       { path:'clientes/cliente/:uid', component: ClienteComponent },
+      { path:'crear-datos', component: CrearDatosComponent },
       { path: '**', redirectTo: '' }
     ]
   },

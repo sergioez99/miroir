@@ -78,4 +78,29 @@ export class ApiService {
     });
     return this.http.post(this.url+'/api/prendas', formData, { headers: headers });
   }
+
+  crearDatosUsuariosCall( formData, token) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.post(this.url+'/api/datos/usuarios', formData, { headers: headers });
+  }
+
+  crearDatosClientesCall( formData, token) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.post(this.url+'/api/datos/clientes', formData, { headers: headers });
+  }
+
+  crearDatosPrendasCall( formData, token) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.post(this.url+'/api/datos/prendas', formData, { headers: headers });
+  }
+
 }

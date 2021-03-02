@@ -1,0 +1,91 @@
+<p>crear-datos works!</p>
+
+<div>
+    <form [formGroup]="formCrearUsuarios" (ngSubmit)="enviarUsuarios();">
+
+
+        <!-- INPUT: CANTIDAD -->
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Cantidad: </mat-label>
+            <input type="number" matInput formControlName="cantidad" min="0" class="form-input" placeholder="123">
+            <mat-hint>Introduzca la cantidad deseada</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="!formCrearUsuarios.get('cantidad').valid">
+                Por favor, introduce un número <strong>válido</strong>
+            </mat-error>
+
+
+        </mat-form-field>
+        <!-- ---------------- -->
+
+
+        <!-- SUBMIT: BOTON ENVIAR -->
+        <div class="mir-box-buttons">
+            <button type="submit" mat-raised-button color="accent" type="submit">Crear Usuarios</button>
+        </div>
+        <!-- -------------------- -->
+
+    </form>
+
+</div>
+<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
+<div>
+    <form [formGroup]="formCrearClientes" (ngSubmit)="enviarClientes();">
+
+
+        <!-- INPUT: CANTIDAD -->
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Cantidad: </mat-label>
+            <input type="number" matInput formControlName="cantidad" min="0" class="form-input" placeholder="123">
+            <mat-hint>Introduzca la cantidad deseada</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="!formCrearClientes.get('cantidad').valid">
+                Por favor, introduce un número <strong>válido</strong>
+            </mat-error>
+
+
+        </mat-form-field>
+        <!-- ---------------- -->
+
+
+        <!-- SUBMIT: BOTON ENVIAR -->
+        <div class="mir-box-buttons">
+            <button type="submit" mat-raised-button color="accent" type="submit">Crear Clientes</button>
+        </div>
+        <!-- -------------------- -->
+
+    </form>
+
+</div>
+<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
+<div>
+    <form class="mir-login-form" [formGroup]="formCrearPrendas" (ngSubmit)="enviarPrendas();">
+
+
+        <!-- INPUT: CANTIDAD -->
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Cantidad: </mat-label>
+            <input type="number" matInput formControlName="cantidad" min="0" class="form-input" placeholder="123">
+            <mat-hint>Introduzca la cantidad deseada</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="!formCrearPrendas.get('cantidad').valid">
+                Por favor, introduce un número <strong>válido</strong>
+            </mat-error>
+
+
+        </mat-form-field>
+        <!-- ---------------- -->
+
+
+        <!-- SUBMIT: BOTON ENVIAR -->
+        <div class="mir-box-buttons">
+            <button type="submit" mat-raised-button color="accent" type="submit">Crear Prendas</button>
+        </div>
+        <!-- -------------------- -->
+
+    </form>
+
+</div>

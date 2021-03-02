@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+/* const { Schema, model } = require('mongoose');
 //const mongoose = require('mongoose');
 
 // esquema de la base de datos
@@ -77,4 +77,4 @@ DatosSchema.method('toJSON', function() {
     return object;
 });
 
-module.exports = model('DatosUsuarios', DatosUsuarioSchema);
+module.exports = model('DatosUsuarios', DatosUsuarioSchema); */
