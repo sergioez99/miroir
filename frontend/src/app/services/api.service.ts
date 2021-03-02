@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { MedidasForm } from '../interfaces/usuario-medidas-form.interface';
 import { UsuarioForm } from '../interfaces/usuario-form.interface';
+import { ClienteForm } from '../interfaces/cliente-form.interface';
 import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
+import { FormBuilder } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class ApiService {
 
   private url = 'http://localhost:3000';
 
-  constructor( private http: HttpClient ) { }
+  constructor( private http: HttpClient,private fb: FormBuilder) { }
 
   recuperacionCall(email: string){
 
@@ -93,4 +95,15 @@ export class ApiService {
     return this.http.post(this.url + '/api/usuarios', formData,{ headers: headers });
   }
 
+  actualizarDatosClienteCall (token :string, id :string, formData :ClienteForm){
+
+     console.log ('Datos cliente desde Call: ', formData);
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    
+    
+    return this.http.put(this.url + '/api/clientes/'+id, formData, { headers: headers });
+  }
 }

@@ -106,4 +106,61 @@ export class ClienteService {
     return this.http.get(`${environment.base_url}/clientes/?id=${uid}` , { headers: headers });
   }
 
+  actualizarDatosCliente(formData) :Promise<any>{
+    
+    return new Promise ( (resolve, reject) => {
+
+
+      console.log('estamos modificando las medidas del usuario: ', formData);
+ 
+      let form :ClienteForm = {
+        //email: this.usuario['email'],
+        //id: this.usuario['uid'],
+        id: formData.uid,
+        email: formData.email,
+        nombreEmpresa:formData.nombreEmpresa,
+        nombre: formData.nombre,
+        nif: formData.nif,
+        telefono: formData.telefono   
+      };
+ 
+ 
+      console.log(form);
+
+      if(form.id!=='nuevo'){
+        this.apiService.actualizarDatosClienteCall(this.usuarioService.getToken(), form.id, form).subscribe( (res) => {
+ 
+          // medidas modificadas correctamente
+          //console.log(res);
+  
+          this.cliente = res['cliente'];
+          resolve(true);
+  
+        }, (err) =>{
+          console.log('el error',err);
+          //console.error(err);
+          reject(err);
+  
+        });
+      }
+      /*
+      else{
+        this.apiService.crearUsuarioCall(this.token, form.id, form).subscribe( (res) => {
+ 
+          // medidas modificadas correctamente
+          console.log(res);
+  
+          this.usuario = res['usuario'];
+          resolve(true);
+  
+        }, (err) =>{
+  
+          console.error(err);
+          reject(err);
+  
+        });
+      }*/
+    });
+  }
+
 }

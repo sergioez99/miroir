@@ -6,16 +6,47 @@
             <p> Modifica tus datos: </p>
         </header>
 
-        <form [formGroup]="formCliente">
-            <mat-form-field appearance="outline" class="mir-block">
-                <mat-label>Email</mat-label>
-                <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-                <button mat-icon-button matSuffix type="button" disabled>
-                    <mat-icon>alternate_email</mat-icon>
-                  </button>
-                <mat-hint>Introduzca su email</mat-hint>
-    
-            </mat-form-field>
+        <form [formGroup]="formCliente" (ngSubmit)="actualizarCliente();">
+            <div>
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput formControlName="email" placeholder=this.email>
+                    <button mat-icon-button matSuffix type="button" disabled>
+                        <mat-icon>alternate_email</mat-icon>
+                    </button>
+        
+                </mat-form-field>
+            </div>
+            
+            <div>
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Empresa</mat-label>
+                    <input matInput formControlName="nombreEmpresa" placeholder=this.empresa>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="nombre" placeholder=this.nombre>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>NIF</mat-label>
+                    <input matInput formControlName="nif" placeholder=this.NIF>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Teléfono</mat-label>
+                    <input matInput formControlName="telefono" placeholder=this.telefono>
+                </mat-form-field>
+            </div>
+
+            <button type="submit" mat-raised-button color="accent">Actualizar</button>
         </form>
         
     </article>

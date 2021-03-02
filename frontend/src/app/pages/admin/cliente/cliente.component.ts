@@ -45,9 +45,9 @@ export class ClienteComponent implements OnInit {
     this.formCliente = this.fb.group({
       uid:this.uid,//
       email: this.email,//
-      empresa: this.empresa,
+      nombreEmpresa: this.empresa,
       nombre: this.nombre,
-      NIF: this.NIF,
+      nif: this.NIF,
       telefono: this.telefono,
     });
 
@@ -55,19 +55,19 @@ export class ClienteComponent implements OnInit {
 
   cargarFormulario(res:any):void{
     this.formCliente.get('email').setValue(res['clientes'].email);//
-    this.formCliente.get('empresa').setValue(res['clientes'].empresa);
+    this.formCliente.get('nombreEmpresa').setValue(res['clientes'].nombreEmpresa);
     this.formCliente.get('nombre').setValue(res['clientes'].nombre);
-    this.formCliente.get('NIF').setValue(res['clientes'].NIF);
+    this.formCliente.get('nif').setValue(res['clientes'].nif);
     this.formCliente.get('telefono').setValue(res['clientes'].telefono);
 
   }
 
-  /*
+  
   actualizarCliente(){
     if (this.formCliente.valid) {
 
 
-      this.clienteService.actualizarMedidasUsuario(this.formCliente.value).then((response) => {
+      this.clienteService.actualizarDatosCliente(this.formCliente.value).then((response) => {
 
         // medidas introducidas correctamente
 
@@ -82,7 +82,7 @@ export class ClienteComponent implements OnInit {
 
         Swal.fire({
           title: '¡Error!',
-          text: error.error.msg,
+          text: error,
           icon: 'error',
           confirmButtonText: 'Volver a intentar',
         });
@@ -100,5 +100,5 @@ export class ClienteComponent implements OnInit {
     }
 
   }
-  */
+  
 }
