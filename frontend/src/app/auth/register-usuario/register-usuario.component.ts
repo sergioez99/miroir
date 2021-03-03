@@ -16,7 +16,7 @@ export class RegisterUsuarioComponent implements OnInit {
 
   public formRegister: FormGroup | null = null;
   public formSubmit = false;
-
+  terminos = false;
   public hide = true;
   public hideR = true;
 
@@ -29,7 +29,8 @@ export class RegisterUsuarioComponent implements OnInit {
     this.formRegister = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      passwordRepeat: ['', [Validators.required]]
+      passwordRepeat: ['', [Validators.required]],
+      terminos: [false, [Validators.required] ],
     });
 
     this.formRegister.get('passwordRepeat').setValidators(
@@ -43,36 +44,38 @@ export class RegisterUsuarioComponent implements OnInit {
     this.formSubmit = true;
     console.log(this.formRegister);
 
-    if (this.formRegister.valid){
-      console.log('enviar');
+    if(this.terminos){
+      if (this.formRegister.valid){
+        console.log('enviar');
 
-      this.authService.registro(this.formRegister.value).then( res => {
+        this.authService.registro(this.formRegister.value).then( res => {
 
-        Swal.fire({
-          title:'Usuario creado correctamente',
-          text: 'Le hemos enviado un email de confirmación. <br> Por favor, revise su bendeja de entrada.',
-          icon: 'success',
-          showCloseButton: true,
-          confirmButtonText: 'Aceptar'
-        }).then((result) => {
-          // navegacion a login con router
-          localStorage.setItem('email', this.formRegister.value.email);
-          this.router.navigateByUrl('/verificacion');
+          Swal.fire({
+            title:'Usuario creado correctamente',
+            text: 'Le hemos enviado un email de confirmación. <br> Por favor, revise su bendeja de entrada.',
+            icon: 'success',
+            showCloseButton: true,
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            // navegacion a login con router
+            localStorage.setItem('email', this.formRegister.value.email);
+            this.router.navigateByUrl('/verificacion');
+          });
+
+
+        }).catch( err =>{
+
+          Swal.fire({
+            title:'¡Error!',
+            text: err.error.msg,
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonText: 'Volver a intentar',
+            footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
+          });
+
         });
-
-
-      }).catch( err =>{
-
-        Swal.fire({
-          title:'¡Error!',
-          text: err.error.msg,
-          icon: 'error',
-          showCloseButton: true,
-          confirmButtonText: 'Volver a intentar',
-          footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
-        });
-
-      });
+      }
     }
 
   }
