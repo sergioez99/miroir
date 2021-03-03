@@ -359,7 +359,7 @@ z`   *
   
   private initialiseBuffers(): any {
     const cubo = new RMalla();
-    cubo.cargarRMalla("../../assets/cubo.json");
+    //cubo.cargarRMalla("../../assets/cubo.json");
     
     const positionBuffer = this.gl.createBuffer();
 
