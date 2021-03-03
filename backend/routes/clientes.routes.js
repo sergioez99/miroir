@@ -23,7 +23,7 @@ const {
 
 
 router.get('/', [
-    validarJWT,
+    /*validarJWT,*/
     check('id', 'El id de usuario ha de ser valido').optional().isMongoId(),
     check('desde', 'El desde debe ser un número').optional().isNumeric(),
     validarCampos,
@@ -62,7 +62,7 @@ router.put('/:id', [
 ], actualizarCliente);
 
 router.delete('/:id', [
-    validarJWT,
+    /*validarJWT,*/
     check('id', 'El identificador no es válido').isMongoId(),
     validarCampos
 ], borrarCliente);
