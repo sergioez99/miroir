@@ -138,7 +138,7 @@ const enviarArchivo = async(req, res = response) => {
                 msg: 'El archivo no existe',
             });
         }
-        patharchivo = `${process.env.PATHUPLOAD}/sinImagen.jpg`;
+        patharchivo = `${process.env.PATHUPLOAD}/sinImagen.png`;
     }
     //si todo bien lo enviamos
     res.sendFile(patharchivo);
