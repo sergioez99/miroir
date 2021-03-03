@@ -42,7 +42,7 @@ export class Pruebas1Component implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.miNodo = new TNode(null,null,null,null,null,null,null);
+    //this.miNodo = new TNode(null,null,null,null,null,null,null);
     this.miLight = new ELight(null,null,null,null,null,null, null);
     this.miCamera = new ECamera(null,null,null,null,null,null,null);
 
@@ -50,11 +50,12 @@ export class Pruebas1Component implements OnInit {
     console.log(this.miLight);
     console.log(this.miCamera);
 
-    this.miNodo1 = new TNode(null,this.miNodo1,null,null,null,null,null);
+    /*this.miNodo1 = new TNode(null,this.miNodo1,null,null,null,null,null);
     this.miNodo2 = new TNode(null,this.miNodo1,null,null,null,null,null);
     this.miNodo3 = new TNode(null,this.miNodo1,null,null,null,null,null);
     this.miNodo4 = new TNode(null,this.miNodo1,null,null,null,null,null);
     this.hijos = [this.miNodo1, this.miNodo2, this.miNodo3, this.miNodo4];
+    */
 
     this.miNodo.addChild(this.miNodo4);
     console.log(this.miNodo);

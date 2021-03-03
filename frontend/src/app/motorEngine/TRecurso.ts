@@ -1,8 +1,12 @@
-import { arch } from 'os';
+
 import { TRecurso, Malla } from './commons';
 
-class RMalla extends TRecurso {
+export class RMalla extends TRecurso {
 
+    //Vertices, normales, coordenadas -> aquí los buffers
+    //Valores en el json -> se abre el fichero y eso 
+    //Parse, con esa estructura, guardamos las cosas en la malla de aquí abajo
+    //Hacer correspondencia correcta entre arrays de maya ->  arrays de buffer
     private mallas: Malla[];
 
 

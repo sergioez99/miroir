@@ -7,18 +7,20 @@ import { mat4, vec3 } from 'gl-matrix';
 
 export class TNode {
 
-    private transformMatrix: mat4;
+    private transformMatrix: mat4 = mat4.create();
     private entidad;//: Tentity;
     private padre : TNode;
     private children: TNode[];
     private traslacion: vec3 = vec3.create();
-    private rotacion: vec3 = vec3.create();
+    private rotacionX: vec3 = vec3.create();
+    private rotacionY: vec3 = vec3.create();
+    private rotacionZ: vec3 = vec3.create();
     private escalado: vec3 = vec3.create();
 
 
 
 
-    constructor(transformMatrix, padre, entidad, children, traslacion, rotacion, escalado) {
+    constructor(transformMatrix, padre, entidad, children, traslacion, rotacionX, rotacionY, rotacionZ, escalado) {
       this.transformMatrix = transformMatrix;
       this.entidad = entidad;
       this.padre = padre;
@@ -31,8 +33,12 @@ export class TNode {
 
       if(traslacion)
         this.traslacion = traslacion;
-      if(rotacion)
-        this.rotacion = rotacion;
+      if(rotacionX)
+        this.rotacionX = rotacionX;
+      if(rotacionY)
+        this.rotacionY = rotacionY;
+      if(rotacionZ)
+        this.rotacionZ = rotacionZ;
       if(escalado)
         this.escalado = escalado;
     }
@@ -83,10 +89,10 @@ export class TNode {
     }
 
     setRotacion (rotacion) {
-      this.rotacion = rotacion;
+      this.rotacionX = rotacion;
     }
     getRotacion() {
-      return this.rotacion
+      return this.rotacionX
     }
 
     setEscalado (escalado){
@@ -96,15 +102,19 @@ export class TNode {
       return this.escalado;
     }
     
-    /*recorrer (matrizAcum){
+    recorrer (matrizAcum){
       console.log("Empieza método recorrer");
       //falta un if que no entiendo
 
-      this.transformMatrix = matrizAcum * mat4.translate(this.traslacion) * mat4.rotate(this.rotacion) * mat4.scale(this.escalado);
+      mat4.translate(matrizAcum, matrizAcum, this.traslacion);
+      mat4.rotate(matrizAcum, matrizAcum, 0.5, this.rotacionX);
+      mat4.scale(matrizAcum, matrizAcum, this.escalado);
+
+      this.transformMatrix = matrizAcum;
 
       console.log(this.transformMatrix);
       
-      this.entidad.draw(this.transformMatrix);
+      this.entidad.draw(matrizAcum);
 
       //para cada hijo recorrer(transformMatrix) esto no se :S      
       for (var i = 0; i < this.padre.children.length; i++) {
@@ -113,7 +123,7 @@ export class TNode {
 
         }
       }
-    }*/
+    }
     
     draw() {
       if (this.entidad && this.entidad != null) {

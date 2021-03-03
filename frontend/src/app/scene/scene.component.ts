@@ -3,6 +3,11 @@ import { SceneService } from '../services/scene.service';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../services/webgl.service';
+import { min } from 'rxjs/operators';
+import { TEntity } from 'src/app/motorEngine/commons';
+import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
+import { TNode } from 'src/app/motorEngine/TNode';
+import { mat4, vec3, vec4 } from 'gl-matrix';
 
 @Component({
   selector: 'app-scene',
@@ -38,7 +43,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-      
+
     }
 
    

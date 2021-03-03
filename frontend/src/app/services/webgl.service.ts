@@ -3,6 +3,9 @@ import { GLSLConstants } from '../../assets/GLSLConstants';
 import fragmentShaderSrc from '../../assets/toucan-fragment-shader.glsl';
 import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
+import { TNode } from '../motorEngine/TNode';
+import { TEntity } from '../motorEngine/TEntity';
+import { RMalla } from '../motorEngine/TRecurso';
 
 @Injectable({
   providedIn: 'root',
@@ -354,20 +357,14 @@ z`   *
     return -1;
   }
   
-  /**
-   * Initialise the buffers we'll need. For this demo, we just
-   * have one object -- a simple two-dimensional square.
-   *
-   * @returns {{position: WebGLBuffer}}
-   */
   private initialiseBuffers(): any {
-    // Create a buffer for the square's positions.
+    const cubo = new RMalla();
+    cubo.cargarRMalla("../../assets/cubo.json");
+    
     const positionBuffer = this.gl.createBuffer();
 
-    // bind the buffer to WebGL and tell it to accept an ARRAY of data
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
-    // create an array of positions for the square. (Es un cubo ahora)
     const positions = new Float32Array([
        // Cara delantera
         -1.0, -1.0,  1.0,
