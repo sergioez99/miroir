@@ -1,0 +1,66 @@
+th {
+    background-color: #b388ff;
+    color: white;
+    border: solid #292929 1px;
+}
+
+.nuevo-usu {
+    margin-bottom: 5px;
+    vertical-align: middle;
+}
+
+.delete {
+    color: orangered;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.edit {
+    color: green;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.table-striped {
+    border: solid #292929 1px;
+    background-color: #e6d2ff;
+}
+
+.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(2n+1)>th {
+    background-color: #f4ebff;
+    border: solid #292929 1px;
+}
+
+.table-striped>tbody>tr:nth-child(2n)>td,
+.table-striped>tbody>tr:nth-child(2n)>th {
+    border: solid #292929 1px;
+}
+
+.form-control,
+.micursor {
+    background-color: #e6d2ff;
+    border: solid #292929 1px;
+}
+
+.micursor {
+    cursor: pointer;
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited {
+    background-color: #b388ff;
+    text-align: center;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #fb9b02;
+    border: none;
+}
+
+::placeholder {
+    color: #292929;
+    opacity: 0.8;
+}
