@@ -4,7 +4,6 @@ import { PrendaService } from '../../../services/prenda.service';
 import { Prenda } from '../../../models/prenda.model';
 import Swal from 'sweetalert2';
 
-import {} from '../../../services/prenda.service';
 import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
@@ -102,7 +101,9 @@ export class PrendasComponent implements OnInit {
           if (result.value) {
             this.prendaService.borrarPrenda(uid)
               .subscribe( resp => {
+                Swal.fire({icon: 'success', title: 'Prenda eliminada'});
                 this.cargarPrendas(this.ultimaBusqueda);
+
               }
               ,(err) =>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'No se pudo completar la acción, vuelva a intentarlo',});
