@@ -1,4 +1,3 @@
-import { arch } from 'os';
 import { TRecurso, Malla } from './commons';
 
 class RMalla extends TRecurso {
