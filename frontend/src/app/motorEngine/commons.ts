@@ -9,11 +9,11 @@ class TEntity {
     endDraw() {
     }
 }
-
 class TRecurso {
 
     private nombre: string;
     
+
     constructor() {
     }
 
@@ -35,6 +35,41 @@ class Malla {
 
     constructor(){
 
+    }
+
+    setVertices(v) {
+        this.vertices = v;
+    }
+    getVertices() {
+        return this.vertices;
+    }
+
+    setNormales(v) {
+        this.normales = v;
+    }
+    getNormales() {
+        return this.normales;
+    }
+
+    setCoordtex(v) {
+        this.coordtex = v;
+    }
+    getCoordtex() {
+        return this.coordtex;
+    }
+
+    setIndices(v) {
+        this.indices = v;
+    }
+    getIndices() {
+        return this.indices;
+    }
+
+    setTexturas(v) {
+        this.texturas = v;
+    }
+    getTexturas() {
+        return this.texturas;
     }
 
     draw(){

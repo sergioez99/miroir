@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { min } from 'rxjs/operators';
-import { TEntity } from 'src/app/motorEngine/commons';
+import { TEntity, Malla, TRecurso } from 'src/app/motorEngine/commons';
 import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
 import { TNode } from 'src/app/motorEngine/TNode';
 import { mat4, vec3, vec4 } from 'gl-matrix';
@@ -38,6 +38,13 @@ export class Pruebas1Component implements OnInit {
 
   //Para probar camaras
   private miCamera: ECamera;
+
+  //Para probar malla
+  private miMalla: Malla;
+  private arrays: number[];
+
+  //Para probar recuro
+  private miRecurso: TRecurso;
 
   constructor() { }
 
@@ -107,6 +114,20 @@ export class Pruebas1Component implements OnInit {
     console.log(this.miLight.getTipo());
 
     console.log(this.miLight);
+
+    //Malla
+    this.arrays = [1,2,3];
+    this.miMalla.setCoordtex(this.arrays);
+    this.miMalla.setIndices(this.arrays);
+    this.miMalla.setNormales(this.arrays);
+    this.miMalla.setTexturas(this.arrays);
+    this.miMalla.setTexturas(this.arrays);
+
+    console.log(this.miMalla);
+
+    //Recurso
+    this.miRecurso.setNombre("Hola");
+    console.log(this.miRecurso);
 
   }
 

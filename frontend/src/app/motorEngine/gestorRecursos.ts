@@ -5,7 +5,6 @@ export class gestorRecursos {
     private recursos: TRecurso[];
 
     constructor(){
-
     }
 
     getRecurso(nombre) {

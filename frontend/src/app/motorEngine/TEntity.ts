@@ -86,6 +86,7 @@ class ELight extends TEntity {
   }
 
   endDraw() {
+      
   }
 }
 

@@ -1,4 +1,3 @@
-
 import { TRecurso, Malla } from './commons';
 
 export class RMalla extends TRecurso {
