@@ -19,6 +19,10 @@ export class ApiService {
     return this.http.get(this.url+'/api/recuperar/'+email );
   }
 
+  cargarModelo(nombre: string) { 
+     return this.http.get(this.url+'/assets/'+nombre);
+  }
+
   cambiarpasswordCall(formData){
     return this.http.post(this.url+'/api/recuperar/cambiarpassword', formData);
   }

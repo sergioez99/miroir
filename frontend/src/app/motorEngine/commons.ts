@@ -27,10 +27,10 @@ class TRecurso {
 }
 
 class Malla {
-    private vertices: number[];
-    private normales: number[];
+    private vertices;
+    private normales;
     private coordtex: number[];
-    private indices: number[];
+    private indices;
     private texturas; //Textura[];
 
     constructor(){

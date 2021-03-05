@@ -6,6 +6,8 @@ import * as matrix from 'gl-matrix';
 import { TNode } from '../motorEngine/TNode';
 import { TEntity } from '../motorEngine/TEntity';
 import { RMalla } from '../motorEngine/TRecurso';
+import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
+
 
 @Injectable({
   providedIn: 'root',
@@ -36,12 +38,18 @@ export class WebGLService {
 
   private cubeRotation = 0.0;
 
+  //Variables árbol de la escena
+  private miNodo;
+  private miLuz;
+  private miCamara;
+
   private then = 0;
 
   constructor() {}
 
   //Inicializamos el canvas HTML con el context 
   initialiseWebGLContext(canvas: HTMLCanvasElement): WebGLRenderingContext {
+
     // Iniciacializamos el contexto
     this.renderingContext =
       canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -149,6 +157,12 @@ export class WebGLService {
 
     // Clear the colour as well as the depth buffer.
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+    //Creando nodos del árbol de la escena
+    this.miNodo = new TNode(null,null,null,null,null,null,null);
+    this.miLuz = new ELight(null,null,null,null,null,null, null);
+    this.miCamara = new ECamera(null,null,null,null,null,null,null);
+
   }
 
   /**
@@ -356,60 +370,24 @@ z`   *
     }
     return -1;
   }
+
+  
   
   private initialiseBuffers(): any {
     const cubo = new RMalla();
-    //cubo.cargarRMalla("../../assets/cubo.json");
-    
+
+    var mallas = cubo.getMallas();
+
     const positionBuffer = this.gl.createBuffer();
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
-    const positions = new Float32Array([
-       // Cara delantera
-        -1.0, -1.0,  1.0,
-        1.0, -1.0,  1.0,
-        1.0,  1.0,  1.0,
-        -1.0,  1.0,  1.0,
+    console.log(mallas);
 
-      // Cara trasera
-        -1.0, -1.0, -1.0,
-        -1.0,  1.0, -1.0,
-        1.0,  1.0, -1.0,
-        1.0, -1.0, -1.0,
-
-      // Top face
-        -1.0,  1.0, -1.0,
-        -1.0,  1.0,  1.0,
-        1.0,  1.0,  1.0,
-        1.0,  1.0, -1.0,
-
-      // Bottom face
-        -1.0, -1.0, -1.0,
-        1.0, -1.0, -1.0,
-        1.0, -1.0,  1.0,
-        -1.0, -1.0,  1.0,
-
-      // Right face
-        1.0, -1.0, -1.0,
-        1.0,  1.0, -1.0,
-        1.0,  1.0,  1.0,
-        1.0, -1.0,  1.0,
-
-      // Left face
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0,  1.0,
-        -1.0,  1.0,  1.0,
-        -1.0,  1.0, -1.0
-    ]);
-
-    // set the list of positions into WebGL to build the
-    // shape by passing it into bufferData.
-    // We tell WebGL that the data supplied is an ARRAY and
-    // to handle the data as a statically drawn shape.
+    console.log(mallas[0].getVertices());
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      positions,
+      mallas[0].getVertices(),
       this.gl.STATIC_DRAW
     );
 
@@ -455,7 +433,7 @@ z`   *
     const colorBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
-
+    
     return {
       position: positionBuffer,
       color: colorBuffer,

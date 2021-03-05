@@ -12,15 +12,15 @@ export class TNode {
     private padre : TNode;
     private children: TNode[];
     private traslacion: vec3 = vec3.create();
-    private rotacionX: vec3 = vec3.create();
-    private rotacionY: vec3 = vec3.create();
-    private rotacionZ: vec3 = vec3.create();
+    private rotacionX;
+    private rotacionY;
+    private rotacionZ;
     private escalado: vec3 = vec3.create();
 
 
 
 
-    constructor(transformMatrix, padre, entidad, children, traslacion, rotacionX, rotacionY, rotacionZ, escalado) {
+    constructor(transformMatrix, padre, entidad, children, traslacion, rotAnguloX, rotAnguloY, rotAnguloZ, escalado) {
       this.transformMatrix = transformMatrix;
       this.entidad = entidad;
       this.padre = padre;
@@ -33,12 +33,12 @@ export class TNode {
 
       if(traslacion)
         this.traslacion = traslacion;
-      if(rotacionX)
-        this.rotacionX = rotacionX;
-      if(rotacionY)
-        this.rotacionY = rotacionY;
-      if(rotacionZ)
-        this.rotacionZ = rotacionZ;
+      if(rotAnguloX)
+        this.rotacionX = rotAnguloX;
+      if(rotAnguloY)
+        this.rotacionY = rotAnguloY;
+      if(rotAnguloZ)
+        this.rotacionZ = rotAnguloZ;
       if(escalado)
         this.escalado = escalado;
     }
@@ -88,11 +88,23 @@ export class TNode {
       return this.traslacion;
     }
 
-    setRotacion (rotacion) {
+    setRotacionX (rotacion) {
       this.rotacionX = rotacion;
     }
-    getRotacion() {
+    getRotacionX() {
       return this.rotacionX
+    }
+    setRotacionY (rotacion) {
+      this.rotacionY = rotacion;
+    }
+    getRotacionY() {
+      return this.rotacionY
+    }
+    setRotacionZ (rotacion) {
+      this.rotacionZ = rotacion;
+    }
+    getRotacionZ() {
+      return this.rotacionZ
     }
 
     setEscalado (escalado){
@@ -107,7 +119,9 @@ export class TNode {
       //falta un if que no entiendo
 
       mat4.translate(matrizAcum, matrizAcum, this.traslacion);
-      mat4.rotate(matrizAcum, matrizAcum, 0.5, this.rotacionX);
+      mat4.rotateX(matrizAcum, matrizAcum, this.rotacionX);
+      mat4.rotateY(matrizAcum, matrizAcum, this.rotacionY);
+      mat4.rotateZ(matrizAcum, matrizAcum, this.rotacionZ);
       mat4.scale(matrizAcum, matrizAcum, this.escalado);
 
       this.transformMatrix = matrizAcum;
