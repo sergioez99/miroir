@@ -159,7 +159,7 @@ export class WebGLService {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     //Creando nodos del árbol de la escena
-    this.miNodo = new TNode(null,null,null,null,null,null,null);
+    this.miNodo = new TNode(null, null, null, null, null, null, null, null, null);
     this.miLuz = new ELight(null,null,null,null,null,null, null);
     this.miCamara = new ECamera(null,null,null,null,null,null,null);
 
