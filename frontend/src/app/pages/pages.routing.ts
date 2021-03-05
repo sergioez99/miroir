@@ -22,6 +22,7 @@ import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
+import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 
 
 const routes: Routes = [
@@ -70,6 +71,11 @@ const routes: Routes = [
       { path:'usuario', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
         children: [
           { path: '', component: PerfilUsuarioComponent }
+        ]
+      },
+      { path:'contra', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
+        children: [
+          { path: '', component: CambioContraComponent }
         ]
       },
 

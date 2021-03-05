@@ -28,7 +28,8 @@ import { PrendaComponent } from './admin/prenda/prenda.component';
 // import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
 import { PaginationComponent } from '../components/pagination/pagination.component';
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
-import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component'
+import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
+import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,9 @@ import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component'
     // ActivarCuentaComponent,
     PaginationComponent,
     ProgressbarComponent,
-    CrearDatosComponent
+    CrearDatosComponent,
+    CambioContraComponent,
+  
 
 
   ],

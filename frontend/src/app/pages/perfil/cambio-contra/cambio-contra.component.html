@@ -1,0 +1,49 @@
+<article class="mir-recovery-box">
+    <h1 class="mir-title"> Recuperar contraseña </h1>
+    <form class="mir-recovery-form" [formGroup]="formRecovery" (ngSubmit)="cambiarpassword();">
+
+
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint>Introduzca su nueva contraseña</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRecovery.get('password').hasError('required');">
+                Contraseña <strong>necesaria</strong>
+            </mat-error>
+
+        </mat-form-field>
+        <!-- ------------ -->
+        <!-- INPUT: PASSWORD REPETIR -->
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
+            <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+            <mat-hint>Repita su contraseña</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRecovery.get('passwordRepeat').hasError('required');">
+                Contraseña <strong>necesaria</strong>
+            </mat-error>
+            <mat-error *ngIf="formRecovery.get('passwordRepeat').hasError('notEquals')">
+                La contraseña <strong>no coincide</strong>
+            </mat-error>
+
+        </mat-form-field>
+        <!-- ------------ -->
+
+        <div class="mir-box-buttons">
+            <app-button-back></app-button-back>
+            <button class="mir-recovery-button" mat-raised-button color="accent" type="submit">Recuperar 
+            </button>
+        </div>
+    </form>
+
+
+</article>

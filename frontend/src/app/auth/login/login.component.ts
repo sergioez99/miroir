@@ -41,6 +41,9 @@ export class LoginComponent implements OnInit {
     if (this.formLogin.valid) {
       this.authService.login(this.formLogin.value).then((response) => {
 
+        this.usuarioService.setEmail(this.formLogin.value.email);
+        console.log(this.formLogin.value.email);
+
         // navegacion en función del tipo de usuario
 
         switch ( this.usuarioService.getRol() ){
