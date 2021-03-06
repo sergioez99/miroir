@@ -24,7 +24,7 @@ const obtenerUsuarios = async(req, res = response) => {
     let textoBusqueda = '';
     if (texto) {
         textoBusqueda = new RegExp(texto, 'i');
-        //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+        // console.log('texto', texto, ' textoBusqueda', textoBusqueda);
     }
 
     //encontrar un unico usuario
@@ -166,7 +166,7 @@ const crearUsuario = async(req, res) => {
             });
 
             //var link = 'https://miroir.ovh/verificado/' + verificationToken;
-            var link = 'http://localhost:4200/verificado/'+verificationToken;
+            var link = 'http://localhost:4200/verificado/' + verificationToken;
             var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
                 '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
                 '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +

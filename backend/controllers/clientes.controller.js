@@ -24,7 +24,6 @@ const obtenerClientes = async(req, res = response) => {
 
     //encontrar un unico Cliente
     const id = req.query.id;
-    
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -38,7 +37,7 @@ const obtenerClientes = async(req, res = response) => {
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
+    const registropp = Number(process.env.DOCSPERPAGE);
 
 
 

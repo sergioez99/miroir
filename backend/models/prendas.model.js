@@ -17,7 +17,7 @@ const PrendaSchema = Schema({
         required: true,
     },
     talla: {
-        type: String,
+        type: { talla: String },
         required: true,
     },
     //OJOOOO !!!!!! HAY QUE revisar esta vaina !!!!

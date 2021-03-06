@@ -1,0 +1,31 @@
+th {
+    background-color: #b388ff;
+    color: white;
+    border: solid #292929 1px;
+}
+
+.nuevo-pre {
+    margin-bottom: 5px;
+    vertical-align: middle;
+}
+
+.delete {
+    color: orangered;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.edit {
+    color: green;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.table-striped {
+    border: solid #292929 1px;
+    background-color: #e6d2ff;
+}
+
+.justify-content-end {
+    size: 4cm;
+}
