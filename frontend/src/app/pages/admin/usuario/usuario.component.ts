@@ -69,18 +69,17 @@ export class UsuarioComponent implements OnInit {
     this.formMedidas.get('cadera').setValue(res['usuarios'].cadera);
   }
   
- /* cargarFormularioNuevo():void{
+  cargarFormularioNuevo(){
     this.formMedidas.reset();
     this.formMedidas.get('uid').setValue('nuevo');
     this.formMedidas.get('email').setValue('ejemplo2@gmail.com');
-    this.formMedidas.get('peso').setValue('10');
-    this.formMedidas.get('altura').setValue('10');
-    this.formMedidas.get('pecho').setValue('10');
-    this.formMedidas.get('cintura').setValue('10');
-    this.formMedidas.get('cadera').setValue('10');
+    this.formMedidas.get('peso').setValue('100');
+    this.formMedidas.get('altura').setValue('100');
+    this.formMedidas.get('pecho').setValue('100');
+    this.formMedidas.get('cintura').setValue('100');
+    this.formMedidas.get('cadera').setValue('100');
     //this.router.navigateByUrl('/admin/usuarios/usuario/nuevo');
-
-  }*/
+  }
   esNuevo(){
     if(this.uid==='nuevo'){
       this.isNew = true;

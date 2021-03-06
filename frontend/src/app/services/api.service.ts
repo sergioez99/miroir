@@ -106,4 +106,15 @@ export class ApiService {
     
     return this.http.put(this.url + '/api/clientes/'+id, formData, { headers: headers });
   }
+
+  crearClienteCall (token :string, id :string, formData :ClienteForm){
+
+    console.log ('crear cliente call', formData);
+
+   const headers = new HttpHeaders({
+     'x-token': token,
+   });
+
+   return this.http.post(this.url + '/api/clientes', formData,{ headers: headers });
+ }
 }

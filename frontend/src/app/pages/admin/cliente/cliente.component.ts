@@ -12,10 +12,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
-
+  public isNew: boolean=false;
   public formCliente: FormGroup | null = null;
   private uid: string = '';
   @Input() email: string = '';
+  @Input() password: string='';
   @Input() empresa: string = '';
   @Input() nombre: string = '';
   @Input() NIF: string = '';
@@ -29,8 +30,10 @@ export class ClienteComponent implements OnInit {
   ngOnInit(): void {
     this.uid=this.route.snapshot.params['uid'];
     console.log(this.uid);
+    this.esNuevo();
 
-    this.clienteService.cargarCli(this.uid)
+    if(this.uid!=='nuevo'){
+      this.clienteService.cargarCli(this.uid)
         .subscribe( (res) => {
           console.log('nos responde: ');
           console.log(res);
@@ -38,13 +41,16 @@ export class ClienteComponent implements OnInit {
         }, (err) => {
           console.log('nos da error en el back');
           console.log(err);
-    });
+        });
+    }
+    
 
 
 
     this.formCliente = this.fb.group({
       uid:this.uid,//
       email: this.email,//
+      password:this.password,
       nombreEmpresa: this.empresa,
       nombre: this.nombre,
       nif: this.NIF,
@@ -61,7 +67,14 @@ export class ClienteComponent implements OnInit {
     this.formCliente.get('telefono').setValue(res['clientes'].telefono);
 
   }
-
+  esNuevo(){
+    if(this.uid==='nuevo'){
+      this.isNew = true;
+    }
+    else{
+      this.isNew = false;
+    } 
+  }
   
   actualizarCliente(){
     if (this.formCliente.valid) {
@@ -73,7 +86,7 @@ export class ClienteComponent implements OnInit {
 
         Swal.fire({
           title: 'Felicidades',
-          text: 'Sus medidas han sido actualizadas correctamente',
+          text: 'Su usuario ha sido actualizado correctamente',
           icon: 'success',
           confirmButtonText: 'Aceptar',
         });
@@ -92,8 +105,8 @@ export class ClienteComponent implements OnInit {
     }
     else {
       Swal.fire({
-        title: 'Medidas incorrectas',
-        text: 'Hay algún error en las medidas introducidas, por favor revíselo',
+        title: 'Datos incorrectos',
+        text: 'Hay algún error en los datos introducidos, por favor revíselo',
         icon: 'error',
         confirmButtonText: 'Volver a intentar',
       });

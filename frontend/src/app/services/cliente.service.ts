@@ -114,10 +114,10 @@ export class ClienteService {
       console.log('estamos modificando las medidas del usuario: ', formData);
  
       let form :ClienteForm = {
-        //email: this.usuario['email'],
-        //id: this.usuario['uid'],
+        
         id: formData.uid,
         email: formData.email,
+        password: formData.password,
         nombreEmpresa:formData.nombreEmpresa,
         nombre: formData.nombre,
         nif: formData.nif,
@@ -130,9 +130,6 @@ export class ClienteService {
       if(form.id!=='nuevo'){
         this.apiService.actualizarDatosClienteCall(this.usuarioService.getToken(), form.id, form).subscribe( (res) => {
  
-          // medidas modificadas correctamente
-          //console.log(res);
-  
           this.cliente = res['cliente'];
           resolve(true);
   
@@ -143,14 +140,14 @@ export class ClienteService {
   
         });
       }
-      /*
+      
       else{
-        this.apiService.crearUsuarioCall(this.token, form.id, form).subscribe( (res) => {
+        this.apiService.crearClienteCall(this.usuarioService.getToken(), form.id, form).subscribe( (res) => {
  
-          // medidas modificadas correctamente
+          
           console.log(res);
   
-          this.usuario = res['usuario'];
+          this.cliente = res['cliente'];
           resolve(true);
   
         }, (err) =>{
@@ -159,7 +156,7 @@ export class ClienteService {
           reject(err);
   
         });
-      }*/
+      }
     });
   }
 

@@ -62,8 +62,13 @@
                     <mat-slider thumbLabel formControlName="cadera" min="10" max="200" step="1" [(ngModel)]=this.cadera></mat-slider>
                     <mat-label>Cadera: {{this.cadera}} cm</mat-label>
                 </div>
-
-                <button type="submit" mat-raised-button color="accent">Actualizar</button>
+                <div *ngIf="this.isNew; else noNew">
+                    <button type="submit" mat-raised-button color="accent">Crear</button>
+                </div>
+                <ng-template #noNew>
+                    <button type="submit" mat-raised-button color="accent">Actualizar</button>
+                </ng-template>
+                
             </form>
 
         </div>
