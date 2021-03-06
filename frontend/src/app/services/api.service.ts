@@ -82,7 +82,7 @@ export class ApiService {
       'x-token': token,
     });
 
-    return this.http.put(this.url + '/api/usuarios/'+id, formData, { headers: headers });
+    return this.http.put(this.url + '/usuarios/'+id, formData, { headers: headers });
   }
 
   crearUsuarioCall (token :string, id :string, formData :UsuarioForm){
@@ -93,7 +93,7 @@ export class ApiService {
       'x-token': token,
     });
 
-    return this.http.post(this.url + '/api/usuarios', formData,{ headers: headers });
+    return this.http.post(this.url + '/usuarios', formData,{ headers: headers });
   }
 
   actualizarDatosClienteCall (token :string, id :string, formData :ClienteForm){
@@ -105,7 +105,7 @@ export class ApiService {
     });
     
     
-    return this.http.put(this.url + '/api/clientes/'+id, formData, { headers: headers });
+    return this.http.put(this.url + '/clientes/'+id, formData, { headers: headers });
   }
 
   crearClienteCall (token :string, id :string, formData :ClienteForm){
@@ -116,7 +116,7 @@ export class ApiService {
      'x-token': token,
    });
 
-   return this.http.post(this.url + '/api/clientes', formData,{ headers: headers });
+   return this.http.post(this.url + '/clientes', formData,{ headers: headers });
  }
 
 
