@@ -1,11 +1,26 @@
 <article class="mir-recovery-box">
-    <h1 class="mir-title"> Recuperar contraseña </h1>
+    <h1 class="mir-title"> Cambio de contraseña </h1>
     <form class="mir-recovery-form" [formGroup]="formRecovery" (ngSubmit)="cambiarpassword();">
 
 
         <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
+            <mat-label>Contraseña actual</mat-label>
+            <input type="password" matInput formControlName="passwordOld" [type]="hide ? 'password' : 'text'" placeholder="Contraseña actual">
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint>Introduzca su contraseña actual</mat-hint>
+
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRecovery.get('passwordOld').hasError('required');">
+                Contraseña <strong>necesaria</strong>
+            </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mir-block">
+            <mat-label>Nueva contraseña</mat-label>
+            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Nueva contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
@@ -40,7 +55,7 @@
 
         <div class="mir-box-buttons">
             <app-button-back></app-button-back>
-            <button class="mir-recovery-button" mat-raised-button color="accent" type="submit">Recuperar 
+            <button class="mir-recovery-button" mat-raised-button color="accent" type="submit">Cambiar 
             </button>
         </div>
     </form>

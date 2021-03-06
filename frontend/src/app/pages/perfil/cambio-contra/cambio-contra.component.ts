@@ -31,6 +31,7 @@ export class CambioContraComponent implements OnInit {
   ngOnInit(): void {
     this.formRecovery = this.fb.group({
       email: ['', Validators.required],
+      passwordOld: ['', Validators.required],
       password: ['', Validators.required],
       passwordRepeat: ['', [Validators.required]]
     });
@@ -46,7 +47,7 @@ export class CambioContraComponent implements OnInit {
     //Esto hay que cambiarlo con algo del token
     this.email = this.usuarioService.getEmail();
     this.formRecovery.patchValue({ email : this.email });
-    console.log(localStorage.getItem('email'));
+    console.log(this.formRecovery.value);
 
     this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
 
@@ -56,7 +57,7 @@ export class CambioContraComponent implements OnInit {
         showCloseButton: true,
         confirmButtonText: 'Aceptar'
       }).then((result) => {
-          this.router.navigateByUrl('/login');
+          //this.router.navigateByUrl('/login');
       });
 
     }).catch((error) =>{

@@ -47,7 +47,6 @@ export class RegisterUsuarioComponent implements OnInit {
     if(this.terminos){
       if (this.formRegister.valid){
         console.log('enviar');
-        debugger;
 
         this.authService.registro(this.formRegister.value).then( res => {
 
