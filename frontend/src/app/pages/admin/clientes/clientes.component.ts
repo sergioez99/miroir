@@ -22,7 +22,7 @@ export class ClientesComponent implements OnInit {
   public listaUsuarios: Cliente[] = [];
 
   constructor( private clienteService: ClienteService,
-               private ususuarioService: UsuarioService) { }
+               private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.cargarClientes(this.ultimaBusqueda);
@@ -61,7 +61,7 @@ export class ClientesComponent implements OnInit {
 
   eliminarCliente( uid: string, email: string) {
     // Solo los admin pueden borrar usuarios
-    if (this.ususuarioService.getRol() !== 'ROL_ADMIN') {
+    if (this.usuarioService.getRol() !== 'ROL_ADMIN') {
       Swal.fire({icon: 'warning', title: 'Oops...', text: 'No tienes permisos para realizar esta acción',});
       return;
     }

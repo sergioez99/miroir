@@ -1,0 +1,25 @@
+{
+    "cols": [
+        "email"
+    ],
+    "data": [
+        [
+            "@hotmail.com"
+        ],
+        [
+            "@gmail.com"
+        ],
+        [
+            "@yahoo.com"
+        ],
+        [
+            "@msn.com"
+        ],
+        [
+            "@miroir.com"
+        ],
+        [
+            "@insight.com"
+        ]
+    ]
+}

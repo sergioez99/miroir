@@ -29,13 +29,15 @@ router.get('/', [
     validarCampos,
 
 ], obtenerPrendas);
-router.post('/', [
 
+
+router.post('/', [
+    validarJWT,
     check('identificador', 'El identificador es obligatorio').not().isEmpty(),
     check('nombre', 'El nombre de la prenda es obligatorio').not().isEmpty(),
     check('descripcion', 'La descripcion de la prenda es obligatorio').not().isEmpty(),
     check('talla', 'La talla de la prenda es obligatorio').not().isEmpty(),
-    check('objeto', 'El objeto es obligatorio.').not().isEmpty(),
+    // check('objeto', 'El objeto es obligatorio.').not().isEmpty(),
 
     validarCampos,
     validarRol
