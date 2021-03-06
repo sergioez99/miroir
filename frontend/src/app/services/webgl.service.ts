@@ -47,8 +47,7 @@ export class WebGLService {
 
   constructor() {}
 
-  //Inicializamos el canvas HTML con el context 
-  initialiseWebGLContext(canvas: HTMLCanvasElement): WebGLRenderingContext {
+  async initialiseWebGLContext(canvas: HTMLCanvasElement){
 
     // Iniciacializamos el contexto
     this.renderingContext =
@@ -88,7 +87,8 @@ export class WebGLService {
       },
     };
     // Inicializamos los buffers con lo que queremos dibujar
-    this.buffers = this.initialiseBuffers();
+    await this.initialiseBuffers().then(buffers => {this.buffers = buffers; console.log(buffers)});
+    console.log(this.buffers);
 
     // Prepramos la escena para dibujar el contenido
     this.prepareScene();
@@ -96,15 +96,9 @@ export class WebGLService {
     return this.gl
   }
 
-  /**
-   * [initializeShaders] provides the functions necessary for loading,
-   * compiling and attaching vertex and fragment shaders into a shader program.
-   */
   initializeShaders(): WebGLProgram {
-    // 1. Create the shader program
     let shaderProgram = this.gl.createProgram();
 
-    // 2. compile the shaders
     const compiledShaders = [];
     let fragmentShader = this.loadShader(
       fragmentShaderSrc,
@@ -117,7 +111,6 @@ export class WebGLService {
     compiledShaders.push(fragmentShader);
     compiledShaders.push(vertexShader);
 
-    // 3. attach the shaders to the shader program using our WebGLContext
     if (compiledShaders && compiledShaders.length > 0) {
       for (let i = 0; i < compiledShaders.length; i++) {
         const compiledShader = compiledShaders[i];
@@ -127,10 +120,8 @@ export class WebGLService {
       }
     }
 
-    // 4. link the shader program to our gl context
     this.gl.linkProgram(shaderProgram);
 
-    // 5. check if everything went ok
     if (!this.gl.getProgramParameter(shaderProgram, this.gl.LINK_STATUS)) {
       console.log(
         'Unable to initialize the shader program: ' +
@@ -138,67 +129,46 @@ export class WebGLService {
       );
     }
 
-    // 6. return shader
     return shaderProgram;
   }
 
-  /**
-   * Initialises the WebGL canvas so it is ready for rendering.
-   */
+
   initialiseWebGLCanvas() {
-    // Set clear colour to black, fully opaque
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-    // Enable depth testing
     this.gl.enable(this.gl.DEPTH_TEST);
-
-    // Near things obscure far things
     this.gl.depthFunc(this.gl.LEQUAL);
-
-    // Clear the colour as well as the depth buffer.
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     //Creando nodos del árbol de la escena
     this.miNodo = new TNode(null, null, null, null, null, null, null, null, null);
     this.miLuz = new ELight(null,null,null,null,null,null, null);
     this.miCamara = new ECamera(null,null,null,null,null,null,null);
-
   }
 
-  /**
-   * Prepare's the WebGL context to render content.
-   */
   prepareScene() {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
     //Preparamos la animación de rotación
     //transformaciones
-    //matrix.mat4.perspective(this.modelViewMatrix, this.fieldOfView, this.aspect, this.zNear, this.zFar);
-    matrix.mat4.translate(this.modelViewMatrix,     // destination matrix
-      this.modelViewMatrix,     // matrix to translate
-      [-0.0, 0.0, -6.0]);  // amount to translate
-    matrix.mat4.rotate(this.modelViewMatrix,  // destination matrix
-      this.modelViewMatrix,  // matrix to rotate
-      this.cubeRotation,     // amount to rotate in radians
-      [0, 0, 1]);       // axis to rotate around (Z)
-    matrix.mat4.rotate(this.modelViewMatrix,  // destination matrix
-      this.modelViewMatrix,  // matrix to rotate
-      this.cubeRotation * .7,// amount to rotate in radians
-      [0, 1, 0]);       // axis to rotate around (X)
+    matrix.mat4.translate(this.modelViewMatrix,    
+      this.modelViewMatrix,    
+      [-0.0, 0.0, -6.0]); 
+    matrix.mat4.rotate(this.modelViewMatrix,  
+      this.modelViewMatrix,  
+      this.cubeRotation,    
+      [0, 0, 1]);      
+    matrix.mat4.rotate(this.modelViewMatrix, 
+      this.modelViewMatrix,  
+      this.cubeRotation * .7,
+      [0, 1, 0]);      
 
-
-    // tell WebGL how to pull out the positions from the position
-    // buffer into the vertexPosition attribute
     this.bindVertexPosition(this.programInfo, this.buffers);
 
-    // tell WebGL how to pull out the colors from the color buffer
-    // into the vertexColor attribute.
     this.bindVertexColor(this.programInfo, this.buffers);
 
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
-    // tell WebGL to use our program when drawing
     this.gl.useProgram(this.programInfo.program);
 
     // set the shader uniforms
@@ -216,9 +186,6 @@ export class WebGLService {
     this.cubeRotation = this.cubeRotation + 0.01;
   }
 
-  /**
-   * Resize the WebGL canvas based on the canvas's clientWidth and clientHeight.
-   */
   resizeWebGLCanvas() {
     const width = this.clientCanvas.clientWidth;
     const height = this.clientCanvas.clientHeight;
@@ -228,20 +195,11 @@ export class WebGLService {
     }
   }
 
-  /**
-   * Sets the {@link WebGLRenderingContext} canvas width and height based on the {@link HTMLCanvasElement} provided.
-z`   *
-   * @param canvas - the {@link HTMLCanvasElement}
-   */
   setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
-    // set width and height based on canvas width and height - good practice to use clientWidth and clientHeight
     this.gl.canvas.width = canvas.clientWidth;
     this.gl.canvas.height = canvas.clientHeight;
   }
 
-  /**
-   * Update the WebGL Viewport if we have a valid rendering context.
-   */
   updateViewport() {
     if (this.gl) {
       this.gl.viewport(
@@ -258,25 +216,10 @@ z`   *
     }
   }
 
-  /**
-   * Update the WebGL canvas and configure the perspective matrix 
-   * for our viewpoint and origin before rending.
-   */
   updateWebGLCanvas() {
     this.initialiseWebGLCanvas();
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
-    this.gl.clearDepth(1.0);                 // Clear everything
-    this.gl.enable(this.gl.DEPTH_TEST);           // Enable depth testing
-    this.gl.depthFunc(this.gl.LEQUAL);            // Near things obscure far things
-
-    // Clear the canvas before we start drawing on it.
-
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-    // Our field of view is 45 degrees, with a width/height ratio of 640:480. 
-    // We only want to see objects  between 0.1 units and 100 units away from the camera. 
-    // The perspective projection matrix is a special matrix that is used to simulate the 
-    // distortion of perspective in a camera.
     this.aspect = this.clientCanvas.clientWidth / this.clientCanvas.clientHeight;
     this.projectionMatrix = matrix.mat4.create();
     matrix.mat4.perspective(
@@ -287,14 +230,9 @@ z`   *
       this.zFar
     );
 
-    // Set the drawing position to the "identity" point, which is the center of the scene.
     this.setModelViewAsIdentity();
   }
 
-  /**
-   * Tell WebGL how to pull out the colors from the color buffer
-   * into the vertexColor attribute.
-   */
   private bindVertexColor(programInfo: any, buffers: any) {
     const bufferSize = 4;
     const type = this.gl.FLOAT;
@@ -313,10 +251,6 @@ z`   *
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
   }
 
-  /**
-   * Tell WebGL how to pull out the positions from the position
-   * buffer into the vertexPosition attribute
-   */
   private bindVertexPosition(programInfo: any, buffers: any) {
     const bufferSize = 3;
     const type = this.gl.FLOAT;
@@ -335,13 +269,6 @@ z`   *
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
   }
 
-  /**
-   * Checks the compiled shader and determines if its valid.
-   * If it isn't, its deleted from the GL context to prevent integrity issues.
-   * 
-   * @param compiledShader
-   * returns true if valid, false otherwise
-   */
   private checkCompiledShader(compiledShader: WebGLShader): boolean {
     if (!compiledShader) {
       // shader failed to compile, get the last error
@@ -353,11 +280,6 @@ z`   *
     return true;
   }
 
-  /**
-   * Determines the shader type and returns the result.
-   * @param shaderMimeType
-   * @returns -1 if the shader type could not be identified.
-   */
   private determineShaderType(shaderMimeType: string): number {
     if (shaderMimeType) {
       if (shaderMimeType === GLSLConstants.vertexShaderMimeType) {
@@ -373,58 +295,35 @@ z`   *
 
   
   
-  private initialiseBuffers(): any {
+  async initialiseBuffers() {
     const cubo = new RMalla();
 
-    var mallas = cubo.getMallas();
+    var mallas = await cubo.getMallas();
 
     const positionBuffer = this.gl.createBuffer();
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
     console.log(mallas);
-
+    console.log(mallas[0]);
     console.log(mallas[0].getVertices());
+
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      mallas[0].getVertices(),
+      new Float32Array(mallas[0].getVertices()),
       this.gl.STATIC_DRAW
     );
 
     const indexBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    var cubeVertexIndices = new Uint16Array([
-      0,  1,  2,      0,  2,  3,    // enfrente
-      4,  5,  6,      4,  6,  7,    // atrás
-      8,  9,  10,     8,  10, 11,   // arriba
-      12, 13, 14,     12, 14, 15,   // fondo
-      16, 17, 18,     16, 18, 19,   // derecha
-      20, 21, 22,     20, 22, 23    // izquierda
-    ]);
-    
-    // Ahora enviamos el elemento arreglo a  GL
-    
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(cubeVertexIndices), this.gl.STATIC_DRAW);
+        new Uint16Array(mallas[0].getIndices()), this.gl.STATIC_DRAW);
 
-
-    // Set up the colors for the vertices
-    const faceColors = [
-      [1.0,  1.0,  1.0,  1.0],    // Front face: white
-      [1.0,  0.0,  0.0,  1.0],    // Back face: red
-      [0.0,  1.0,  0.0,  1.0],    // Top face: green
-      [0.0,  0.0,  1.0,  1.0],    // Bottom face: blue
-      [1.0,  1.0,  0.0,  1.0],    // Right face: yellow
-      [1.0,  0.0,  1.0,  1.0],    // Left face: purple
-    ];
-  
-    // Convert the array of colors into a table for all the vertices.
-  
     var colors = [];
   
-    for (var j = 0; j < faceColors.length; ++j) {
-      const c = faceColors[j];
+    for (var j = 0; j < mallas[0].getNormales().length; ++j) {
+      const c = mallas[0].getNormales()[j];
   
       // Repeat each color four times for the four vertices of the face
       colors = colors.concat(c, c, c, c);
@@ -441,26 +340,21 @@ z`   *
     };
   }
 
-  /**
-   * Loads a shader by source code and type supplied.
-   * @param shaderSource
-   * @param shaderType
-   */
   private loadShader(shaderSource: string, shaderType: string): WebGLShader {
     const shaderTypeAsNumber = this.determineShaderType(shaderType);
     if (shaderTypeAsNumber < 0) {
       return null;
     }
-    // Create the gl shader
+    
     const glShader: WebGLShader = this.gl.createShader(shaderTypeAsNumber);
 
-    // Load the source into the shader
+   
     this.gl.shaderSource(glShader, shaderSource);
 
-    // Compile the shaders
+    
     this.gl.compileShader(glShader);
 
-    // Check the compile status
+   
     const compiledShader: WebGLShader = this.gl.getShaderParameter(
       glShader,
       this.gl.COMPILE_STATUS
@@ -468,9 +362,6 @@ z`   *
     return this.checkCompiledShader(compiledShader) ? glShader : null;
   }
 
-  /**
-   * Loads the {@link modelViewMatrix} as an identity matrix.
-   */
   private setModelViewAsIdentity() {
     this.modelViewMatrix = matrix.mat4.create();
   }

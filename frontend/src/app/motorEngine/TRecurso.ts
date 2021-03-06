@@ -1,6 +1,7 @@
 import { TRecurso, Malla } from './commons';
-import { ApiService } from '../services/api.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { promise } from 'protractor';
+import { ApiService } from '../services/api.service';
 
 export class RMalla extends TRecurso {
 
@@ -9,11 +10,34 @@ export class RMalla extends TRecurso {
     //Parse, con esa estructura, guardamos las cosas en la malla de aquí abajo
     //Hacer correspondencia correcta entre arrays de maya ->  arrays de buffer
     private mallas: Malla[] = [];
-
+    //private http: HttpClient = new HttpClient();
 
 
     constructor() {
       super();
+    }
+
+    async cargar(nombre:string) {
+        let datos;
+        datos = await this.cargarRMalla(nombre);
+        console.log(nombre,':',datos);
+        return datos;
+    }
+
+    async cargarArchivos() {
+        await Promise.all([
+          this.cargar('cubo.json'),
+        ]).then(res => {
+            /*//Posicion 0 -> primer archivo cargado
+            var malla = new Malla();
+            malla.setVertices(res[0].positions);
+            malla.setNormales(res[0].colors);
+            malla.setIndices(res[0].index);
+            */
+            this.mallas.push(res[0]);
+        })
+    
+        console.log('terminar cargarArchivos');
     }
 
     cargarRMalla(fichero): Promise<Malla>{
@@ -25,16 +49,12 @@ export class RMalla extends TRecurso {
             req.onreadystatechange = function() {
                 if (req.readyState === 4) {
                     file = req.response;
-                    console.log(file);
 
                     file = JSON.parse(file);
-                    console.log(file);
-                    console.log(file["positions"]);
                     var malla = new Malla();
                     malla.setVertices(file.positions);
                     malla.setNormales(file.colors);
                     malla.setIndices(file.index);
-                    console.log(malla);
                     resolve(malla);
                 }
             }
@@ -51,13 +71,15 @@ export class RMalla extends TRecurso {
             console.log(this.mallas);
         })
     }
+    
 
     draw() {
         for(let i in this.mallas)
             this.mallas[i].draw();
     }
 
-    getMallas(){
+    async getMallas(){
+        await this.cargarArchivos();
         return this.mallas;
     }
 }

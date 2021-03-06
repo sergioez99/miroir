@@ -32,7 +32,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-      this.gl = this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
+      this.webglService.initialiseWebGLContext(this.canvas.nativeElement).then(gl => this.gl = gl);
       // Set up to draw the scene periodically.
       const drawSceneInterval = interval(this._60fpsInterval);
       drawSceneInterval.subscribe(() => {

@@ -90,10 +90,10 @@ export class Pruebas1Component implements OnInit {
     console.log(this.miNodo4.getpadre());
 
     this.miNodo.setEscalado(this.escalado);
-    this.miNodo.setRotacion(this.rotacion);
+    //this.miNodo.setRotacion(this.rotacion);
     this.miNodo.setTraslacion(this.traslacion);
     console.log(this.miNodo.getEscalado());
-    console.log(this.miNodo.getRotacion());
+    //console.log(this.miNodo.getRotacion());
     console.log(this.miNodo.getTraslacion());
 
     //Probando una luz
