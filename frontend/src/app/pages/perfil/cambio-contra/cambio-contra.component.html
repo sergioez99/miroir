@@ -1,4 +1,5 @@
 <article class="mir-recovery-box">
+    <div class="mir-caja_explicacion_usuario">
     <h1 class="mir-title"> Cambio de contraseña </h1>
     <form class="mir-recovery-form" [formGroup]="formRecovery" (ngSubmit)="cambiarpassword();">
 
@@ -35,7 +36,7 @@
         <!-- ------------ -->
         <!-- INPUT: PASSWORD REPETIR -->
         <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Contraseña</mat-label>
+            <mat-label>Nueva contraseña</mat-label>
             <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -54,11 +55,11 @@
         <!-- ------------ -->
 
         <div class="mir-box-buttons">
-            <app-button-back></app-button-back>
+            <!--<app-button-back></app-button-back>-->
             <button class="mir-recovery-button" mat-raised-button color="accent" type="submit">Cambiar 
             </button>
         </div>
     </form>
-
+</div>
 
 </article>
