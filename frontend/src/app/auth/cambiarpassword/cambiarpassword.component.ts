@@ -45,6 +45,8 @@ export class CambiarpasswordComponent implements OnInit {
     this.email = this.usuarioService.getEmail();
     this.formRecovery.patchValue({ email : this.email });
 
+    if(this.formRecovery.valid){
+
     this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
 
       Swal.fire({
@@ -65,4 +67,5 @@ export class CambiarpasswordComponent implements OnInit {
       });
     });
   }
+}
 }

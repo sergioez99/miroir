@@ -49,25 +49,27 @@ export class CambioContraComponent implements OnInit {
     this.formRecovery.patchValue({ email : this.email });
     console.log(this.formRecovery.value);
 
-    this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
+    if(this.formRecovery.valid){
+      this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
 
-      Swal.fire({
-        title:'Contraseña cambiada correctamente',
-        icon: 'success',
-        showCloseButton: true,
-        confirmButtonText: 'Aceptar'
-      }).then((result) => {
-          //this.router.navigateByUrl('/login');
-      });
+        Swal.fire({
+          title:'Contraseña cambiada correctamente',
+          icon: 'success',
+          showCloseButton: true,
+          confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            //this.router.navigateByUrl('/login');
+        });
 
-    }).catch((error) =>{
-      Swal.fire({
-        title: '¡Error!',
-        text: error.error.msg,
-        icon: 'error',
-        confirmButtonText: 'Volver a intentar',
+      }).catch((error) =>{
+        Swal.fire({
+          title: '¡Error!',
+          text: error.error.msg,
+          icon: 'error',
+          confirmButtonText: 'Volver a intentar',
+        });
       });
-    });
+    }
   }
 
 }
