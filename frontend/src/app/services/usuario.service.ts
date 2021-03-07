@@ -47,7 +47,7 @@ export class UsuarioService{
 
     this.rol = this.usuario['rol'];
     this.id = this.usuario['uid'];
-
+    console.log('usuario iniciado',this.usuario['email']);
     if (tokenRecibido){
       this.actualizarToken(tokenRecibido);
     }

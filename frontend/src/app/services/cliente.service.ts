@@ -48,6 +48,9 @@ export class ClienteService {
     return this.cliente['uid'];
   }
 
+  getPass(){
+    return this.cliente['password'];
+  }
 
   getToken (){
 
@@ -58,9 +61,12 @@ export class ClienteService {
     return this.token;
 
   }
+  getEmail(){
+    return this.cliente['email'];
+  }
 
   getEmpresa() {
-    return this.cliente['empresa'];
+    return this.cliente['nombreEmpresa'];
   }
   getNombre() {
     return this.cliente['nombre'];
