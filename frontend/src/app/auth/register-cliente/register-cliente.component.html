@@ -1,5 +1,5 @@
 <article class="mir-login-box">
-    <h1 class="mir-title"> Crear cuenta de cliente </h1>
+    <h1 class="mir-title"> Crea tu cuenta </h1>
     <form class="mir-login-form" [formGroup]="formRegistroCliente" (ngSubmit)="enviar();">
 
 
@@ -119,8 +119,9 @@
 
 
         <div class="mir-box-buttons">
-            <!--<app-button-back></app-button-back>-->
+            
             <button type="submit" class="mir-login-button" mat-raised-button color="accent" [disabled]="!terminos">Registrarse</button>
+            <app-button-back></app-button-back>
         </div>
         <div class="mir-box-link"> ¿Ya tienes cuenta?
             <a routerLink="/login" class="loginhere-link">Inicia sesión</a>
