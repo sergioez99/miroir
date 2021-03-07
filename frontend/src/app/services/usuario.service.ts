@@ -34,8 +34,8 @@ export class UsuarioService{
   login(guardar :boolean) {
 
     if (guardar) {
-      localStorage.setItem('rol', this.rol);
-      localStorage.setItem('usuario', this.usuario['uid']);
+      // localStorage.setItem('rol', this.rol);
+      // localStorage.setItem('usuario', this.usuario['uid']);
       localStorage.setItem('token', this.token);
     }
   }
@@ -50,6 +50,8 @@ export class UsuarioService{
 
     if (tokenRecibido){
       this.actualizarToken(tokenRecibido);
+      //guardar token en localstorage
+      localStorage.setItem('token', this.token);
     }
 
   }

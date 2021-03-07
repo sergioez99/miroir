@@ -70,8 +70,14 @@ export class AuthService {
 
         // decir que nos hemos logueado
         this.usuarioService.inicializar(res['usuario'], res['token']);
-        this.usuarioService.login(formData.remember);
+        // this.usuarioService.login(formData.remember);
         this.setIsLogged(true);
+
+        //si quiere guardar el email es el momento
+        localStorage.removeItem('email');
+        if(formData.remember){
+          localStorage.setItem('email', formData.email);
+        }
 
         resolve(true);
 
