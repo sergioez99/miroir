@@ -44,9 +44,9 @@ export class UsuarioComponent implements OnInit {
         }, (err) => {
         });
     }
-    /*else{
+    else{
       this.cargarFormularioNuevo();
-    }*/
+    }
 
     this.formMedidas = this.fb.group({
       uid:this.uid,//
@@ -70,15 +70,13 @@ export class UsuarioComponent implements OnInit {
   }
   
   cargarFormularioNuevo(){
-    this.formMedidas.reset();
-    this.formMedidas.get('uid').setValue('nuevo');
-    this.formMedidas.get('email').setValue('ejemplo2@gmail.com');
-    this.formMedidas.get('peso').setValue('100');
-    this.formMedidas.get('altura').setValue('100');
-    this.formMedidas.get('pecho').setValue('100');
-    this.formMedidas.get('cintura').setValue('100');
-    this.formMedidas.get('cadera').setValue('100');
-    //this.router.navigateByUrl('/admin/usuarios/usuario/nuevo');
+    this.uid='nuevo';
+    this.email='ejemplo@gmail.com';
+    this.peso=10;
+    this.altura=100;
+    this.pecho=10;
+    this.cintura=10;
+    this.cadera=10;
   }
   esNuevo(){
     if(this.uid==='nuevo'){
@@ -106,7 +104,7 @@ export class UsuarioComponent implements OnInit {
       }).catch((error) =>{
 
         Swal.fire({
-          title: '¡Error!',
+          title: 'Faltan campos por rellenar',
           text: error.error.msg,
           icon: 'error',
           confirmButtonText: 'Volver a intentar',

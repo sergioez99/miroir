@@ -43,7 +43,9 @@ export class ClienteComponent implements OnInit {
           console.log(err);
         });
     }
-    
+    else{
+      this.cargarFormularioNuevo();
+    }
 
 
 
@@ -67,6 +69,17 @@ export class ClienteComponent implements OnInit {
     this.formCliente.get('telefono').setValue(res['clientes'].telefono);
 
   }
+
+  cargarFormularioNuevo(){
+    this.uid='nuevo';
+    this.email='ejemplo@gmail.com';
+    /*this.empresa='Nombre empresa';
+    this.nombre='Nombre propietario';
+    this.NIF='NIF';
+    this.telefono=111111111;*/
+
+  }
+
   esNuevo(){
     if(this.uid==='nuevo'){
       this.isNew = true;
@@ -94,7 +107,7 @@ export class ClienteComponent implements OnInit {
       }).catch((error) =>{
 
         Swal.fire({
-          title: '¡Error!',
+          title: 'Faltan campos por rellenar',
           text: error,
           icon: 'error',
           confirmButtonText: 'Volver a intentar',
