@@ -74,7 +74,14 @@ export class AuthService {
         this.usuarioService.inicializar(res['usuario'], res['token']);
         this.clienteService.inicializar(res['usuario'], res['token']);
         this.usuarioService.login(formData.remember);
+        // this.usuarioService.login(formData.remember);
         this.setIsLogged(true);
+
+        //si quiere guardar el email es el momento
+        localStorage.removeItem('email');
+        if(formData.remember){
+          localStorage.setItem('email', formData.email);
+        }
 
         resolve(true);
 
