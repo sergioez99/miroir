@@ -12,6 +12,8 @@ import { MaterialModule } from './material/material.module';
 
 import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 
+import { DatePipe } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,7 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
     WavesModule,
 
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

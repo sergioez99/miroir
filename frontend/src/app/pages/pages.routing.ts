@@ -22,6 +22,7 @@ import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
+import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component';
 
 
 const routes: Routes = [
@@ -46,15 +47,8 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
-  /*
-  {
-    path: 'prendas', component: BaseLayoutComponent,
-    children: [
-      { path: '', component: PrendasComponent },
-      { path: '**', redirectTo: ''}
-    ]
-  },
-  */
+
+
   {
     path: 'perfil', component: PerfilLayoutComponent, canActivate: [ PerfilGuard ], canActivateChild: [ PerfilGuard ],
     children: [
@@ -91,6 +85,7 @@ const routes: Routes = [
       { path:'clientes', component: ClientesComponent },
       { path:'clientes/cliente/:uid', component: ClienteComponent },
       { path:'crear-datos', component: CrearDatosComponent },
+      { path: 'cuadro', component: CuadroUsuarioComponent },
       { path: '**', redirectTo: '' }
     ]
   },

@@ -17,6 +17,8 @@ const {
     borrarUsuario
 
 } = require('../controllers/usuarios.controller');
+
+
 router.get('/', [
     validarJWT,
     check('id', 'El id de usuario ha de ser valido').optional().isMongoId(),

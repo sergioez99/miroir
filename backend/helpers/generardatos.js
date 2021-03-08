@@ -307,7 +307,7 @@ const generarClientes = async(cantidad) => {
 
             const email = (e[Math.floor((Math.random() * (e.length - 1)))]) + i + (mail[Math.floor((Math.random() * (mail.length - 1)))]);
             const pass = password[Math.floor((Math.random() * (password.length - 1)))][0];
-            const alta = miAlta.setDate(miAlta.getDate() + Math.floor((Math.random() * 90) + Math.floor((Math.random() * 180))));
+            const alta = miAlta.setDate(miAlta.getDate() + Math.floor((Math.random() * 90) - Math.floor((Math.random() * 120))));
             const activo = miActivo[Math.round((Math.random()))];
             const validado = miValidado[Math.round((Math.random()))];
             const nombre = nombres[Math.floor((Math.random() * (nombres.length - 1)))][0];

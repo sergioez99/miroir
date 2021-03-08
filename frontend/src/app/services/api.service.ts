@@ -103,4 +103,18 @@ export class ApiService {
     return this.http.post(this.url+'/api/datos/prendas', formData, { headers: headers });
   }
 
+  getUsuariosChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/usuarios', { headers: headers });
+  }
+
+  getClientesChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/clientes', { headers: headers });
+  }
+
 }

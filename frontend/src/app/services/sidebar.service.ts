@@ -12,6 +12,7 @@ export class SidebarService {
     { titulo: 'Clientes', icono: 'airline_seat_recline_normal', sub: false, url: '/admin/clientes'},
     { titulo: 'Prendas', icono: 'pages', sub: false, url: '/admin/prendas'},
     { titulo: 'Crear Datos', icono: 'info', sub: false, url: '/admin/crear-datos'},
+    { titulo: 'Cuadros', icono: 'info', sub: false, url: '/admin/cuadro'},
   ];
   menuCliente: sidebarItem[]=[
     { titulo: 'Tu Perfil', icono: 'person', sub: false, url: '/perfil/cliente/'},

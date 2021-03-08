@@ -42,6 +42,7 @@ app.use('/api/prendas', require('./routes/prendas.routes'));
 app.use('/api/upload', require('./routes/uploads.routes'));
 //para generar datos 
 app.use('/api/datos', require('./routes/datos.routes'));
+app.use('/api/chart', require('./routes/charts.routes'));
 
 /*
 app.use('/api/usuarios', require('./routes/usuarios.routes'));
