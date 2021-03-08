@@ -27,12 +27,12 @@ export class SceneComponent implements OnInit, AfterViewInit {
     private webglService :WebGLService) { }
 
 
-    ngAfterViewInit(): void {
+    async ngAfterViewInit() {
       if (!this.canvas) {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-      this.webglService.initialiseWebGLContext(this.canvas.nativeElement).then(gl => this.gl = gl);
+      await this.webglService.initialiseWebGLContext(this.canvas.nativeElement).then(gl => this.gl = gl);
       // Set up to draw the scene periodically.
       const drawSceneInterval = interval(this._60fpsInterval);
       drawSceneInterval.subscribe(() => {

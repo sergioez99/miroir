@@ -52,15 +52,17 @@ export class RMalla extends TRecurso {
             req.onreadystatechange = function() {
                 if (req.readyState === 4) {
                     file = req.response;
+
+                    var splitted = fichero.split(".", 2);
                     
-                    if(fichero == 'cubo.json'){
+                    if(splitted[1] == "json"){
                         file = JSON.parse(file);
                         malla.setVertices(file.positions);
                         malla.setCoordtex(file.textureCoordinates);
                         malla.setNormales(file.vertexNormals);
                         malla.setIndices(file.index);
                     }
-                    else{
+                    else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
                         var imagen = new Image();
                         imagen.src = "http://localhost:4200/assets/"+fichero;
                         malla.setTexturas(imagen);

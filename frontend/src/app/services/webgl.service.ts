@@ -9,6 +9,7 @@ import { RMalla } from '../motorEngine/TRecurso';
 import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
 
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -75,7 +76,7 @@ export class WebGLService {
           'aVertexPosition'
         ),
         textureCoord: this.gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
-        //vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal')
+        vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal')
       },
       uniformLocations: {
         projectionMatrix: this.gl.getUniformLocation(
@@ -86,7 +87,7 @@ export class WebGLService {
           shaderProgram,
           'uModelViewMatrix'
         ),
-        //normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
+        normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
         uSampler: this.gl.getUniformLocation(shaderProgram, 'uSampler'),
       },
     };
@@ -94,13 +95,15 @@ export class WebGLService {
     await this.initialiseBuffers().then(buffers => {this.buffers = buffers; console.log(buffers)});
     console.log(this.buffers);
 
-    const texture = this.loadTexture('../../assets/cubetexture.png');
+    const texture = this.loadTexture();
 
     // Tell WebGL we want to affect texture unit 0
     this.gl.activeTexture(this.gl.TEXTURE0);
 
     // Bind the texture to texture unit 0
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    this.gl.useProgram(this.programInfo.program);
 
     // Tell the shader we bound the texture to texture unit 0
     this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
@@ -192,12 +195,12 @@ export class WebGLService {
 
     //this.bindVertexColor(this.programInfo, this.buffers);
 
-    //this.bindVertexNormal(this.programInfo, this.buffers);
+    this.bindVertexNormal(this.programInfo, this.buffers);
 
 
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
-    this.gl.useProgram(this.programInfo.program);
+    
 
     // set the shader uniforms
     this.gl.uniformMatrix4fv(
@@ -441,15 +444,10 @@ export class WebGLService {
   private setModelViewAsIdentity() {
     this.modelViewMatrix = matrix.mat4.create();
   }
-  private loadTexture(url) {
+  private loadTexture() {
     const texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
-    // Because images have to be downloaded over the internet
-    // they might take a moment until they are ready.
-    // Until then put a single pixel in the texture so we can
-    // use it immediately. When the image has finished downloading
-    // we'll update the texture with the contents of the image.
     const level = 0;
     const internalFormat = this.gl.RGBA;
     const width = 1;
@@ -461,11 +459,12 @@ export class WebGLService {
     this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
                   width, height, border, srcFormat, srcType,
                   pixel);
+                  
 
     const mallas = this.Mallas.getMallas2();
-    console.log(this.Mallas);
-    console.log(mallas[1]);
-    const image = mallas[1].getTexturas();
+    var image = mallas[1].getTexturas();
+    console.log(image)
+    image.onload = () => {
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
                     srcFormat, srcType, image);
@@ -482,8 +481,15 @@ export class WebGLService {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+      }
+      /*
+      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
+      this.gl.generateMipmap(this.gl.TEXTURE_2D);
+      */
     };
-    image.src = url;
 
     return texture;
   }
