@@ -25,7 +25,6 @@ const obtenerClientes = async(req, res = response) => {
     //encontrar un unico Cliente
     const id = req.query.id;
 
-
     const texto = req.query.texto;
     let textoBusqueda = '';
     if (texto) {
@@ -33,7 +32,6 @@ const obtenerClientes = async(req, res = response) => {
         //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
     }
     await sleep(100);
-
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
     let desde = Number(req.query.desde) || 0;
@@ -212,12 +210,12 @@ const actualizarCliente = async(req, res = response) => {
 
     // aunque venga el password aqui no se va a cambiar
     // si cambia el email, hay que comprobar que no exista en la BD
-    const { password, alta, email, cif, ...object } = req.body;
+    const { password, alta, email, nif, ...object } = req.body;
     const uid = req.params.id;
-
+    console.log('hola estoy en el back',req.body);
     try {
         // comprobar si existe o no existe el Cliente
-        const existeEmail = await cliente.findOne({ email: email });
+        const existeEmail = await Cliente.findOne({ email: email });
 
         if (existeEmail) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
@@ -233,8 +231,8 @@ const actualizarCliente = async(req, res = response) => {
         object.email = email;
 
         // comprobar si se quiere modificar el CIF  de Cliente
-        const existeCif = await cliente.findOne({ cif: cif });
-
+        const existeCif = await Cliente.findOne({ nif: nif });
+        /*
         if (existeCif) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
             if (existeCif._id != uid) {
@@ -244,9 +242,9 @@ const actualizarCliente = async(req, res = response) => {
                     msg: "CIF ya existe"
                 });
             }
-        }
+        }*/
         // aqui ya se ha comprobado el email
-        object.cif = cif;
+        object.nif = nif;
 
 
 

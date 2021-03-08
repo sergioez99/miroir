@@ -47,7 +47,7 @@ export class UsuarioService{
 
     this.rol = this.usuario['rol'];
     this.id = this.usuario['uid'];
-
+    console.log('usuario iniciado',this.usuario['email']);
     if (tokenRecibido){
       this.actualizarToken(tokenRecibido);
       //guardar token en localstorage
@@ -77,6 +77,7 @@ export class UsuarioService{
 
      let form :UsuarioForm = {
        email: this.usuario['email'],
+       password:this.usuario['password'],//ATENCION
        id: this.usuario['uid'],
        altura: formData.altura,
        peso: formData.peso,
@@ -176,6 +177,70 @@ export class UsuarioService{
     if (!uid || uid === null) {uid = 'a'; }
     return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
   }
+
+  cargarUsu( uid: string) {
+    return this.http.get(`${environment.base_url}/usuarios/?id=${uid}` , this.cabeceras);
+  }
+
+  actualizarMedidasUsuario(formData) :Promise<any>{
+    
+    return new Promise ( (resolve, reject) => {
+
+
+      console.log('estamos modificando las medidas del usuario: ', formData);
+ 
+      let form :UsuarioForm = {
+        //email: this.usuario['email'],
+        //id: this.usuario['uid'],
+        email: formData.email,
+        password: formData.password,
+        id: formData.uid,
+        altura: formData.altura,
+        peso: formData.peso,
+        pecho: formData.pecho,
+        cintura: formData.cintura,
+        cadera: formData.cadera
+      };
+ 
+ 
+      console.log(form);
+
+      if(form.id!=='nuevo'){
+        this.apiService.actualizarMedidasUsuariosCall(this.token, form.id, form).subscribe( (res) => {
+ 
+          // medidas modificadas correctamente
+          console.log(res);
+  
+          this.usuario = res['usuario'];
+          resolve(true);
+  
+        }, (err) =>{
+  
+          console.error(err);
+          reject(err);
+  
+        });
+      }
+      else{
+        this.apiService.crearUsuarioCall(this.token, form.id, form).subscribe( (res) => {
+ 
+          // medidas modificadas correctamente
+          console.log(res);
+  
+          this.usuario = res['usuario'];
+          resolve(true);
+  
+        }, (err) =>{
+  
+          console.error(err);
+          reject(err);
+  
+        });
+      }
+    });
+  }
+
+
   getEmail(){
     return this.email;
   }

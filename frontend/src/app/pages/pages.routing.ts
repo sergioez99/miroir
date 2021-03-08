@@ -91,6 +91,7 @@ const routes: Routes = [
       { path:'clientes', component: ClientesComponent },
       { path:'clientes/cliente/:uid', component: ClienteComponent },
       { path:'crear-datos', component: CrearDatosComponent },
+      { path:'perfil', component: PerfilAdminComponent },//added, not working
       { path: '**', redirectTo: '' }
     ]
   },

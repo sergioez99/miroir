@@ -1,8 +1,9 @@
 export interface ClienteForm {
   email :string;
   id :string;
-  empresa :string;
+  password :string;
+  nombreEmpresa :string;
   nombre :string;
-  NIF :string;
+  nif :string;
   telefono :number;
 }

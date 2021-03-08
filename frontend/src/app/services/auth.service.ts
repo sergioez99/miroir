@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { UsuarioService } from './usuario.service';
+import { ClienteService } from './cliente.service';
 import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
 
 @Injectable({
@@ -12,7 +13,8 @@ export class AuthService {
   private isLogged: boolean;
 
   constructor( private apiService: ApiService,
-               private usuarioService :UsuarioService ) {
+               private usuarioService :UsuarioService,
+               private clienteService :ClienteService ) {
 
     console.log('hola, soy el constructor de auth service');
     this.isLogged = false;
@@ -70,7 +72,8 @@ export class AuthService {
 
         // decir que nos hemos logueado
         this.usuarioService.inicializar(res['usuario'], res['token']);
-        // this.usuarioService.login(formData.remember);
+        this.clienteService.inicializar(res['usuario'], res['token']);
+        this.usuarioService.login(formData.remember);
         this.setIsLogged(true);
 
         //si quiere guardar el email es el momento

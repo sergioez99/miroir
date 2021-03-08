@@ -11,7 +11,7 @@ import {environment} from '../../../environments/environment';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
+  public tipo: string='';
   imagenURL = '';
 
   // cuando lo construye
@@ -22,6 +22,9 @@ export class NavbarComponent implements OnInit {
 
   // cada vez que se muestra por pantalla
   ngOnInit(): void {
+
+    this.tipoDePerfil();
+
     this.usuarioService.cargarUsuario(this.usuarioService.getID()).subscribe(res =>{
       this.imagenURL = `${environment.base_url}/upload/fotoperfil/` + res['usuarios'].imagen || 'no-imagen';
       this.imagenURL += `?token=${this.usuarioService.getToken()}`;
@@ -34,6 +37,19 @@ export class NavbarComponent implements OnInit {
 
   public getIsLoged (){
     return this.authService.getIsLogged();
+  }
+
+  public tipoDePerfil(){
+    console.log(this.usuarioService.getRol());
+    if(this.usuarioService.getRol()=='ROL_CLIENTE'){
+      this.tipo='cliente';
+    }
+    if(this.usuarioService.getRol()=='ROL_USUARIO'){
+      this.tipo='usuario';
+    }
+    if(this.usuarioService.getRol()=='ROL_ADMIN'){
+      this.tipo='admin';
+    }
   }
 
 }
