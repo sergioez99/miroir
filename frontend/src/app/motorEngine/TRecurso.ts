@@ -27,6 +27,7 @@ export class RMalla extends TRecurso {
     async cargarArchivos() {
         await Promise.all([
           this.cargar('cubo.json'),
+          this.cargar('cubetexture.png')
         ]).then(res => {
             /*//Posicion 0 -> primer archivo cargado
             var malla = new Malla();
@@ -35,13 +36,15 @@ export class RMalla extends TRecurso {
             malla.setIndices(res[0].index);
             */
             this.mallas.push(res[0]);
+            this.mallas.push(res[1]);
         })
-    
+        console.log(this.mallas);
         console.log('terminar cargarArchivos');
     }
 
     cargarRMalla(fichero): Promise<Malla>{
-        var file;
+        var file, malla;
+        malla = new Malla();
 
         return new Promise( (resolve, reject) =>{
 
@@ -49,12 +52,19 @@ export class RMalla extends TRecurso {
             req.onreadystatechange = function() {
                 if (req.readyState === 4) {
                     file = req.response;
-
-                    file = JSON.parse(file);
-                    var malla = new Malla();
-                    malla.setVertices(file.positions);
-                    malla.setNormales(file.colors);
-                    malla.setIndices(file.index);
+                    
+                    if(fichero == 'cubo.json'){
+                        file = JSON.parse(file);
+                        malla.setVertices(file.positions);
+                        malla.setCoordtex(file.textureCoordinates);
+                        malla.setNormales(file.vertexNormals);
+                        malla.setIndices(file.index);
+                    }
+                    else{
+                        var imagen = new Image();
+                        imagen.src = "http://localhost:4200/assets/"+fichero;
+                        malla.setTexturas(imagen);
+                    }
                     resolve(malla);
                 }
             }
@@ -80,6 +90,10 @@ export class RMalla extends TRecurso {
 
     async getMallas(){
         await this.cargarArchivos();
+        return this.mallas;
+    }
+
+    getMallas2(){
         return this.mallas;
     }
 }

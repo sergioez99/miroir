@@ -42,6 +42,7 @@ export class WebGLService {
   private miNodo;
   private miLuz;
   private miCamara;
+  private Mallas;
 
   private then = 0;
 
@@ -73,7 +74,8 @@ export class WebGLService {
           shaderProgram,
           'aVertexPosition'
         ),
-        vertexColor: this.gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+        textureCoord: this.gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
+        //vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal')
       },
       uniformLocations: {
         projectionMatrix: this.gl.getUniformLocation(
@@ -84,11 +86,24 @@ export class WebGLService {
           shaderProgram,
           'uModelViewMatrix'
         ),
+        //normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
+        uSampler: this.gl.getUniformLocation(shaderProgram, 'uSampler'),
       },
     };
     // Inicializamos los buffers con lo que queremos dibujar
     await this.initialiseBuffers().then(buffers => {this.buffers = buffers; console.log(buffers)});
     console.log(this.buffers);
+
+    const texture = this.loadTexture('../../assets/cubetexture.png');
+
+    // Tell WebGL we want to affect texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE0);
+
+    // Bind the texture to texture unit 0
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    // Tell the shader we bound the texture to texture unit 0
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
     // Prepramos la escena para dibujar el contenido
     this.prepareScene();
@@ -143,6 +158,11 @@ export class WebGLService {
     this.miNodo = new TNode(null, null, null, null, null, null, null, null, null);
     this.miLuz = new ELight(null,null,null,null,null,null, null);
     this.miCamara = new ECamera(null,null,null,null,null,null,null);
+    this.Mallas = new RMalla();
+
+    this.miNodo.addChild(this.miLuz);
+    this.miNodo.addChild(this.miCamara);
+    this.miNodo.addChild(this.Mallas);
   }
 
   prepareScene() {
@@ -163,9 +183,17 @@ export class WebGLService {
       this.cubeRotation * .7,
       [0, 1, 0]);      
 
+      
+    const normalMatrix = matrix.mat4.create();
+    matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
+    matrix.mat4.transpose(normalMatrix, normalMatrix);
+
     this.bindVertexPosition(this.programInfo, this.buffers);
 
-    this.bindVertexColor(this.programInfo, this.buffers);
+    //this.bindVertexColor(this.programInfo, this.buffers);
+
+    //this.bindVertexNormal(this.programInfo, this.buffers);
+
 
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
@@ -182,6 +210,10 @@ export class WebGLService {
       false,
       this.modelViewMatrix
     );
+   this.gl.uniformMatrix4fv(
+      this.programInfo.uniformLocations.normalMatrix,
+      false,
+      normalMatrix);
 
     this.cubeRotation = this.cubeRotation + 0.01;
   }
@@ -233,6 +265,7 @@ export class WebGLService {
     this.setModelViewAsIdentity();
   }
 
+  /*
   private bindVertexColor(programInfo: any, buffers: any) {
     const bufferSize = 4;
     const type = this.gl.FLOAT;
@@ -249,6 +282,36 @@ export class WebGLService {
       offset
     );
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+  }
+  */
+
+  private bindVertexTextures(programInfo: any, buffers: any) {
+    const num = 2; // every coordinate composed of 2 values
+    const type = this.gl.FLOAT; // the data in the buffer is 32 bit float
+    const normalize = false; // don't normalize
+    const stride = 0; // how many bytes to get from one set to the next
+    const offset = 0; // how many bytes inside the buffer to start from
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.textureCoord);
+    this.gl.vertexAttribPointer(programInfo.attribLocations.textureCoord, num, type, normalize, stride, offset);
+    this.gl.enableVertexAttribArray(programInfo.attribLocations.textureCoord);
+  }
+
+  private bindVertexNormal(programInfo: any, buffers:any){
+      const numComponents = 3;
+      const type = this.gl.FLOAT;
+      const normalize = false;
+      const stride = 0;
+      const offset = 0;
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.normal);
+      this.gl.vertexAttribPointer(
+          programInfo.attribLocations.vertexNormal,
+          numComponents,
+          type,
+          normalize,
+          stride,
+          offset);
+      this.gl.enableVertexAttribArray(
+          programInfo.attribLocations.vertexNormal);
   }
 
   private bindVertexPosition(programInfo: any, buffers: any) {
@@ -277,6 +340,7 @@ export class WebGLService {
       this.gl.deleteShader(compiledShader);
       return false;
     }
+    
     return true;
   }
 
@@ -296,17 +360,13 @@ export class WebGLService {
   
   
   async initialiseBuffers() {
-    const cubo = new RMalla();
+    var mallas = await this.Mallas.getMallas();
 
-    var mallas = await cubo.getMallas();
+    console.log(this.Mallas);
 
     const positionBuffer = this.gl.createBuffer();
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
-
-    console.log(mallas);
-    console.log(mallas[0]);
-    console.log(mallas[0].getVertices());
 
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
@@ -320,10 +380,10 @@ export class WebGLService {
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
         new Uint16Array(mallas[0].getIndices()), this.gl.STATIC_DRAW);
 
-    var colors = [];
+    /*var colors = [];
   
-    for (var j = 0; j < mallas[0].getNormales().length; ++j) {
-      const c = mallas[0].getNormales()[j];
+    for (var j = 0; j < mallas[0].getCoordtex().length; ++j) {
+      const c = mallas[0].getCoordtex()[j];
   
       // Repeat each color four times for the four vertices of the face
       colors = colors.concat(c, c, c, c);
@@ -332,11 +392,23 @@ export class WebGLService {
     const colorBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
+    */
+    const textureCoordBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
+
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(mallas[0].getCoordtex()),
+                this.gl.STATIC_DRAW);
+
+    const normalBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
+
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(mallas[0].getNormales()),this.gl.STATIC_DRAW);
     
     return {
       position: positionBuffer,
-      color: colorBuffer,
+      textureCoord: textureCoordBuffer,
       indices: indexBuffer,
+      normal: normalBuffer,
     };
   }
 
@@ -362,7 +434,59 @@ export class WebGLService {
     return this.checkCompiledShader(compiledShader) ? glShader : null;
   }
 
+  private isPowerOf2(value) {
+    return (value & (value - 1)) == 0;
+  }
+
   private setModelViewAsIdentity() {
     this.modelViewMatrix = matrix.mat4.create();
   }
+  private loadTexture(url) {
+    const texture = this.gl.createTexture();
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    // Because images have to be downloaded over the internet
+    // they might take a moment until they are ready.
+    // Until then put a single pixel in the texture so we can
+    // use it immediately. When the image has finished downloading
+    // we'll update the texture with the contents of the image.
+    const level = 0;
+    const internalFormat = this.gl.RGBA;
+    const width = 1;
+    const height = 1;
+    const border = 0;
+    const srcFormat = this.gl.RGBA;
+    const srcType = this.gl.UNSIGNED_BYTE;
+    const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+                  width, height, border, srcFormat, srcType,
+                  pixel);
+
+    const mallas = this.Mallas.getMallas2();
+    console.log(this.Mallas);
+    console.log(mallas[1]);
+    const image = mallas[1].getTexturas();
+      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+      this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+                    srcFormat, srcType, image);
+
+      // WebGL1 has different requirements for power of 2 images
+      // vs non power of 2 images so check if the image is a
+      // power of 2 in both dimensions.
+      if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+        // Yes, it's a power of 2. Generate mips.
+        this.gl.generateMipmap(this.gl.TEXTURE_2D);
+      } else {
+        // No, it's not a power of 2. Turn off mips and set
+        // wrapping to clamp to edge
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+    };
+    image.src = url;
+
+    return texture;
+  }
+
+  
 }

@@ -29,7 +29,7 @@ class TRecurso {
 class Malla {
     private vertices;
     private normales;
-    private coordtex: number[];
+    private coordtex;
     private indices;
     private texturas; //Textura[];
 
