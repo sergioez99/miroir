@@ -5,7 +5,7 @@ import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
 import { TNode } from '../motorEngine/TNode';
 import { TEntity } from '../motorEngine/TEntity';
-import { RMalla } from '../motorEngine/TRecurso';
+import { RMalla, RTextura } from '../motorEngine/TRecurso';
 import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
 
 
@@ -44,6 +44,7 @@ export class WebGLService {
   private miLuz;
   private miCamara;
   private Mallas;
+  private Textura;
 
   private then = 0;
 
@@ -162,10 +163,12 @@ export class WebGLService {
     this.miLuz = new ELight(null,null,null,null,null,null, null);
     this.miCamara = new ECamera(null,null,null,null,null,null,null);
     this.Mallas = new RMalla();
+    this.Textura = new RTextura();
 
     this.miNodo.addChild(this.miLuz);
     this.miNodo.addChild(this.miCamara);
     this.miNodo.addChild(this.Mallas);
+
   }
 
   prepareScene() {
