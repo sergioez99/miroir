@@ -110,6 +110,7 @@ const cambiarPassword = async(req, res = response) => {
     try{
         const email = req.body.email;
         const password = req.body.password;
+        const oldPassword = req.body.passwordOld;
         const usuario = await Usuario.findOne( {email : email} );
 
         if (!usuario) {
@@ -118,12 +119,30 @@ const cambiarPassword = async(req, res = response) => {
             });
         }
 
-        // generar cadena aleatoria para el cifrado
-        const salt = bcrypt.genSaltSync();
-        // hacer un hash de la contraseña
-        const cpassword = bcrypt.hashSync(password, salt);
-        usuario.password = cpassword;
-        await usuario.save();
+        if(oldPassword){
+            const validPassword = bcrypt.compareSync(oldPassword, usuario.password)
+            if(validPassword){
+                 // generar cadena aleatoria para el cifrado
+                const salt = bcrypt.genSaltSync();
+                // hacer un hash de la contraseña
+                const cpassword = bcrypt.hashSync(password, salt);
+                usuario.password = cpassword;
+                await usuario.save();
+            }
+            else{
+                return res.status(400).json({
+                    msg: 'La contraseña no coincide'
+                });
+            }
+        }
+        else{
+            const salt = bcrypt.genSaltSync();
+            // hacer un hash de la contraseña
+            const cpassword = bcrypt.hashSync(password, salt);
+            usuario.password = cpassword;
+            await usuario.save();
+        }
+
 
         res.json({
             ok: true,
