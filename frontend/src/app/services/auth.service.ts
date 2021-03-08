@@ -168,6 +168,28 @@ export class AuthService {
 
   }
 
+  loginGoogle (tokenGoogle) : Promise<any>{
+
+    return new Promise( (resolve, reject) => {
+
+      this.apiService.loginCall(tokenGoogle).subscribe(res => {
+        localStorage.setItem('tokenGoogle', res['token']);
+        
+        this.usuarioService.inicializar(res['usuario'], res['token']);
+        this.clienteService.inicializar(res['usuario'], res['token']);
+        this.setIsLogged(true);
+
+        resolve(true);
+
+
+      }, (err) => {
+        console.warn ('error respuesta api: ', err);
+        // mostrar un mensaje de alerta
+        reject(err);
+      });
+    });
+  }
+
   logout () {
 
     localStorage.removeItem('token');

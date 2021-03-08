@@ -3,7 +3,7 @@
 */
 
 const { Router } = require('express');
-const { login, token } = require('../controllers/auth.controller');
+const { login, token, loginGoogle } = require('../controllers/auth.controller');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validar-campos');
 
@@ -20,6 +20,12 @@ router.post('/', [
     check('password', 'El argumento pasword es obligatorio').not().isEmpty(),
     validarCampos,
 ], login);
+
+router.post('/google', [
+    check('token', 'El argumento token es obligatorio').not().isEmpty(),
+    validarCampos,
+], loginGoogle);
+
 
 
 module.exports = router;

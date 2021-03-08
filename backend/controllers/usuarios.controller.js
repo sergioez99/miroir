@@ -17,6 +17,10 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
+const http = require('http-server');
+const url = require('url');
+const opn = require('open');
+const destroyer = require('server-destroy');
 
 const obtenerUsuarios = async(req, res = response) => {
 
@@ -133,40 +137,67 @@ const crearUsuario = async(req, res) => {
             token.token = verificationToken;
 
 
-            //Esto ocultarlo? no se como ahora mismo
             const oauth2Client = new OAuth2(
-                "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-                "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+                process.env.GOOGLE_CLIENT_ID, //Client ID
+                process.env.SECRET_CLIENT, // Client Secret
                 "https://developers.google.com/oauthplayground" // Redirect URL
             );
 
-            const url = oauth2Client.generateAuthUrl({
-                // 'online' (default) or 'offline' (gets refresh_token)
-                access_type: 'offline',
-              });
-
-            const {tokens} = await oauth2Client.getToken();
-            oauth2Client.setCredentials(tokens);
-
-            oauth2Client.on('tokens', (tokens) => {
-                if (tokens.refresh_token) {
-                  // store the refresh_token in my database!
-                  console.log(tokens.refresh_token);
-                }
-                console.log(tokens.access_token);
-            });
-
-            oauth2Client.setCredentials({
-                refresh_token: tokens.refresh_token
-            });
+            var promiseClient, refreshToken, accessToken;
+            async function authenticate() {
+                return new Promise((resolve, reject) => {
+                    // grab the url that will be used for authorization
+                    const authorizeUrl = oauth2Client.generateAuthUrl({
+                        // 'online' (default) or 'offline' (gets refresh_token)
+                        access_type: 'offline',
+                        scope: 'https://mail.google.com/'
+                      });
+                    const server = http
+                    .createServer(async (req, res) => {
+                        try {
+                        if (req.url.indexOf('/oauth2callback') > -1) {
+                            const qs = new url.URL(req.url, 'http://localhost:3030')
+                            .searchParams;
+                            res.end('Authentication successful! Please return to the console.');
+                            server.destroy();
+                            const {tokens} = await oauth2Client.getToken(qs.get('code'));
+                            oauth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
+                            oauth2Client.on('tokens', (tokens) => {
+                                if (tokens.refresh_token) {
+                                  // store the refresh_token in my database!ç
+                                  refreshToken = tokens.refresh_token;
+                                  console.log(tokens.refresh_token);
+                                }
+                                console.log(tokens.access_token);
+                                accessToken = tokens.access_token;
+                            });
+                
+                            oauth2Client.setCredentials({
+                                refresh_token: tokens.refresh_token
+                            });
+                            resolve(oauth2Client);
+                        }
+                        } catch (e) {
+                        reject(e);
+                        }
+                    })
+                    .listen(3030, () => {
+                        // open the browser to the authorize url to start the workflow
+                        opn(authorizeUrl, {wait: false}).then(cp => cp.unref());
+                    });
+                    destroyer(server);
+                });
+            }
+              
+            
+            await authenticate().then(oauth2 => promiseClient = oauth2);
 
             /*oauth2Client.setCredentials({
                 //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
                 refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
             });
-            
-            const accessToken = oauth2Client.getAccessToken()
             */
+            
 
             // guardamos el token de verificacion del email
             await token.save();
@@ -179,9 +210,9 @@ const crearUsuario = async(req, res) => {
                     type: 'OAuth2',
                     user: 'insight.abp@gmail.com',
                     password: 'MiroirInsightABP',
-                    clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                    clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                    refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                    clientId: process.env.GOOGLE_CLIENT_ID, //Client ID,
+                    clientSecret: process.env.SECRET_CLIENT, // Client Secret
+                    refreshToken: refreshToken,
                     accessToken: accessToken
                 },
                 tls: {
