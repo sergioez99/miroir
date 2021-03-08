@@ -9,6 +9,10 @@ const { actualizarBD } = require('../helpers/actualizarbd');
 const fs = require('fs');
 
 
+
+
+
+
 const subirArchivo = async(req, res = response) => {
     //comprobamos si ha llegado algo
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -51,7 +55,9 @@ const subirArchivo = async(req, res = response) => {
                     ok: false,
                     msg: `El tipo de archivo'${extension}' no está permitido. Los archivos permitidos son: (${archivosValidos.fotoperfil})`
                 });
+
             }
+            validarTipoItem();
             break;
 
         case 'prenda':
@@ -62,6 +68,7 @@ const subirArchivo = async(req, res = response) => {
                     msg: `El tipo de archivo'${extension}' no está permitido. Los archivos permitidos son: (${archivosValidos.prenda})`
                 });
             }
+            validarTipoItem();
             break;
 
         default:

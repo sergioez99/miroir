@@ -25,6 +25,7 @@
     "@popperjs/core": "^2.5.4",
     "angular-bootstrap-md": "^10.1.1",
     "bootstrap": "^4.5.3",
+    "chart.js": "^2.9.4",
     "jquery": "^3.5.1",
     "ng-sidebar": "^9.4.2",
     "rxjs": "~6.6.0",

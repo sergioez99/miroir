@@ -5,6 +5,9 @@ const { validarCampos } = require('../middleware/validar-campos');
 const { validarRol } = require('../middleware/validar-rol');
 const { validarJWT } = require('../middleware/validar-jwt');
 
+
+const { validarTipoItem } = require('../middleware/validar-tipo');
+
 const router = Router();
 
 const { crearDatosUsuarios } = require('../controllers/datosUsuarios.controller');
@@ -34,7 +37,8 @@ router.post('/', [
     check('cadera', 'La cadera es opcional').optional().isNumeric(),
     check('cintura', 'La cintura es opcional').optional().isNumeric(),
     validarCampos,
-    validarRol
+    validarRol,
+    validarTipoItem
 ], crearDatosUsuarios);
 /*
 router.put('/:id', [
