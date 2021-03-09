@@ -22,7 +22,7 @@ router.post('/', [
 ], login);
 
 router.post('/google', [
-    check('token', 'El argumento token es obligatorio').not().isEmpty(),
+    check('token', 'El argumento token de google es obligatorio').not().isEmpty(),
     validarCampos,
 ], loginGoogle);
 

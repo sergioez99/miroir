@@ -135,7 +135,7 @@ const loginGoogle = async(req, res = response) => {
     const tokenGoogle = req.body.token;
 
     try {
-        const {email, ...payload} = googleVerify(tokenGoogle);
+        const {email, ...payload} = await googleVerify(tokenGoogle);
         // comprobar que existe el usuario
         let usuarioDB = await Usuario.findOne({ email });
 
@@ -184,7 +184,7 @@ const loginGoogle = async(req, res = response) => {
         return res.status(400).json({
             ok: false,
             error: 0,
-            msg: 'Error en login',
+            msg: 'Error en login google',
             token: ''
         });
     }

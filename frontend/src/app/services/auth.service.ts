@@ -172,8 +172,9 @@ export class AuthService {
 
     return new Promise( (resolve, reject) => {
 
-      this.apiService.loginCall(tokenGoogle).subscribe(res => {
+      this.apiService.loginGoogleCall(tokenGoogle).subscribe(res => {
         localStorage.setItem('tokenGoogle', res['token']);
+        console.log("guardo token en localstorage")
         
         this.usuarioService.inicializar(res['usuario'], res['token']);
         this.clienteService.inicializar(res['usuario'], res['token']);
