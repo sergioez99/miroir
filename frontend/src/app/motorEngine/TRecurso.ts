@@ -99,3 +99,120 @@ export class RMalla extends TRecurso {
         return this.mallas;
     }
 }
+
+export class RTextura extends TRecurso {
+
+    private imagenTextura;
+
+    constructor() {
+      super();
+    }
+
+    async cargar(nombre:string) {
+        let datos;
+        datos = await this.cargarRTextura(nombre);
+        console.log(nombre,':',datos);
+        return datos;
+    }
+
+    async cargarArchivos() {
+        await Promise.all([
+          this.cargar('cubetexture.png')
+        ]).then(res => {
+            this.imagenTextura = res[0];
+        })
+        console.log(this.imagenTextura);
+        console.log('terminar cargarArchivos');
+    }
+
+    cargarRTextura(fichero): Promise<RTextura>{
+        var file, textura;
+        textura = new RTextura();
+
+        return new Promise( (resolve, reject) =>{
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (req.readyState === 4) {
+                    file = req.response;
+
+                    var splitted = fichero.split(".", 2);
+                    
+                    if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
+                        var imagen = new Image();
+                        imagen.src = "http://localhost:4200/assets/"+fichero;
+                        textura.setImagen(imagen);
+                    }
+                    resolve(textura);
+                }
+            }
+            req.open('GET', "http://localhost:4200/assets/"+fichero);
+            req.send();
+        });
+    
+    }
+
+    getImagen(){
+        return this.imagenTextura;
+    }
+}
+
+export class RShader extends TRecurso {
+
+    private vShader: String;
+    private fShader: String;
+
+    constructor() {
+      super();
+    }
+
+    /*async cargar(nombre:string) {
+        let datos;
+        datos = await this.cargarRTextura(nombre);
+        console.log(nombre,':',datos);
+        return datos;
+    }
+
+    async cargarArchivos() {
+        await Promise.all([
+          this.cargar('cubetexture.png')
+        ]).then(res => {
+            this.imagenTextura = res[0];
+        })
+        console.log(this.imagenTextura);
+        console.log('terminar cargarArchivos');
+    }
+
+    cargarRTextura(fichero): Promise<RTextura>{
+        var file, shader;
+
+        return new Promise( (resolve, reject) =>{
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (req.readyState === 4) {
+                    file = req.response;
+
+                    var splitted = fichero.split(".", 2);
+                    
+                    if (splitted[1] == "glsl"){
+                        var imagen = new Image();
+                        imagen.src = "http://localhost:4200/assets/"+fichero;
+                        textura.setImagen(imagen);
+                    }
+                    resolve(textura);
+                }
+            }
+            req.open('GET', "http://localhost:4200/assets/"+fichero);
+            req.send();
+        });
+    
+    }*/
+
+    getVShader(){
+        return this.vShader;
+    }
+    getFShader(){
+        return this.fShader;
+    }
+}
