@@ -75,8 +75,8 @@ export class WebGLService {
           shaderProgram,
           'aVertexPosition'
         ),
+        vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal'),
         textureCoord: this.gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
-        vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal')
       },
       uniformLocations: {
         projectionMatrix: this.gl.getUniformLocation(
@@ -96,6 +96,7 @@ export class WebGLService {
     console.log(this.buffers);
 
     const texture = this.loadTexture();
+    console.log(texture);
 
     // Tell WebGL we want to affect texture unit 0
     this.gl.activeTexture(this.gl.TEXTURE0);
@@ -193,7 +194,7 @@ export class WebGLService {
 
     this.bindVertexPosition(this.programInfo, this.buffers);
 
-    //this.bindVertexColor(this.programInfo, this.buffers);
+    this.bindVertexTextures(this.programInfo, this.buffers);
 
     this.bindVertexNormal(this.programInfo, this.buffers);
 
@@ -468,7 +469,6 @@ export class WebGLService {
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
                     srcFormat, srcType, image);
-
       // WebGL1 has different requirements for power of 2 images
       // vs non power of 2 images so check if the image is a
       // power of 2 in both dimensions.
@@ -490,6 +490,7 @@ export class WebGLService {
       this.gl.generateMipmap(this.gl.TEXTURE_2D);
       */
     };
+    
 
     return texture;
   }
