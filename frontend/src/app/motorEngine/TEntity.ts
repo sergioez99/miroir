@@ -1,4 +1,4 @@
-import { TEntity } from './commons';
+import { Malla, TEntity } from './commons';
 import { vec4 } from 'gl-matrix';
 
 class ELight extends TEntity {
@@ -170,9 +170,9 @@ class ECamera extends TEntity {
   }
 }
 
-/*class EModel extends TEntity {
+class EModel extends TEntity {
 
-
+private malla: Malla;
 
   constructor(malla) {
       super();
@@ -190,14 +190,14 @@ class ECamera extends TEntity {
 
   endDraw() {
   }
-}*/
+}
 
 
 
 export {
     ECamera,
     ELight,
-    //TModel,
+    EModel,
     TEntity,
     
 }

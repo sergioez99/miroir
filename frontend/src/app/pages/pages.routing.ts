@@ -21,13 +21,13 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
-import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component';
+import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component';
 import { SceneComponent } from '../scene/scene.component';
 
 
 const routes: Routes = [
   {
-    path: 'pruebas1', component: Pruebas1Component,
+    path: 'pruebas2', component: Pruebas2Component,
   },
   {
     path: 'probador', component: BaseLayoutComponent,
