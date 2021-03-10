@@ -235,8 +235,14 @@ export class WebGLService {
   }
 
   setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
-    this.gl.canvas.width = canvas.clientWidth;
+    /*this.gl.canvas.width = canvas.clientWidth;
     this.gl.canvas.height = canvas.clientHeight;
+    */
+    
+    
+    this.gl.canvas.width = window.outerWidth;
+    this.gl.canvas.height = window.outerHeight;
+    
   }
 
   updateViewport() {
