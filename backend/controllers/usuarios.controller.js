@@ -143,61 +143,11 @@ const crearUsuario = async(req, res) => {
                 "https://developers.google.com/oauthplayground" // Redirect URL
             );
 
-            var promiseClient, refreshToken, accessToken;
-            async function authenticate() {
-                return new Promise((resolve, reject) => {
-                    // grab the url that will be used for authorization
-                    const authorizeUrl = oauth2Client.generateAuthUrl({
-                        // 'online' (default) or 'offline' (gets refresh_token)
-                        access_type: 'offline',
-                        scope: 'https://mail.google.com/'
-                      });
-                    const server = http
-                    .createServer(async (req, res) => {
-                        try {
-                        if (req.url.indexOf('/oauth2callback') > -1) {
-                            const qs = new url.URL(req.url, 'http://localhost:3030')
-                            .searchParams;
-                            res.end('Authentication successful! Please return to the console.');
-                            server.destroy();
-                            const {tokens} = await oauth2Client.getToken(qs.get('code'));
-                            oauth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
-                            oauth2Client.on('tokens', (tokens) => {
-                                if (tokens.refresh_token) {
-                                  // store the refresh_token in my database!ç
-                                  refreshToken = tokens.refresh_token;
-                                  console.log(tokens.refresh_token);
-                                }
-                                console.log(tokens.access_token);
-                                accessToken = tokens.access_token;
-                            });
-                
-                            oauth2Client.setCredentials({
-                                refresh_token: tokens.refresh_token
-                            });
-                            resolve(oauth2Client);
-                        }
-                        } catch (e) {
-                        reject(e);
-                        }
-                    })
-                    .listen(3030, () => {
-                        // open the browser to the authorize url to start the workflow
-                        opn(authorizeUrl, {wait: false}).then(cp => cp.unref());
-                    });
-                    destroyer(server);
-                });
-            }
-              
-            
-            await authenticate().then(oauth2 => promiseClient = oauth2);
-
-            /*oauth2Client.setCredentials({
-                //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
-                refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+            oauth2Client.setCredentials({
+                refresh_token: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q"
             });
-            */
             
+            const accessToken = await oauth2Client.getAccessToken();
 
             // guardamos el token de verificacion del email
             await token.save();
@@ -212,7 +162,7 @@ const crearUsuario = async(req, res) => {
                     password: 'MiroirInsightABP',
                     clientId: process.env.GOOGLE_CLIENT_ID, //Client ID,
                     clientSecret: process.env.SECRET_CLIENT, // Client Secret
-                    refreshToken: refreshToken,
+                    refreshToken: '1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q',
                     accessToken: accessToken
                 },
                 tls: {
