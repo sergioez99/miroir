@@ -28,7 +28,8 @@ import { PrendaComponent } from './admin/prenda/prenda.component';
 // import { ActivarCuentaComponent } from './usuario/activar-cuenta/activar-cuenta.component';
 import { PaginationComponent } from '../components/pagination/pagination.component';
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
-import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component'
+import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component';
+import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component'
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component'
     // ActivarCuentaComponent,
     PaginationComponent,
     ProgressbarComponent,
-    Pruebas1Component
+    Pruebas1Component,
+    Pruebas2Component
 
 
   ],
