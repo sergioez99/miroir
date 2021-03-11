@@ -2,40 +2,7 @@
     <canvas id="chart" width="800" height="400" style="border:1px solid #000000;"></canvas>
 </div>
 
-<div>
-    <input type='date'>
-</div>
-
-
 <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargar();">
-
-
-    <!--   INPUT: EMAIL
-    <mat-form-field appearance="outline" class="mir-block">
-        <mat-label>Fecha inicial</mat-label>
-        <input type="date" matInput formControlName="fecha_inicial" class="form-input">
-        <mat-hint>Selecciona el rango de fechas</mat-hint>
-
-         ERRORES
-        <mat-error *ngIf="formFechas.get('fecha_inicial').hasError('required');">
-            Fecha <strong>necesario</strong>
-        </mat-error>
-
-    </mat-form-field>
-   ------------
-   INPUT: EMAIL
-    <mat-form-field appearance="outline" class="mir-block">
-        <mat-label>Fecha final</mat-label>
-        <input type="date" matInput formControlName="fecha_final" class="form-input">
-        <mat-hint>Selecciona el rango de fechas</mat-hint>
-
-        <!-- ERRORES
-        <mat-error *ngIf="formFechas.get('fecha_final').hasError('required');">
-            Fecha <strong>necesario</strong>
-        </mat-error>
-
-    </mat-form-field>
-    <!-- ------------ -->-->
 
     <mat-form-field appearance="fill">
         <mat-label>Selecciona el rango de fechas</mat-label>

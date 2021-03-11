@@ -238,23 +238,28 @@ export class CuadroUsuarioComponent implements OnInit {
       this.chartServices.getClientes().then ( res =>{
         let clientes :Cliente[]= res['clientes'];
 
-        let fechas = [];
-        let repetidaCliente = [];
-        let contador = -1;
+        let fechas = fecha_intervalo;
+        let repetidaCliente :number[] = [];
+        let contador = 0;
+
+        for (let i = 0; i< fecha_intervalo.length; i++){
+          repetidaCliente[i]=0;
+        }
 
         for(let i=0; i<clientes.length; i++){
 
           let fecha :Date= new Date(clientes[i].alta);
           let latest_date =this.datepipe.transform(fecha, 'yyyy-MM-dd');
 
-          if (fechas[contador] != latest_date){
-            ++ contador;
-            fechas.push(latest_date);
-            repetidaCliente.push(1);
+          for (let j=0; j<fechas.length; j++){
+
+            if (fechas[j] == latest_date){
+
+              repetidaCliente[j] ++;
+            }
           }
-          else{
-            ++ repetidaCliente[contador];
-          }
+
+
         }
 
         let max = 0;

@@ -16,10 +16,9 @@ const PrendaSchema = Schema({
         type: String,
         required: true,
     },
-    talla: {
-        type: { talla: String },
-        required: true,
-    },
+    talla: [{
+        type: String
+    }],
     //OJOOOO !!!!!! HAY QUE revisar esta vaina !!!!
     objeto: {
         type: String,
