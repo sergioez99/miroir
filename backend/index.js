@@ -4,8 +4,11 @@ Importación de módulos
 const express = require('express');
 // intercambio de recursos de origen cruzado
 const cors = require('cors');
+
 //Para subir los archivos
+//npm i express-fileupload
 const fileUpload = require('express-fileupload');
+
 // para guardar variables de entorno en un archivo de variables
 require('dotenv').config();
 
@@ -20,6 +23,7 @@ dbConnection();
 app.use(cors());
 // para manejar los argumentos en la peticion (body, cabeceras, url, ...)
 app.use(express.json());
+
 //para la transferencia de archivos
 app.use(fileUpload({
     //vamos a limitar el tamanyo (establecido como variable global en .env)

@@ -1,11 +1,13 @@
+//para caracterizar las respuestas
 const { response } = require('express');
-const bcrypt = require('bcryptjs');
+//const bcrypt = require('bcryptjs');
 require('dotenv').config();
-//const validator = require('validator');
+const validator = require('validator');
 //const Prenda = require('../models/prendas.model');
-
 const { v4: uuidv4 } = require('uuid');
+//para actualizar la base de datos
 const { actualizarBD } = require('../helpers/actualizarbd');
+//para el acceso al sistema de archivos
 const fs = require('fs');
 
 
@@ -14,7 +16,7 @@ const fs = require('fs');
 
 
 const subirArchivo = async(req, res = response) => {
-    //comprobamos si ha llegado algo
+    //comprobamos si ha llegado algo a nuestro sistema
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
             ok: false,
@@ -23,18 +25,19 @@ const subirArchivo = async(req, res = response) => {
     }
     //comprobamos si el archivo no se ha saltado la condicion de 
     //la propiedad abortOnLimit del index.js (superar el tamanyo max,
-    //de momento lo tenemos como variable global con valor=5)
+    //de momento lo tenemos como variable global con valor=5Mb)
 
+    //archivo porque en postman lo hemos llamado asi, si en Postman es Pepe aqui es Pepe
     if (req.files.archivo.truncated) {
         return res.status(400).json({
             ok: false,
             msg: `El archivo es demasiado grande: Límite hasta ${process.env.MAXSIZEUPLOAD}MB `,
         });
     }
-
+    //creamos las variables para la ruta de la api (/api/:tipo/:id)
     const tipo = req.params.tipo; //fotoperfil o prendas
     const id = req.params.id;
-    //extensiones que permitimos
+    //Estructura con las extensiones permitidas
     const archivosValidos = {
         fotoperfil: ['jpg', 'jpeg', 'png'],
         prenda: ['obj', 'jpg', 'jpeg', 'png']
@@ -80,6 +83,7 @@ const subirArchivo = async(req, res = response) => {
             break;
     }
 
+    //anyadimos tipo para que cree carpetas distintas (fotoperfil y prendas)
     const path = `${process.env.PATHUPLOAD}/${tipo}`;
     const nombreArchivo = `${uuidv4()}.${extension}`
         // path con su ruta base/carpeta para cada tipo/nombre dea archivo unico/extension
@@ -110,6 +114,7 @@ const subirArchivo = async(req, res = response) => {
                     ok: false,
                     msg: `No se ha podido actualizar la BD`,
                 });
+                //si todo ok
             } else {
                 res.json({
                     ok: true,
@@ -137,6 +142,16 @@ const enviarArchivo = async(req, res = response) => {
     // path con su ruta base/carpeta para cada tipo/nombre dea archivo unico/extension
     patharchivo = `${path}/${nombreArchivo}`;
 
+    //----------------------------------------------------------------------------------------
+    //comprobamos el nombre del archivo y nos fijamos en su extension
+    const archivo = req.files.archivo;
+    //devuelve un array con cada una de estas partes
+    const nombrePartido = archivo.name.split('.');
+    //cogemos el ultimo
+    const extension = nombrePartido[nombrePartido.length - 1];
+    //-----------------------------------------------------------------------------------------
+
+
     //comprobar si existe el archivo
     if (!fs.existsSync(patharchivo)) {
         if (tipo !== 'fotoperfil') {
@@ -146,6 +161,7 @@ const enviarArchivo = async(req, res = response) => {
             });
         }
         patharchivo = `${process.env.PATHUPLOAD}/sinImagen.jpg`;
+        // patharchivo = `${process.env.PATHUPLOAD}/${extension}`;
     }
     //si todo bien lo enviamos
     res.sendFile(patharchivo);
