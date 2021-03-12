@@ -30,12 +30,78 @@ export class CuadroUsuarioComponent implements OnInit {
 
     this.canvas01 = <HTMLCanvasElement> document.querySelector('#chart')
 
-    this.renderCharts();
+    let fechaF = new Date(Date.now());
+    let fechaI = new Date(fechaF);
+    fechaI.setDate(fechaI.getDate()-1);
 
     this.formFechas = this.fb.group({
-      fechaI: ['', [Validators.required]],
-      fechaF: ['', [Validators.required]],
+      fechaI: [fechaI, [Validators.required]],
+      fechaF: [fechaF, [Validators.required]],
     });
+
+    this.renderCharts(this.canvas01, this.chart01, this.formFechas);
+  }
+
+  renderCharts(canvas, chart, formulario?) {
+    // borrar el canvas actual
+    let context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    // cargar el nuevo canvas
+    this.cargar(chart, formulario);
+}
+
+  cargar(chart, formulario){
+    // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
+    if (chart){
+      chart.destroy();
+    }
+
+    if(formulario.valid){
+      // cargar las nuevas fechas del formulario
+      let fecha_inicial = formulario.value.fechaI;
+      let fecha_final = formulario.value.fechaF;
+
+      // hacer la peticion al backend (la creada para este chart)
+      this.chartServices.getAltasFechas(fecha_inicial, fecha_final).then( (res)=>{
+
+        // en res estarán los datos ya formateados para introducirlos en el chart
+
+        console.log('respuesta intentando conseguir los datos de fechas: ', res);
+
+        let labels = null;
+        let data = null;
+        let min = 0;
+        let max = 1;
+
+        this.chart01 = new Chart(this.canvas01, {
+          type: "line",
+          data: {
+              labels: labels, //eje x
+              datasets: [{
+                  label: 'Número de usuarios',
+                  data: data,
+                  borderColor:"rgb(200, 92, 12)"
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          suggestedMin: min,
+                          suggestedMax: max,
+                      }
+                  }]
+              }
+          }
+        });
+
+      }).catch( (error)=>{
+        console.warn('error en la llamada', error);
+      })
+
+    }
+
+
   }
 
   totalChart(ctx) {
@@ -163,20 +229,7 @@ export class CuadroUsuarioComponent implements OnInit {
 
   }
 
-
-  renderCharts() {
-      // const ctx = <HTMLCanvasElement> document.querySelector('#chart');
-
-      let context = this.canvas01.getContext('2d');
-      context.clearRect(0, 0, this.canvas01.width, this.canvas01.height);
-      // this.totalChart(ctx);
-      this.chartRegistroUsuarios(this.canvas01);
-  }
-
-
-
-
-  cargar(){
+  cargarUsuariosClientesAntiguo(){
 
     if(this.formFechas.valid){
 

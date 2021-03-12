@@ -9,8 +9,20 @@ const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
+const {
+    obtenerTodosClientes,
+    obtenerTodosUsuarios,
+    obtenerUsuariosFecha,
 
-const { obtenerTodosUsuarios, obtenerTodosClientes } = require('../controllers/charts.controller');
+} = require('../controllers/charts.controller');
+
+
+
+
+router.get('/usuarios/:fecha_inicio/:fecha_fin', [
+    validarJWT,
+
+], obtenerUsuariosFecha);
 
 router.get('/usuarios', [
     validarJWT,

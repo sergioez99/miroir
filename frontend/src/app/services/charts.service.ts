@@ -13,7 +13,26 @@ export class ChartService{
 
 
   constructor( private apiService :ApiService,
-               private usuarioService :UsuarioService) { }
+               private usuarioService :UsuarioService) {
+
+
+  }
+
+  getAltasFechas(fecha_inicio, fecha_fin){
+
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getAltasFechasChartCall(this.usuarioService.getToken(), fecha_inicio, fecha_fin).subscribe( (res) => {
+
+        console.log(res);
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
 
   getUsuarios (){
 

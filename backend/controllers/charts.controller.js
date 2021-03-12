@@ -1,11 +1,12 @@
 const { response } = require('express');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuarios.model');
 const Cliente = require('../models/clientes.model');
-const Token = require('../models/validaciontoken.model');
+const Prenda = require('../models/prendas.model');
+const DatoKPI = require('../models/datosGenericos.model');
+const AltaUsuarios = require('../models/altaUsuarios.model');
 const { infoToken } = require('../helpers/infotoken');
+const mongoose = require('mongoose');
 
 
 const sleep = (ms) => {
@@ -14,7 +15,7 @@ const sleep = (ms) => {
     });
 }
 
-const siUsuarioEsAdmin = (token) => {
+const salirSiUsuarioNoAdmin = (token) => {
     if (!(infoToken(token).rol === 'ROL_ADMIN')) {
         return res.status(400).json({
             ok: false,
@@ -23,11 +24,137 @@ const siUsuarioEsAdmin = (token) => {
     }
 }
 
+const recalcularUsuariosTotales = async() => {
 
+    try {
+
+        const rol = 'ROL_USUARIO';
+        const total = await Usuario.countDocuments({ rol: rol });
+
+        console.log('TOTAL USUARIOS:........ ', total);
+
+        // guardarlo en la colección de datos genéricos
+
+        let salida = new DatoKPI();
+        salida.identificador = 'total_usuarios';
+        salida.datoNumber = total;
+
+        await salida.save();
+
+        return true;
+
+    } catch (error) {
+
+        console.log(error);
+        return error;
+    }
+
+}
+
+const recalcularClientesTotales = async() => {
+
+    try {
+
+        const total = await Cliente.countDocuments();
+        console.log('TOTAL CLIENTES:........ ', total);
+
+        // guardarlo en la colección de datos genéricos
+
+        let salida = new DatoKPI();
+        salida.identificador = 'total_clientes';
+        salida.datoNumber = total;
+
+        await salida.save();
+        return true;
+
+    } catch (error) {
+        return error;
+    }
+
+}
+
+const recalcularPrendasTotales = async() => {
+
+    try {
+
+        const total = await Prenda.countDocuments();
+        console.log('TOTAL PRENDAS:........ ', total);
+
+        // guardarlo en la colección de datos genéricos
+
+        let salida = new DatoKPI();
+        salida.identificador = 'total_prendas';
+        salida.datoNumber = total;
+
+        await salida.save();
+        return true;
+
+    } catch (error) {
+        return error;
+    }
+
+}
+
+const recalcularAltaUsuarios = async() => {
+    try {
+
+        //mongoose.AltaUsuarios.drop();
+
+        const rolUsuario = 'ROL_USUARIO';
+
+        const [usuarios, clientes] = await Promise.all(
+            [
+                Usuario.find({ rol: rolUsuario }),
+                Cliente.find(),
+            ]
+        );
+
+        if (usuarios) {
+            let alta;
+            for (let i = 0; i < usuarios.length; i++) {
+                alta = usuarios[i].alta;
+
+                console.log(alta);
+
+                /* let db = await AltaUsuarios.findOne({ fecha: fecha });
+
+                if (!db) {
+                    db = new AltaUsuarios();
+                } */
+
+            }
+
+        }
+
+
+
+
+/* 
+
+        console.log('USUARIOS:........ ', usuarios);
+        console.log('CLIENTES:........ ', clientes); */
+
+        // guardarlo en la colección de datos genéricos
+
+        return true;
+
+    } catch (error) {
+        return error;
+    }
+}
+
+const obtenerUsuariosFecha = (req, res = response) => {
+
+    salirSiUsuarioNoAdmin(req.header('x-token'));
+
+    // como no lo tengo, calcular la tabla de datos
+    recalcularAltaUsuarios();
+
+}
 
 const obtenerTodosUsuarios = async(req, res = response) => {
 
-    siUsuarioEsAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(req.header('x-token'));
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -76,7 +203,7 @@ const obtenerTodosUsuarios = async(req, res = response) => {
 
 const obtenerTodosClientes = async(req, res = response) => {
 
-    siUsuarioEsAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(req.header('x-token'));
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -128,4 +255,5 @@ const obtenerTodosClientes = async(req, res = response) => {
 module.exports = {
     obtenerTodosUsuarios,
     obtenerTodosClientes,
+    obtenerUsuariosFecha,
 }

@@ -117,4 +117,11 @@ export class ApiService {
     return this.http.get(this.url+'/api/chart/clientes', { headers: headers });
   }
 
+  getAltasFechasChartCall(token, fecha_inicio, fecha_fin){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/usuarios/'+fecha_inicio+'/'+fecha_fin, { headers: headers });
+  }
+
 }
