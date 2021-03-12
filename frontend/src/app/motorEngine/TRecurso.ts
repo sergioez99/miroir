@@ -29,12 +29,7 @@ export class RMalla extends TRecurso {
           this.cargar('cubo.json'),
           this.cargar('cubetexture.png')
         ]).then(res => {
-            /*//Posicion 0 -> primer archivo cargado
-            var malla = new Malla();
-            malla.setVertices(res[0].positions);
-            malla.setNormales(res[0].colors);
-            malla.setIndices(res[0].index);
-            */
+            
             this.mallas.push(res[0]);
             this.mallas.push(res[1]);
         })
@@ -78,8 +73,8 @@ export class RMalla extends TRecurso {
     }
 
     addMalla(fichero){
-        this.cargarRMalla(fichero).then( (res)=>{
-            this.mallas.push(res);
+        this.cargarFichero(fichero).then( (res)=>{
+            this.mallas.push(<Malla>res);
             console.log(this.mallas);
         })
     }
@@ -90,12 +85,7 @@ export class RMalla extends TRecurso {
             this.mallas[i].draw();
     }
 
-    async getMallas(){
-        await this.cargarArchivos();
-        return this.mallas;
-    }
-
-    getMallas2(){
+    getMallas(){
         return this.mallas;
     }
 }

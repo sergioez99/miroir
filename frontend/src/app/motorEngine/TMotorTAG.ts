@@ -60,14 +60,17 @@ export class TMotorTAG {
         return nuevo;
 
     }
-    crearModelo(padre:TNode, trasl:vec3, rot:vec3, esc:vec3, malla) {
+    async crearModelo(padre:TNode, trasl:vec3, rot:vec3, esc:vec3, fichero) {
         if(padre == null)
             padre = this.raiz;
         var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        var entidad = new EModel(malla);
+        //hay que ver si me pasan un fichero y creo aqui la malla o me pasan una malla directamente
+        var entidad = new EModel();
+         await entidad.cargarModelo(fichero);
+        
 
         nuevo.setentidad(entidad);
 
@@ -75,14 +78,17 @@ export class TMotorTAG {
     }
 
     dibujarEscena(){
-        var matrizId:mat4 = [1, 0, 0, 0,
-                           0, 1, 0, 0,
-                           0, 0, 1, 0, 
-                           0, 0, 0, 1]; //matriz identidad.
+        var matrizId:mat4 =[1, 0, 0, 0,
+                            0, 1, 0, 0,
+                            0, 0, 1, 0, 
+                            0, 0, 0, 1]; //matriz identidad.
 
         for (var i = 0; i < this.registroLuces.length; i++) {
-            var matrizLuz = this.registroLuces[i].getTransformMatrix();
-            //pasarle la matrizLuz a GL?
+            if(this.lucesActivas[i] == true){
+                var matrizLuz = this.registroLuces[i].getTransformMatrix();
+                //pasarle la matrizLuz a GL?
+            }
+                
         }
             //me he perdido
     }
@@ -101,7 +107,7 @@ export class TMotorTAG {
         this.lucesActivas[nLuz] = activa;
     }
 
-    registrarViewport(x:number, y:number, alto:number, Ancho:number){
+    registrarViewport(x:number, y:number, alto:number, ancho:number){
         //esto no lo entiendo
     }
     setViewportActivo(nViewport:number){

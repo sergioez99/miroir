@@ -1,4 +1,4 @@
-import { Malla, TEntity } from './commons';
+import { Malla, TEntity, TRecurso } from './commons';
 import { vec4 } from 'gl-matrix';
 
 class ELight extends TEntity {
@@ -174,14 +174,21 @@ class EModel extends TEntity {
 
 private malla: Malla;
 
-  constructor(malla) {
+  constructor() {
       super();
-      this.malla = malla;
       
   }
+  
 
-  cargarModelo (fichero) {
+  async cargarModelo (fichero) {
+    var nuevo = new TRecurso();
+    await nuevo.cargarFichero(fichero).then( (res)=>{
+        this.malla=<Malla>res;
+    })
+  }
 
+  getMalla(){
+      return this.malla;
   }
 
   beginDraw() {

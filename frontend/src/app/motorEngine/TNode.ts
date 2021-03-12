@@ -74,7 +74,7 @@ export class TNode {
         this.entidad = entidad;
     }
 
-    getentidad() {
+    getEntidad() {
         return this.entidad;
     }
     

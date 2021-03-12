@@ -7,6 +7,8 @@ import { TNode } from '../motorEngine/TNode';
 import { TEntity } from '../motorEngine/TEntity';
 import { RMalla, RTextura } from '../motorEngine/TRecurso';
 import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
+import { Malla } from '../motorEngine/commons';
+import { TMotorTAG } from '../motorEngine/TMotorTAG';
 
 
 
@@ -28,7 +30,7 @@ export class WebGLService {
   }
   
 
-  private fieldOfView = (45 * Math.PI) / 180; // radianes
+  private fieldOfView = (65 * Math.PI) / 180; // radianes
   private aspect = 1;
   private zNear = 0.1;
   private zFar = 100.0;
@@ -40,6 +42,7 @@ export class WebGLService {
   private cubeRotation = 0.0;
 
   //Variables árbol de la escena
+  private miMotor;
   private miNodo;
   private miLuz;
   private miCamara;
@@ -51,6 +54,12 @@ export class WebGLService {
   constructor() {}
 
   async initialiseWebGLContext(canvas: HTMLCanvasElement){
+
+    //Creando nodos del árbol de la escena
+    this.miMotor = new TMotorTAG();
+    this.miMotor.crearLuz(null, null, null, null, null, null, null, null, null, null, null);
+    this.miMotor.crearCamara(null, null, null, null, null, null, null, null, null, null);
+    this.Textura = new RTextura();
 
     // Iniciacializamos el contexto
     this.renderingContext =
@@ -159,17 +168,6 @@ export class WebGLService {
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-    //Creando nodos del árbol de la escena
-    this.miNodo = new TNode(null, null, null, null, null, null, null, null, null);
-    this.miLuz = new ELight(null,null,null,null,null,null, null);
-    this.miCamara = new ECamera(null,null,null,null,null,null,null);
-    this.Mallas = new RMalla();
-    this.Textura = new RTextura();
-
-    this.miNodo.addChild(this.miLuz);
-    this.miNodo.addChild(this.miCamara);
-    this.miNodo.addChild(this.Mallas);
-
   }
 
   prepareScene() {
@@ -181,14 +179,14 @@ export class WebGLService {
     matrix.mat4.translate(this.modelViewMatrix,    
       this.modelViewMatrix,    
       [-0.0, 0.0, -6.0]); 
-    matrix.mat4.rotate(this.modelViewMatrix,  
+    /*matrix.mat4.rotate(this.modelViewMatrix,  
       this.modelViewMatrix,  
       this.cubeRotation,    
       [0, 0, 1]);      
     matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       this.cubeRotation * .7,
-      [0, 1, 0]);      
+      [0, 1, 0]);      */
 
       
     const normalMatrix = matrix.mat4.create();
@@ -373,17 +371,16 @@ export class WebGLService {
   
   
   async initialiseBuffers() {
-    var mallas = await this.Mallas.getMallas();
-
-    console.log(this.Mallas);
-
+    var malla = await this.miMotor.crearModelo(null, null, null, null, "coca.json"); 
+    malla = malla.getEntidad().getMalla();
+    console.log(this.miMotor);
     const positionBuffer = this.gl.createBuffer();
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      new Float32Array(mallas[0].getVertices()),
+      new Float32Array(malla.getVertices()),
       this.gl.STATIC_DRAW
     );
 
@@ -391,7 +388,7 @@ export class WebGLService {
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(mallas[0].getIndices()), this.gl.STATIC_DRAW);
+        new Uint16Array(malla.getIndices()), this.gl.STATIC_DRAW);
 
     /*var colors = [];
   
@@ -409,13 +406,13 @@ export class WebGLService {
     const textureCoordBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(mallas[0].getCoordtex()),
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getCoordtex()),
                 this.gl.STATIC_DRAW);
 
     const normalBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(mallas[0].getNormales()),this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getNormales()),this.gl.STATIC_DRAW);
     
     return {
       position: positionBuffer,
@@ -471,7 +468,7 @@ export class WebGLService {
                   pixel);
                   
 
-    const mallas = this.Mallas.getMallas2();
+    /*const mallas = this.Mallas.getMallas2();
     var image = mallas[1].getTexturas();
     console.log(image)
     image.onload = () => {
@@ -491,14 +488,14 @@ export class WebGLService {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
       }
-      /*
+      
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
       this.gl.generateMipmap(this.gl.TEXTURE_2D);
-      */
-    };
+      
+    };*/
     
 
     return texture;
