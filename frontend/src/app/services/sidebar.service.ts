@@ -16,11 +16,12 @@ export class SidebarService {
   menuCliente: sidebarItem[]=[
     { titulo: 'Tu Perfil', icono: 'person', sub: false, url: '/perfil/cliente/'},
     { titulo: 'Prendas', icono: 'pages', sub: false, url: '/perfil/cliente/prendas'},
+    { titulo: 'Cambiar contraseña', icono: 'history_edu', sub: false, url: '/perfil/contra'},
   ];
   menuUsuario: sidebarItem[]=[
     { titulo: 'Perfil', icono: 'person', sub: false, url: '/perfil/usuario/'},
     { titulo: 'Activación de cuenta', icono: 'history_edu', sub: false, url: '/perfil/usuario/activar'},
-
+    { titulo: 'Cambiar contraseña', icono: 'history_edu', sub: false, url: '/perfil/contra'},
   ];
   none: sidebarItem[]=[
     { titulo: 'error', icono: 'fa fa-exclamation-triangle', sub: false, url: '/error'}

@@ -132,17 +132,41 @@ const crearUsuario = async(req, res) => {
             const token = new Token(object);
             token.token = verificationToken;
 
+
+            //Esto ocultarlo? no se como ahora mismo
             const oauth2Client = new OAuth2(
                 "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
                 "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
                 "https://developers.google.com/oauthplayground" // Redirect URL
             );
 
+            const url = oauth2Client.generateAuthUrl({
+                // 'online' (default) or 'offline' (gets refresh_token)
+                access_type: 'offline',
+              });
+
+            const {tokens} = await oauth2Client.getToken();
+            oauth2Client.setCredentials(tokens);
+
+            oauth2Client.on('tokens', (tokens) => {
+                if (tokens.refresh_token) {
+                  // store the refresh_token in my database!
+                  console.log(tokens.refresh_token);
+                }
+                console.log(tokens.access_token);
+            });
+
             oauth2Client.setCredentials({
+                refresh_token: tokens.refresh_token
+            });
+
+            /*oauth2Client.setCredentials({
                 //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
                 refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
             });
+            
             const accessToken = oauth2Client.getAccessToken()
+            */
 
             // guardamos el token de verificacion del email
             await token.save();

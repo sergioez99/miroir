@@ -1,20 +1,16 @@
-.mir-login-button {
+.mir-recovery-button {
     display: inline;
     float: right;
 }
 
-.mir-login-box {
-    max-width: 30em;
+.mir-recovery-box {
+    /*max-width: 30em;*/
     margin: auto;
 }
 
 .mir-box-buttons {
     padding-top: 1em;
     ;
-}
-
-.mir-box-link {
-    text-align: right;
 }
 
 .mir-title {
@@ -27,18 +23,19 @@
 
 h1 {
     line-height: 1.66;
-    margin: 0;
-    padding: 0;
+    padding-top: 30px;
     font-weight: 900;
     color: #222;
     font-family: 'Montserrat';
     font-size: 24px;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 40px; 
+    margin-bottom: 20px; 
 }
 
-.main {
+.mir-recovery-box {
+    margin: auto;
+
     height: 100vh;
     width: 100%;
     font-size: 14px;
@@ -46,7 +43,7 @@ h1 {
     color: #222;
     font-weight: 400;
     font-family: 'Montserrat';
-    background-image: url("../../../assets/fondo-registro.jpg");
+    background-image: url("../../../../assets/fondo-registro.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     -moz-background-size: cover;
@@ -55,11 +52,12 @@ h1 {
     -ms-background-size: cover;
     background-position: center center;
     padding: 115px 0; 
-    align-items: center;
-    align-content: center;
 }
 
-div.signup-content {
+.mir-caja_explicacion_usuario {
+    margin: auto;
+    margin-bottom: 30px;
+
     background: #fff;
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -67,22 +65,11 @@ div.signup-content {
     -o-border-radius: 10px;
     -ms-border-radius: 10px;
     padding: 50px 85px; 
-    width: 60vh;
+    width: 50vh;
+    height: 50vh;
 }
 
-.mir-box-link {
-    color: #555;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 71px;
-    margin-bottom: 5px; }
-  
-.loginhere-link {
-    font-weight: 700;
-    color: #222; }
-
-.mir-login-button {
-    margin-bottom: 10px;
+.mir-recovery-button {
     width: 100%;
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -96,14 +83,14 @@ div.signup-content {
     color: #fff;
     text-transform: uppercase;
     border: none;
+    margin-top: 30px;
     background-image: -moz-linear-gradient(to left, #fb9b02, #b388ff);
     background-image: -ms-linear-gradient(to left, #fb9b02, #b388ff);
     background-image: -o-linear-gradient(to left, #fb9b02, #b388ff);
     background-image: -webkit-linear-gradient(to left, #fb9b02, #b388ff);
     background-image: linear-gradient(to left, #fb9b02, #b388ff); 
 }
-
-.mir-login-button:hover {
+.mir-recovery-button:hover {
     width: 100%;
     border-radius: 5px;
     -moz-border-radius: 5px;
