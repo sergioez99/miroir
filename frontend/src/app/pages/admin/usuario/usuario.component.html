@@ -23,11 +23,13 @@
 
             <form [formGroup]="formMedidas" (ngSubmit)="actualizarUsuario();">
                 <p> poner los datos para poder modificarlos directamente</p>
-                <div *ngIf="this.isNew">
+                <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
                     </mat-form-field>
-
+                </div>
+                    
+                <div *ngIf="this.isNew">
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>Contraseña</mat-label>
                         <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
@@ -36,6 +38,29 @@
                         </button>
                         <mat-hint>Introduzca su contraseña</mat-hint>
                     </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-label>Rol: </mat-label>
+                    <select formControlName="rol">
+                        <option [ngValue]="objeto" *ngFor="let objeto of lista">{{objeto}}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <mat-label>Activo: </mat-label>
+                    <select formControlName="activo">
+                        <option [ngValue]="true">Si</option>
+                        <option [ngValue]="false">No</option>    
+                    </select>
+                </div>
+
+                <div>
+                    <mat-label>Validado: </mat-label>
+                    <select formControlName="validado">
+                        <option [ngValue]="true">Si</option>
+                        <option [ngValue]="false">No</option>    
+                    </select>
                 </div>
                 
                 <div>

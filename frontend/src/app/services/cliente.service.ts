@@ -120,7 +120,9 @@ export class ClienteService {
       console.log('estamos modificando las medidas del usuario: ', formData);
  
       let form :ClienteForm = {
-        
+        rol: formData.rol,
+        activo:formData.activo,
+        validado:formData.validado,
         id: formData.uid,
         email: formData.email,
         password: formData.password,

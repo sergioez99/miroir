@@ -15,7 +15,11 @@ export class UsuarioComponent implements OnInit {
   //public listaUsuarios: Usuario[] = [];
   public formMedidas: FormGroup | null = null;
   public isNew: boolean=false;
+  public lista:string[]=["ROL_ADMIN", "ROL_USUARIO", "ROL_CLIENTE"];
   private uid: string = '';
+  @Input() rol: string = '';
+  @Input() activo: boolean =false;
+  @Input() validado: boolean =false;
   @Input() email: string = '';
   @Input() password: string='';
   @Input() peso :number;
@@ -49,8 +53,11 @@ export class UsuarioComponent implements OnInit {
     }
 
     this.formMedidas = this.fb.group({
-      uid:this.uid,//
-      email: this.email,//
+      uid:this.uid,
+      rol:this.rol,
+      activo:this.activo,
+      validado:this.validado,
+      email: this.email,
       password:this.password,
       peso: [this.peso, [Validators.required, Validators.min(10), Validators.max(200)]],
       altura: [this.altura, [Validators.required, Validators.min(100), Validators.max(200)]],
@@ -61,6 +68,9 @@ export class UsuarioComponent implements OnInit {
  
   }
   cargarFormulario(res:any):void{
+    this.formMedidas.get('rol').setValue(res['usuarios'].rol);
+    this.formMedidas.get('activo').setValue(res['usuarios'].activo);
+    this.formMedidas.get('validado').setValue(res['usuarios'].validado);
     this.formMedidas.get('email').setValue(res['usuarios'].email);//
     this.formMedidas.get('peso').setValue(res['usuarios'].peso);
     this.formMedidas.get('altura').setValue(res['usuarios'].altura);
@@ -70,6 +80,9 @@ export class UsuarioComponent implements OnInit {
   }
   
   cargarFormularioNuevo(){
+    this.rol='ROL_USUARIO';
+    this.activo=true;
+    this.validado=true;
     this.uid='nuevo';
     this.email='ejemplo@gmail.com';
     this.peso=10;

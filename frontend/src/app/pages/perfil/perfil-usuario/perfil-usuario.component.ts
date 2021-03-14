@@ -33,6 +33,7 @@ export class PerfilUsuarioComponent implements OnInit {
     this.cadera = this.usuarioService.getCadera();
 
     this.formMedidas = this.fb.group({
+      
       peso: [this.peso, [Validators.required, Validators.min(10), Validators.max(200)]],
       altura: [this.altura, [Validators.required, Validators.min(100), Validators.max(200)]],
       pecho: [this.pecho, [Validators.required, Validators.min(10), Validators.max(200)]],

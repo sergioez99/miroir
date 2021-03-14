@@ -1,4 +1,7 @@
 export interface ClienteForm {
+  rol:string;
+  activo:boolean;
+  validado:boolean;
   email :string;
   id :string;
   password :string;
