@@ -76,10 +76,10 @@ export class UsuarioService{
      console.log('estamos modificando las medidas del usuario: ', formData);
 
      let form :UsuarioForm = {
-      rol: formData.rol,
-      activo:formData.activo,
-      validado:formData.validado,
-       email: this.usuario['email'],
+       rol: formData.rol,
+       activo:formData.activo,
+       validado:formData.validado,
+       email: formData.email,
        password:this.usuario['password'],//ATENCION
        id: this.usuario['uid'],
        altura: formData.altura,

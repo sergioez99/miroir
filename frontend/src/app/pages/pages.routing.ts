@@ -94,7 +94,7 @@ const routes: Routes = [
 
   { path:'admin', component: PerfilLayoutComponent, canActivate: [ AdminGuard ], canActivateChild: [ AdminGuard ],
     children:[
-      { path: '', component: NotAuthComponent },
+      //{ path: '', component: NotAuthComponent },
       { path:'usuarios', component: UsuariosComponent },
       { path:'usuarios/usuario/:uid', component: UsuarioComponent },
       { path:'prendas', component: PrendasComponent },
@@ -102,7 +102,7 @@ const routes: Routes = [
       { path:'clientes', component: ClientesComponent },
       { path:'clientes/cliente/:uid', component: ClienteComponent },
       { path:'crear-datos', component: CrearDatosComponent },
-      { path:'perfil', component: PerfilAdminComponent },//added, not working
+      { path:'perfil', component: PerfilUsuarioComponent },//added, not working
       { path: '**', redirectTo: '' }
     ]
   },

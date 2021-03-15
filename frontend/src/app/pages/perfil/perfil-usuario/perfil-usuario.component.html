@@ -23,7 +23,12 @@
 
             <form [formGroup]="formMedidas" (ngSubmit)="actualizar();">
                 <p> poner los datos para poder modificarlos directamente</p>
-
+                <div>
+                    <mat-form-field appearance="outline" class="mir-block">
+                        <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+                    </mat-form-field>
+                </div>
+                
                 <div>
                     <mat-slider thumbLabel formControlName="peso" min="10" max="200" step="1" [(ngModel)]=this.peso></mat-slider>
                     <mat-label>Peso: {{this.peso}} kg</mat-label>
