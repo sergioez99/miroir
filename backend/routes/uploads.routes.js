@@ -21,7 +21,7 @@ router.get('/:tipo/:nombreArchivo', [
     validarCampos
 ], enviarArchivo);
 router.post('/:tipo/:id', [
-    // validarJWT,
+    validarJWT,
     check('tipo', 'El tipo debe ser valido').notEmpty(),
     check('id', 'El id del archivo debe ser valido').isMongoId(),
     validarCampos

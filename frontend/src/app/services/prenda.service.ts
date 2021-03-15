@@ -103,7 +103,7 @@ export class PrendaService{
       this.apiService.modificarPrendaCall(uid, form, this.usuarioService.getToken()).subscribe(res =>{
 
         console.log('Respuesta del servidor: ', res);
-        resolve(true);
+        resolve(res);
 
       }, (error)=>{
         console.warn('error respuesta api:; ', error);

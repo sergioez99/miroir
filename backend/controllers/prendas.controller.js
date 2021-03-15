@@ -118,7 +118,7 @@ const actualizarPrenda = async(req, res = response) => {
 
     // aunque venga el password aqui no se va a cambiar
     // si cambia el email, hay que comprobar que no exista en la BD
-    const { identificador, nombre, ...object } = req.body;
+    const { identificador, ...object } = req.body;
     const uid = req.params.id;
     try {
         // comprobar si existe o no existe la prenda
