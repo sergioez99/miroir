@@ -15,7 +15,7 @@ export class UsuarioComponent implements OnInit {
   //public listaUsuarios: Usuario[] = [];
   public formMedidas: FormGroup | null = null;
   public isNew: boolean=false;
-  public lista:string[]=["ROL_ADMIN", "ROL_USUARIO", "ROL_CLIENTE"];
+  public lista:string[]=["ROL_ADMIN", "ROL_USUARIO"];
   private uid: string = '';
   @Input() rol: string = '';
   @Input() activo: boolean =false;

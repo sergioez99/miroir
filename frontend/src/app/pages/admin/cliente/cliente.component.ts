@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ClienteComponent implements OnInit {
   public isNew: boolean=false;
   public formCliente: FormGroup | null = null;
-  public lista:string[]=["ROL_ADMIN", "ROL_USUARIO", "ROL_CLIENTE"];
+  //public lista:string[]=["ROL_ADMIN", "ROL_USUARIO", "ROL_CLIENTE"];
   private uid: string = '';
   @Input() rol: string = '';
   @Input() activo: boolean =false;
@@ -54,7 +54,7 @@ export class ClienteComponent implements OnInit {
 
 
     this.formCliente = this.fb.group({
-      rol:this.rol,
+      //rol:this.rol,
       activo:this.activo,
       validado:this.validado,
       uid:this.uid,//
@@ -69,7 +69,7 @@ export class ClienteComponent implements OnInit {
   }
 
   cargarFormulario(res:any):void{
-    this.formCliente.get('rol').setValue(res['clientes'].rol);
+    //this.formCliente.get('rol').setValue(res['clientes'].rol);
     this.formCliente.get('activo').setValue(res['clientes'].activo);
     this.formCliente.get('validado').setValue(res['clientes'].validado);
     this.formCliente.get('email').setValue(res['clientes'].email);//
@@ -81,7 +81,7 @@ export class ClienteComponent implements OnInit {
   }
 
   cargarFormularioNuevo(){
-    this.rol='ROL_USUARIO';
+    //this.rol='ROL_CLIENTE';
     this.activo=true;
     this.validado=true;
     this.uid='nuevo';

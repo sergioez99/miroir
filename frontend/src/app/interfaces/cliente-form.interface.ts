@@ -1,5 +1,5 @@
 export interface ClienteForm {
-  rol:string;
+  //rol:string;
   activo:boolean;
   validado:boolean;
   email :string;
