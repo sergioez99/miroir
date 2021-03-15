@@ -16,6 +16,11 @@ const PrendaSchema = Schema({
         type: String,
         required: true,
     },
+    visible: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     talla: [{
         type: String,
         required: true,

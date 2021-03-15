@@ -83,7 +83,7 @@ const obtenerPrendas = async(req, res = response) => {
 
 const crearPrenda = async(req, res) => {
 
-    const { identificador, nombre } = req.body;
+    const { identificador } = req.body;
 
     try {
         const exiteIdentificador = await Prenda.findOne({ identificador: identificador });

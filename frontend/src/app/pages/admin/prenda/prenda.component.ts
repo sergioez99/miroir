@@ -124,7 +124,7 @@ export class PrendaComponent implements OnInit {
         console.log('buscando id de la prenda: ', res['prenda'].uid);
 
         // guardar archivo de la prenda
-        this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then( (res) => {
+        this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then((res) => {
 
           console.log('hola holita: ', res);
 
@@ -164,7 +164,7 @@ export class PrendaComponent implements OnInit {
 
           });
 
-        }).catch ( (error) =>{
+        }).catch((error) => {
           console.log(error);
           Swal.fire({
             title: 'Error cargando el archivo',
@@ -212,13 +212,44 @@ export class PrendaComponent implements OnInit {
 
       this.prendaService.modificarPrenda(this.uid, this.formPrenda.value).then((res) => {
 
-        console.log('como que undefined: ', res);
+        if (this.archivoASubir) {
+          // guardar archivo de la prenda
+          this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then((res) => {
 
-        // guardar archivo de la prenda
-        this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then( (res) => {
+            console.log('hola holita: ', res);
 
-          console.log('hola holita: ', res);
+            Swal.fire({
+              title: 'Prenda creada correctamente',
+              icon: 'success',
+              showCloseButton: true,
+              showCancelButton: true,
+              confirmButtonText: 'Aceptar',
+              cancelButtonText: 'Volver a modificar'
+            }).then(res => {
 
+              if (res.isDismissed) {
+                console.log('aceptar, volver a la lista');
+              }
+              else {
+                this.router.navigateByUrl('/admin/prendas');
+              }
+
+            });
+
+          }).catch((error) => {
+            console.log(error);
+            Swal.fire({
+              title: 'Error cargando el archivo',
+              text: error.error.msg,
+              icon: 'error',
+              showCloseButton: true,
+              confirmButtonText: 'Volver a intentar',
+              footer: 'Parece que ha habido un error, intentelo de nuevo'
+            });
+          });
+
+        }
+        else{
           Swal.fire({
             title: 'Prenda creada correctamente',
             icon: 'success',
@@ -237,23 +268,13 @@ export class PrendaComponent implements OnInit {
 
           });
 
-        }).catch ( (error) =>{
-          console.log(error);
-          Swal.fire({
-            title: 'Error cargando el archivo',
-            text: error.error.msg,
-            icon: 'error',
-            showCloseButton: true,
-            confirmButtonText: 'Volver a intentar',
-            footer: 'Parece que ha habido un error, intentelo de nuevo'
-          });
-        });
+        }
 
 
 
       }).catch((error) => {
 
-        console.log('error modificando la prenda: ',error);
+        console.log('error modificando la prenda: ', error);
 
         Swal.fire({
           title: '¡Error!',

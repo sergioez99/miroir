@@ -67,7 +67,8 @@ export class PrendaService{
       nombre: formData.nombre,
       descripcion: formData.descripcion,
       talla: formData.talla,
-      idCliente: idCliente
+      idCliente: idCliente,
+      visible: formData.visible
     };
 
     return new Promise ( (resolve, reject)=>{
@@ -91,7 +92,8 @@ export class PrendaService{
       identificador : formData.identificador,
       nombre: formData.nombre,
       descripcion: formData.descripcion,
-      talla: formData.talla
+      talla: formData.talla,
+      visible: formData.visible,
     };
 
     if(formData.idCliente != null){
