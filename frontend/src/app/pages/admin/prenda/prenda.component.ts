@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormBuilder,Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 //para mensajes de alerta
 import Swal from 'sweetalert2';
 //importamos el servicio de la prenda
-import {PrendaService} from './../../../services/prenda.service';
+import { PrendaService } from './../../../services/prenda.service';
 @Component({
   selector: 'app-prenda',
   templateUrl: './prenda.component.html',
@@ -17,78 +17,153 @@ export class PrendaComponent implements OnInit {
 
 
   public formPrenda: FormGroup | null = null;
-  tallas:string[] = ['S','M','L','XL'];
-  toppingList: string[] = ['S','M', 'L', 'XL'];
+  tallas: string[] = ['XS', 'S', 'M', 'L', 'XL'];
+  toppingList: string[] = ['XS', 'S', 'M', 'L', 'XL'];
 
   uid;
 
 
-  archivoASubir :Array<File>;
+  archivoASubir: Array<File>;
 
   constructor(private fb: FormBuilder,
-             private prendaService: PrendaService,
-             private route: ActivatedRoute ) {  }
+    private prendaService: PrendaService,
+    private route: ActivatedRoute,
+    private router: Router,) { }
 
 
   ngOnInit(): void {
-    this.formPrenda = this.fb.group({
-      talla: ['', Validators.required],
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      validar: [true, Validators.required],
-      archivo:[null, Validators.required],
-      identificador:['', Validators.required]
-    })
-
-    // comprobar si en la url viene un 'nuevo' o un identificador
-    // si es 'nuevo', lo que hace hasta ahora
-    // si es un id, recuperar los datos de esa prenda y meterlos en los inputs
     this.uid = this.route.snapshot.params['uid'];
 
-    console.log('Recuperar uid de la url: ',this.uid);
+    let talla = '';
+    let nombre = '';
+    let descripcion = '';
+    let visible = true;
+    let archivo = null;
+    let identificador = '';
+    let idCliente = '';
 
-    // recuperar de la BD los datos de esa prenda
 
-    // meter los datos de la prenda en el formulario
+    if (this.uid != 'nuevo') {
 
-   }
+      // recuperar de la BD los datos de esa prenda
 
-   enviar(){
-     if(this.uid == 'nuevo'){
-      this.crearPrenda();
-     }
-   }
+      this.prendaService.cargarPrendas(null, null, this.uid).then((res) => {
 
-   crearPrenda() {
+        console.log('respuesta al buscar la prenda por id:', res['prendas']);
 
-    if (this.formPrenda.valid) {
+        const prenda = res['prendas'];
 
-      this.prendaService.crearPrenda(this.formPrenda.value).then( (res)=>{
+        talla = prenda['talla'];
+        nombre = prenda['nombre'];
+        descripcion = prenda['descripcion'];
+        visible = prenda['visible'];
+        archivo = prenda['archivo'];
+        identificador = prenda['identificador'];
+        idCliente = prenda['idCliente'];
 
+        console.log('no muestra los datos de la prenda: ', talla);
+
+      }).catch(error => {
         Swal.fire({
-          title:'Prenda creado correctamente',
-          text: 'Le hemos enviado un email de confirmación. <p> Por favor, revise su bendeja de entrada.</p>',
-          icon: 'success',
+          title: 'Ha habido un error recuperando los datos de la prenda',
+          icon: 'error',
           showCloseButton: true,
           confirmButtonText: 'Aceptar'
         });
 
-      }).catch( (error)=>{
+      }).finally(() => {
+        this.formPrenda = this.fb.group({
+          talla: [talla, Validators.required],
+          nombre: [nombre, Validators.required],
+          descripcion: [descripcion, Validators.required],
+          visible: [visible, Validators.required],
+          archivo: [archivo],
+          identificador: [identificador, Validators.required],
+          idCliente: [idCliente],
+        });
+      });
+    }
+    else {
+      this.formPrenda = this.fb.group({
+        talla: [talla, Validators.required],
+        nombre: [nombre, Validators.required],
+        descripcion: [descripcion, Validators.required],
+        visible: [visible, Validators.required],
+        archivo: [archivo],
+        identificador: [identificador, Validators.required],
+        idCliente: [idCliente],
+      });
+    }
+
+  }
+
+  enviar() {
+    if (this.uid == 'nuevo') {
+      this.crearPrenda();
+    }
+    else {
+      this.modificarPrenda();
+    }
+  }
+
+  crearPrenda() {
+
+    if (this.formPrenda.valid) {
+
+      this.prendaService.crearPrenda(this.formPrenda.value).then((res) => {
+
+        Swal.fire({
+          title: 'Prenda creada correctamente',
+          icon: 'success',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Crear una nueva',
+          cancelButtonText: 'Volver'
+        }).then(res => {
+
+          if (res.isConfirmed) {
+            console.log('aceptar, vaciar el formulario y volver a crear');
+
+            let talla = '';
+            let nombre = '';
+            let descripcion = '';
+            let visible = true;
+            let archivo = null;
+            let identificador = '';
+            let idCliente = '';
+
+            this.formPrenda = this.fb.group({
+              talla: [talla, Validators.required],
+              nombre: [nombre, Validators.required],
+              descripcion: [descripcion, Validators.required],
+              visible: [visible, Validators.required],
+              archivo: [archivo],
+              identificador: [identificador, Validators.required],
+              idCliente: [idCliente],
+            });
+          }
+          else {
+            this.router.navigateByUrl('/admin/prendas');
+          }
+
+        });
+
+      }).catch((error) => {
 
         console.log(error);
 
         Swal.fire({
-          title:'¡Error!',
+          title: '¡Error!',
           text: error.error.msg,
           icon: 'error',
           showCloseButton: true,
           confirmButtonText: 'Volver a intentar',
-          footer: 'Parece que ya tienes una cuenta, <a href="/login">¿Iniciar sesión?</a>'
+          footer: 'Parece que ha habido un error, intentelo de nuevo'
         });
       });
 
     }
-    else{
+    else {
       Swal.fire({
         title: '¡Error!',
         text: 'El formulario no se ha completado correctamente',
@@ -99,26 +174,38 @@ export class PrendaComponent implements OnInit {
 
   }
 
-/*   modificarPrenda() {
+  modificarPrenda() {
+
+    console.log('formulario no validado', this.formPrenda);
 
     if (this.formPrenda.valid) {
 
-      this.prendaService.modificarPrenda(this.formPrenda.value).then( (res)=>{
+      this.prendaService.modificarPrenda(this.uid, this.formPrenda.value).then((res) => {
 
         Swal.fire({
-          title:'Prenda creado correctamente',
-          text: 'Le hemos enviado un email de confirmación. <p> Por favor, revise su bendeja de entrada.</p>',
+          title: 'Prenda creada correctamente',
           icon: 'success',
           showCloseButton: true,
-          confirmButtonText: 'Aceptar'
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Volver a modificar'
+        }).then(res => {
+
+          if (res.isDismissed) {
+            console.log('aceptar, volver a la lista');
+          }
+          else {
+            this.router.navigateByUrl('/admin/prendas');
+          }
+
         });
 
-      }).catch( (error)=>{
+      }).catch((error) => {
 
         console.log(error);
 
         Swal.fire({
-          title:'¡Error!',
+          title: '¡Error!',
           text: error.error.msg,
           icon: 'error',
           showCloseButton: true,
@@ -128,7 +215,7 @@ export class PrendaComponent implements OnInit {
       });
 
     }
-    else{
+    else {
       Swal.fire({
         title: '¡Error!',
         text: 'El formulario no se ha completado correctamente',
@@ -137,9 +224,9 @@ export class PrendaComponent implements OnInit {
       });
     }
 
-  } */
+  }
 
-  cambioArchivo( element ){
+  cambioArchivo(element) {
 
     this.archivoASubir = element.target.files;
 

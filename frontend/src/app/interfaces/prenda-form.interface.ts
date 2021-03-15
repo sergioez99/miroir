@@ -4,6 +4,6 @@ export interface PrendaForm {
   nombre :string;
   descripcion :string;
   talla :string[];
-  idCliente: string;
+  idCliente?: string;
 
 }

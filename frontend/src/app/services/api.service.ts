@@ -4,6 +4,8 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { MedidasForm } from '../interfaces/usuario-medidas-form.interface';
 import { UsuarioForm } from '../interfaces/usuario-form.interface';
 import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +79,42 @@ export class ApiService {
       'x-token': token,
     });
     return this.http.post(this.url+'/api/prendas', formData, { headers: headers });
+  }
+
+  modificarPrendaCall( id, formData, token) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.put(this.url+'/api/prendas/'+id, formData, { headers: headers });
+  }
+
+  borrarPrendaCall( uid: string, token) {
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.delete(`${environment.base_url}/prendas/${uid}` , { headers: headers });
+  }
+
+  getPrendaCall (token:string, desde?:number, textoBusqueda?: string, id?: string) {
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    let url = `${environment.base_url}/prendas/?`;
+
+    if (desde) {
+      url += `desde=${desde}&`;
+    }
+    if (textoBusqueda) {
+      url += `texto=${textoBusqueda}&`;
+    }
+    if (id){
+      url += `id=${id}`;
+    }
+
+    return this.http.get(url ,  { headers: headers });
   }
 
   crearDatosUsuariosCall( formData, token) {

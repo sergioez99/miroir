@@ -16,10 +16,10 @@ const PrendaSchema = Schema({
         type: String,
         required: true,
     },
-    talla: {
-        type: { talla: String },
+    talla: [{
+        type: String,
         required: true,
-    },
+    }],
     imagen: {
         type: String,
     },

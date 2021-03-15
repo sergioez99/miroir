@@ -49,7 +49,7 @@ router.put('/:id', [
     check('nombre', 'El nombre de la prenda es obligatorio').not().isEmpty(),
     check('descripcion', 'La descripcion de la prenda es obligatorio').not().isEmpty(),
     check('talla', 'La talla de la prenda es obligatorio').not().isEmpty(),
-    check('objeto', 'El objeto es obligatorio.').not().isEmpty(),
+    check('idCliente', 'El id debe ser valido').optional().isMongoId(),
     validarCampos,
     validarRol
 ], actualizarPrenda);
