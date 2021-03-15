@@ -78,6 +78,11 @@ const routes: Routes = [
           { path: '', component: CambioContraComponent }
         ]
       },
+      { path:'contracli', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],
+        children: [
+          { path: '', component: CambioContraComponent }
+        ]
+      },
 
       { path: '**', redirectTo: ''}
     ]

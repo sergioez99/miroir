@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { UsuarioService } from '../../../services/usuario.service';
+import { ClienteService } from '../../../services/cliente.service';
 import Swal from 'sweetalert2';
 import { RecuperacionService } from '../../../services/recuperacion.service';
 import {CustomValidators} from '../../../services/auth.password.repeat.service';
@@ -21,19 +21,22 @@ export class CambioContraComponent implements OnInit {
   public hide = true;
   public hideR = true;
   private email;
+  private rol;
 
   constructor( private fb: FormBuilder,
                private router: Router,
                private route: ActivatedRoute,
                private recuperacionService :RecuperacionService,
-               private usuarioService :UsuarioService) { }
+               private usuarioService :UsuarioService,
+               private clienteService :ClienteService) { }
 
   ngOnInit(): void {
     this.formRecovery = this.fb.group({
       email: ['', Validators.required],
       passwordOld: ['', Validators.required],
       password: ['', Validators.required],
-      passwordRepeat: ['', [Validators.required]]
+      passwordRepeat: ['', [Validators.required]],
+      rol:['', [Validators.required]]
     });
 
     this.formRecovery.get('passwordRepeat').setValidators(
@@ -47,6 +50,8 @@ export class CambioContraComponent implements OnInit {
     //Esto hay que cambiarlo con algo del token
     this.email = this.usuarioService.getEmail();
     this.formRecovery.patchValue({ email : this.email });
+    this.rol = this.usuarioService.getRol();
+    this.formRecovery.patchValue({ rol : this.rol });
     console.log(this.formRecovery.value);
 
     if(this.formRecovery.valid){

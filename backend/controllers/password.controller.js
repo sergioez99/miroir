@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Token = require('../models/validaciontoken.model');
 const Usuario = require('../models/usuarios.model');
+const Cliente = require('../models/clientes.model');
 
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
@@ -111,7 +112,16 @@ const cambiarPassword = async(req, res = response) => {
         const email = req.body.email;
         const password = req.body.password;
         const oldPassword = req.body.passwordOld;
-        const usuario = await Usuario.findOne( {email : email} );
+        let usuario=await Usuario.findOne( {email : email} );
+        if (req.body.rol=='ROL_USUARIO'){
+            console.log('es un USUARIO');
+        }
+
+        if (req.body.rol=='ROL_CLIENTE'){
+            usuario=await Cliente.findOne( {email : email} );
+            console.log('es un cliente');
+        }
+        
 
         if (!usuario) {
             return res.status(400).json({
