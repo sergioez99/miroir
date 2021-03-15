@@ -16,6 +16,7 @@ const fs = require('fs');
 
 
 const subirArchivo = async(req, res = response) => {
+
     //comprobamos si ha llegado algo a nuestro sistema
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
@@ -60,7 +61,7 @@ const subirArchivo = async(req, res = response) => {
                 });
 
             }
-            validarTipoItem();
+            //validarTipoItem();
             break;
 
         case 'prenda':
@@ -71,7 +72,7 @@ const subirArchivo = async(req, res = response) => {
                     msg: `El tipo de archivo'${extension}' no está permitido. Los archivos permitidos son: (${archivosValidos.prenda})`
                 });
             }
-            validarTipoItem();
+            //validarTipoItem();
             break;
 
         default:
@@ -93,6 +94,7 @@ const subirArchivo = async(req, res = response) => {
     //console.log('mmmm hola ???' + patharchivo);
     archivo.mv(patharchivo, (err) => {
         if (err) {
+            console.log('no se ha podido cargar el archivo: ', err);
             return res.status(400).json({
                 ok: false,
                 msg: `No se ha podido cargar el archivo`,
@@ -100,6 +102,8 @@ const subirArchivo = async(req, res = response) => {
             });
         }
     });
+
+    console.log('hemos llegado!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     //una vez cargado el archivo en nuestro sistema, 
     //actualizamos la base de datos
@@ -142,16 +146,6 @@ const enviarArchivo = async(req, res = response) => {
     // path con su ruta base/carpeta para cada tipo/nombre dea archivo unico/extension
     patharchivo = `${path}/${nombreArchivo}`;
 
-    //----------------------------------------------------------------------------------------
-    //comprobamos el nombre del archivo y nos fijamos en su extension
-    const archivo = req.files.archivo;
-    //devuelve un array con cada una de estas partes
-    const nombrePartido = archivo.name.split('.');
-    //cogemos el ultimo
-    const extension = nombrePartido[nombrePartido.length - 1];
-    //-----------------------------------------------------------------------------------------
-
-
     //comprobar si existe el archivo
     if (!fs.existsSync(patharchivo)) {
         if (tipo !== 'fotoperfil') {
@@ -160,7 +154,7 @@ const enviarArchivo = async(req, res = response) => {
                 msg: 'El archivo no existe',
             });
         }
-        patharchivo = `${process.env.PATHUPLOAD}/sinImagen.jpg`;
+        patharchivo = `${process.env.PATHUPLOAD}/sinImagen.png`;
         // patharchivo = `${process.env.PATHUPLOAD}/${extension}`;
     }
     //si todo bien lo enviamos

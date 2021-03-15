@@ -1,5 +1,5 @@
 const Usuario = require('../models/usuarios.model');
-const Cliente = require('../models/clientes.model');
+const Prenda = require('../models/prendas.model');
 
 //Para acceder al sistema de archivos
 const fs = require('fs');
@@ -34,6 +34,7 @@ const actualizarBD = async(tipo, path, nombreArchivo, id) => {
 
             //comprobamos si la prenda existe
             const prenda = await Prenda.findById(id);
+
             if (!prenda) {
                 return false;
             }
@@ -41,12 +42,15 @@ const actualizarBD = async(tipo, path, nombreArchivo, id) => {
             let fotoviejaDos = prenda.imagen;
             const pathFotoViejaDos = `${path}/${fotoviejaDos}`;
 
-
             if (fotoviejaDos && fs.existsSync(pathFotoViejaDos)) {
                 fs.unlinkSync(pathFotoViejaDos);
+
             }
+
             prenda.imagen = nombreArchivo;
             await prenda.save();
+            console.log(prenda);
+
 
             return true;
 

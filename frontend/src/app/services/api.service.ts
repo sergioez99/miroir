@@ -155,12 +155,17 @@ export class ApiService {
     return this.http.get(this.url+'/api/chart/clientes', { headers: headers });
   }
 
-  subirArchivosCall(id,token){
+  subirArchivosCall(id, tipo, archivo: File, token){
+
     const headers = new HttpHeaders({
       'x-token': token,
     });
+    const datos: FormData = new FormData();
+    datos.append('archivo', archivo, archivo.name);
 
-    return this.http.post(this.url+'/api/upload/prenda/'+id, { headers: headers });
+    console.log(headers);
+
+    return this.http.post(this.url+'/api/upload/'+tipo+'/'+id, datos, { headers: headers });
   }
 
 

@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 //importamos el servicio de la prenda
 import { PrendaService } from './../../../services/prenda.service';
+import { UploadService } from '../../../services/upload.service';
+import { UsuarioService } from '../../../services/usuario.service';
 @Component({
   selector: 'app-prenda',
   templateUrl: './prenda.component.html',
@@ -27,6 +29,8 @@ export class PrendaComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private prendaService: PrendaService,
+    private usuarioService: UsuarioService,
+    private uploadService: UploadService,
     private route: ActivatedRoute,
     private router: Router,) { }
 
@@ -40,7 +44,7 @@ export class PrendaComponent implements OnInit {
     let visible = true;
     let archivo = null;
     let identificador = '';
-    let idCliente = '';
+    let idCliente = this.usuarioService.getID();
 
 
     if (this.uid != 'nuevo') {
@@ -98,6 +102,9 @@ export class PrendaComponent implements OnInit {
   }
 
   enviar() {
+
+    console.log('de donde saca el idCliente? ', this.formPrenda);
+    console.log('sera el mismo?, ', this.usuarioService.getID());
     if (this.uid == 'nuevo') {
       this.crearPrenda();
     }
@@ -112,41 +119,62 @@ export class PrendaComponent implements OnInit {
 
       this.prendaService.crearPrenda(this.formPrenda.value).then((res) => {
 
-        Swal.fire({
-          title: 'Prenda creada correctamente',
-          icon: 'success',
-          showCloseButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Crear una nueva',
-          cancelButtonText: 'Volver'
-        }).then(res => {
+        console.log('buscando id de la prenda: ', res['prenda'].uid);
 
-          if (res.isConfirmed) {
-            console.log('aceptar, vaciar el formulario y volver a crear');
+        // guardar archivo de la prenda
+        this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then( (res) => {
 
-            let talla = '';
-            let nombre = '';
-            let descripcion = '';
-            let visible = true;
-            let archivo = null;
-            let identificador = '';
-            let idCliente = '';
+          console.log('hola holita: ', res);
 
-            this.formPrenda = this.fb.group({
-              talla: [talla, Validators.required],
-              nombre: [nombre, Validators.required],
-              descripcion: [descripcion, Validators.required],
-              visible: [visible, Validators.required],
-              archivo: [archivo],
-              identificador: [identificador, Validators.required],
-              idCliente: [idCliente],
-            });
-          }
-          else {
-            this.router.navigateByUrl('/admin/prendas');
-          }
+          Swal.fire({
+            title: 'Prenda creada correctamente',
+            icon: 'success',
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Crear una nueva',
+            cancelButtonText: 'Volver'
+          }).then(res => {
 
+            if (res.isConfirmed) {
+              console.log('aceptar, vaciar el formulario y volver a crear');
+
+              let talla = '';
+              let nombre = '';
+              let descripcion = '';
+              let visible = true;
+              let archivo = null;
+              let identificador = '';
+              let idCliente = this.usuarioService.getID();
+
+              this.formPrenda = this.fb.group({
+                talla: [talla, Validators.required],
+                nombre: [nombre, Validators.required],
+                descripcion: [descripcion, Validators.required],
+                visible: [visible, Validators.required],
+                archivo: [archivo],
+                identificador: [identificador, Validators.required],
+                idCliente: [idCliente],
+              });
+            }
+            else {
+              this.router.navigateByUrl('/admin/prendas');
+            }
+
+          });
+
+        }).catch ( (error) =>{
+          console.log(error);
+          Swal.fire({
+            title: 'Error cargando el archivo',
+            text: error.error.msg,
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonText: 'Volver a intentar',
+            footer: 'Parece que ha habido un error, intentelo de nuevo'
+          });
         });
+
+
 
       }).catch((error) => {
 

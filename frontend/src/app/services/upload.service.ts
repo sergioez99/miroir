@@ -18,55 +18,38 @@ import { UsuarioService } from './usuario.service';
 })
 export class UploadService{
 
-  private rol :string;
-  private token :string;
-  private id :string;
+  constructor( private apiService :ApiService,
+               private http: HttpClient,
+               private router: Router,
+               private usuarioService: UsuarioService) { }
 
 
-  constructor( private apiService :ApiService, private http: HttpClient,private router: Router,
-    private usuarioService: UsuarioService) { }
+  crearArchivoPrenda(id, archivo: Array<File>) :Promise<any>{
 
-
-  getToken (){
-
-    let token;
-
-    if (!token) {
-      token = this.usuarioService.getToken();
-    }
-    return token;
-  }
-
-  get cabeceras() {
-    return {
-      headers: {
-        'x-token': this.getToken()
-            }};
-  }
-
-/*
-  borrarPrenda( uid: string) {
-    if (!uid || uid === null) {uid = 'a'; }
-    return this.http.delete(`${environment.base_url}/prendas/${uid}` , this.cabeceras);
-  }
-  */
-
-  crearArchivo() :Promise<any>{
-
-    let idUsuario = this.usuarioService.getID();
-
-
+    let tipo = 'prenda';
     return new Promise ( (resolve, reject)=>{
 
-      this.apiService.subirArchivosCall(idUsuario, this.usuarioService.getToken()).subscribe(res =>{
+      console.log(archivo);
 
-        console.log('Respuesta del servidor: ', res);
-        resolve(true);
+      for (let i=0; i<archivo.length; i++){
 
-      }, (error)=>{
-        console.warn('error respuesta api:; ', error);
-        reject(error);
-      });
+        this.apiService.subirArchivosCall(id, tipo, archivo[i], this.usuarioService.getToken()).subscribe(res =>{
+
+          console.log('Respuesta del servidor: ', res);
+          resolve(true);
+
+        }, (error)=>{
+          console.warn('error respuesta api:; ', error);
+          reject(error);
+        });
+      }
+
+
+
+
     });
   }
+
+
+
 }

@@ -16,11 +16,12 @@ const router = Router();
 
 router.get('/:tipo/:nombreArchivo', [
     validarJWT,
+    check('tipo', 'El tipo debe ser valido').notEmpty(),
     check('nombreArchivo', 'El nombreArchivo debe ser un nombre de archivo válido').trim(),
     validarCampos
 ], enviarArchivo);
 router.post('/:tipo/:id', [
-    validarJWT,
+    // validarJWT,
     check('tipo', 'El tipo debe ser valido').notEmpty(),
     check('id', 'El id del archivo debe ser valido').isMongoId(),
     validarCampos

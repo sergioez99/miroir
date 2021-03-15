@@ -23,7 +23,9 @@ export class NavbarComponent implements OnInit {
   // cada vez que se muestra por pantalla
   ngOnInit(): void {
     this.usuarioService.cargarUsuario(this.usuarioService.getID()).subscribe(res =>{
-      this.imagenURL = `${environment.base_url}/upload/fotoperfil/` + res['usuarios'].imagen || 'no-imagen';
+      let imagen = res['usuarios'].imagen || 'sinImagen.png';
+      this.imagenURL = `${environment.base_url}/upload/fotoperfil/` + imagen;
+      console.log('imagen que intenta cargar: ',this.imagenURL);
       this.imagenURL += `?token=${this.usuarioService.getToken()}`;
     });
   }
