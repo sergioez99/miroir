@@ -46,7 +46,7 @@ const subirArchivo = async(req, res = response) => {
     //comprobamos el nombre del archivo y nos fijamos en su extension
     const archivo = req.files.archivo;
     //devuelve un array con cada una de estas partes
-    const nombrePartido = archivo.name.split('.');
+    const nombrePartido = archivo.name.split('.'); //hola.hadsf.uasdf.uas.jpeg
     //cogemos el ultimo
     const extension = nombrePartido[nombrePartido.length - 1];
 

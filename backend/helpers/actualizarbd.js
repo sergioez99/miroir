@@ -15,7 +15,7 @@ const actualizarBD = async(tipo, path, nombreArchivo, id) => {
                 return false;
             }
             //si el usuario ya tiene una foto
-            const fotovieja = usuario.imagen;
+            let fotovieja = usuario.imagen;
             //creamos el path
             const pathFotoVieja = `${path}/${fotovieja}`;
 
@@ -32,21 +32,21 @@ const actualizarBD = async(tipo, path, nombreArchivo, id) => {
 
         case 'prenda':
 
-            //comprobamos si el cliente existe
-            const cliente = await Cliente.findById(id);
-            if (!cliente) {
+            //comprobamos si la prenda existe
+            const prenda = await Prenda.findById(id);
+            if (!prenda) {
                 return false;
             }
 
-            const fotovieja = cliente.imagen;
-            const pathFotoVieja = `${path}/${fotovieja}`;
+            let fotoviejaDos = prenda.imagen;
+            const pathFotoViejaDos = `${path}/${fotoviejaDos}`;
 
 
-            if (fotovieja && fs.existsSync(pathFotoVieja)) {
-                fs.unlinkSync(pathFotoVieja);
+            if (fotoviejaDos && fs.existsSync(pathFotoViejaDos)) {
+                fs.unlinkSync(pathFotoViejaDos);
             }
-            cliente.imagen = nombreArchivo;
-            await cliente.save();
+            prenda.imagen = nombreArchivo;
+            await prenda.save();
 
             return true;
 
