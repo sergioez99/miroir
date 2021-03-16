@@ -204,50 +204,6 @@ const crearUsuario = async(req, res) => {
             });
         }
     }
-    /* Actualizar usuario 1.0
-    const actualizarUsuario = async(req, res = response) => {
-
-        // aunque venga el password aqui no se va a cambiar
-        // si cambia el email, hay que comprobar que no exista en la BD
-        const { password, alta, email, ...object } = req.body;
-        const uid = req.params.id;
-
-        try {
-            // comprobar si existe o no existe el usuario
-            const existeEmail = await Usuario.findOne({ email: email });
-
-            if (existeEmail) {
-                // si existe, miramos que sea el suyo (que no lo esta cambiando)
-                if (existeEmail._id != uid) {
-
-                    return res.status(400).json({
-                        ok: false,
-                        msg: "Email ya existe"
-                    });
-                }
-            }
-            // aqui ya se ha comprobado el email
-            object.email = email;
-            // new: true -> nos devuelve el usuario actualizado
-            const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
-
-            res.json({
-                ok: true,
-                msg: 'actualizarUsuario',
-                usuario
-            });
-
-        } catch (error) {
-            console.log(error);
-
-            res.status(400).json({
-                ok: false,
-                msg: 'Error actualizando usuario'
-            });
-        }
-
-    } 
-    */
 
 const actualizarUsuario = async(req, res = response) => {
 

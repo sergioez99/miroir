@@ -20,7 +20,6 @@ export class SidebarService {
   ];
   menuUsuario: sidebarItem[]=[
     { titulo: 'Perfil', icono: 'person', sub: false, url: '/perfil/usuario/'},
-    { titulo: 'Activación de cuenta', icono: 'history_edu', sub: false, url: '/perfil/usuario/activar'},
     { titulo: 'Cambiar contraseña', icono: 'history_edu', sub: false, url: '/perfil/contra'},
   ];
   none: sidebarItem[]=[
