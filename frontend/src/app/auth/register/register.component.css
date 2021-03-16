@@ -1,7 +1,7 @@
 .mir-caja_formulario {
     margin: auto;
 
-    height: 100vh;
+    height: 130vh;
     width: 100%;
     font-size: 14px;
     line-height: 1.8;
@@ -80,7 +80,7 @@ h1 {
     -webkit-border-radius: 10px;
     -o-border-radius: 10px;
     -ms-border-radius: 10px;
-    width: 60vh;
+    width: 645px;
 }
 
 .mir-caja_explicacion_usuario {

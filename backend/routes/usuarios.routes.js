@@ -27,7 +27,7 @@ router.get('/', [
 
 
 router.post('/', [
-    validarJWT,
+
     check('email', 'El argumento email es obligatorio').not().isEmpty(),
     check('email', 'El argumento email debe ser un email').isEmail(),
     check('password', 'El argumento password es obligatorio').not().isEmpty(),

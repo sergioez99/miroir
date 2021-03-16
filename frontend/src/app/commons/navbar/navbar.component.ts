@@ -26,8 +26,20 @@ export class NavbarComponent implements OnInit {
     this.tipoDePerfil();
 
     this.usuarioService.cargarUsuario(this.usuarioService.getID()).subscribe(res =>{
-      this.imagenURL = `${environment.base_url}/upload/fotoperfil/` + res['usuarios'].imagen || 'no-imagen';
-      this.imagenURL += `?token=${this.usuarioService.getToken()}`;
+      if(!res['usuarios'].imagen)
+        this.imagenURL = `http://localhost:4200/assets/no-photo.png`;
+      else
+        this.imagenURL = `${environment.base_url}/uploads/` + res['usuarios'].imagen; 
+      console.log(this.imagenURL);
+      document.getElementById('navbar').innerHTML = '<a class="nav-link dropdown-toggle text-muted waves-effect waves-dark prop-pic" id="link-image" routerLink="/home" ng-reflect-router-link="/home" href="/home" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>'
+      var imagen = document.createElement('img');
+      imagen.setAttribute("src", this.imagenURL);
+      imagen.setAttribute("alt", "user");
+      imagen.setAttribute("class", "rounded-circle");
+      imagen.setAttribute("width", "31");
+      imagen.setAttribute("height", "31");
+      document.getElementById('link-image').append(imagen);
+      //this.imagenURL += `?token=${this.usuarioService.getToken()}`;
     });
   }
 
