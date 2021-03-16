@@ -56,6 +56,13 @@ class TRecurso {
                         malla.setCoordtex(file.model.meshes[0].uvs);
                         malla.setNormales(file.model.meshes[0].normals);
                         malla.setIndices(file.model.meshes[0].vertIndices);
+                        /*
+                        //Para el cubo
+                        malla.setVertices(file.positions);
+                        malla.setCoordtex(file.textureCoordinates);
+                        malla.setNormales(file.vertexNormals);
+                        malla.setIndices(file.index);*/
+
                     }
                     else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
                         var imagen = new Image();
