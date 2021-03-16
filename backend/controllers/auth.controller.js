@@ -6,6 +6,7 @@ const Cliente = require('../models/clientes.model');
 
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
+const { googleVerify } = require('../helpers/google-verify');
 
 
 const login = async(req, res = response) => {
@@ -128,4 +129,65 @@ const token = async(req, res = response) => {
     }
 }
 
-module.exports = { login, token }
+
+const loginGoogle = async(req, res = response) => {
+
+    const tokenGoogle = req.body.token;
+
+    try {
+        const {email, ...payload} = await googleVerify(tokenGoogle);
+        // comprobar que existe el usuario
+        let usuarioDB = await Usuario.findOne({ email });
+
+        // probar en la base de datos de clientes
+        if (!usuarioDB) {
+            usuarioDB = await Cliente.findOne({ email });
+        }
+
+        if (!usuarioDB) {
+            return res.status(400).json({
+                ok: false,
+                error: 1,
+                msg: 'Identificación google incorrecta',
+                token: ''
+            });
+        }
+
+        const { _id, rol, validado } = usuarioDB;
+
+        console.log('validado: ', validado);
+
+        // comprobar que el email ha sido validado
+        if (!validado) {
+            return res.status(400).json({
+                ok: false,
+                errorCod: 2,
+                msg: 'El email no ha sido validado',
+                token: ''
+            });
+        }
+
+        // creamos el token
+        const token = await generarJWT(usuarioDB._id, usuarioDB.rol);
+
+        res.json({
+            ok: true,
+            msg: 'login google',
+            token: token,
+            id: _id,
+            rol: rol,
+            usuario: usuarioDB
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            ok: false,
+            error: 0,
+            msg: 'Error en login google',
+            token: ''
+        });
+    }
+}
+
+module.exports = { login, token, loginGoogle }

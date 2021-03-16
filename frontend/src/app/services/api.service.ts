@@ -54,6 +54,12 @@ export class ApiService {
     return this.http.post(this.url+'/login', formData);
   }
 
+  loginGoogleCall( tokenGoogle) {
+    // console.log('login desde loginCall: ', formData);
+
+    return this.http.post(this.url+'/login/google', {token : tokenGoogle});
+  }
+
   tokenCall (token: string) {
 
     const headers = new HttpHeaders({

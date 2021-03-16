@@ -37,13 +37,13 @@ const recuperarPassword = async(req, res = response) => {
 
         //Autorización OAuth2 para mandar gmail
         const oauth2Client = new OAuth2(
-            "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-            "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+            process.env.GOOGLE_CLIENT_ID, //Client ID
+            process.env.SECRET_CLIENT, // Client Secret
             "https://developers.google.com/oauthplayground" // Redirect URL
         );
 
         oauth2Client.setCredentials({
-            refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+            refresh_token: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q"
         });
         const accessToken = oauth2Client.getAccessToken()
 
@@ -56,9 +56,9 @@ const recuperarPassword = async(req, res = response) => {
                 type: 'OAuth2',
                 user: 'insight.abp@gmail.com',
                 password: 'MiroirInsightABP',
-                clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.SECRET_CLIENT,
+                refreshToken: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q",
                 accessToken: accessToken
             },
             tls: {
