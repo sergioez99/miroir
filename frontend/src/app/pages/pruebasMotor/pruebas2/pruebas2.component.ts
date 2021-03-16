@@ -6,7 +6,7 @@ import { TNode } from 'src/app/motorEngine/TNode';
 import { mat4, vec3, vec4 } from 'gl-matrix';
 import { TMotorTAG } from 'src/app/motorEngine/TMotorTAG';
 import { htmlAstToRender3Ast } from '@angular/compiler/src/render3/r3_template_transform';
-import obj2json from "@anderpang/obj2json";
+
 
 
 @Component({

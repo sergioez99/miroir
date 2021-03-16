@@ -30,10 +30,10 @@ export class WebGLService {
   }
   
 
-  private fieldOfView = (65 * Math.PI) / 180; // radianes
+  private fieldOfView = (45 * Math.PI) / 180; // radianes
   private aspect = 1;
   private zNear = 0.1;
-  private zFar = 100.0;
+  private zFar = 3000.0;
   private projectionMatrix = matrix.mat4.create();
   private modelViewMatrix = matrix.mat4.create();
   private buffers: any
@@ -174,11 +174,38 @@ export class WebGLService {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
+    //Cámara 
+    var numFs = 5;
+    var radius = 200;
+    
+    // Compute a matrix for the camera
+    var cameraMatrix = matrix.mat4.create();
+    matrix.mat4.rotateY(cameraMatrix, cameraMatrix, this.fieldOfView); //pongo field of view pq son radianes
+    matrix.mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
+
+    var cameraTarget = matrix.vec3.create();
+    cameraTarget = [0, -100, 0];
+    var cameraPosition = matrix.vec3.create();
+    cameraPosition = [500, 300, 500];
+    var up = matrix.vec3.create();
+    up = [0, 1, 0];
+
+    // Compute the camera's matrix using look at.
+    matrix.mat4.lookAt(cameraMatrix, cameraPosition, cameraTarget, up);
+
+    var viewMatrix = matrix.mat4.create();
+    matrix.mat4.invert(viewMatrix, cameraMatrix);
+    var viewProjectionMatrix = matrix.mat4.create();
+    matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
+
+   
+
+
     //Preparamos la animación de rotación
     //transformaciones
     matrix.mat4.translate(this.modelViewMatrix,    
       this.modelViewMatrix,    
-      [-0.0, 0.0, -6.0]); 
+      [-7.0, 0.0, -5.0]); 
     /*matrix.mat4.rotate(this.modelViewMatrix,  
       this.modelViewMatrix,  
       this.cubeRotation,    
@@ -202,7 +229,6 @@ export class WebGLService {
 
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
-    
 
     // set the shader uniforms
     this.gl.uniformMatrix4fv(
@@ -210,16 +236,23 @@ export class WebGLService {
       false,
       this.projectionMatrix
     );
+    
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.modelViewMatrix,
       false,
       this.modelViewMatrix
     );
-   this.gl.uniformMatrix4fv(
+    this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.normalMatrix,
       false,
       normalMatrix);
 
+    /*
+    this.gl.uniformMatrix4fv(
+      this.programInfo.uniformLocations.viewProjectionMatrix,
+      false,
+      viewProjectionMatrix);
+    */
     this.cubeRotation = this.cubeRotation + 0.01;
   }
 
