@@ -138,6 +138,12 @@ const crearUsuario = async(req, res) => {
         sumarUsuarioKPI();
         insertarfechahoraUsuarioCliente('usuario', usuario.alta);
 
+        // creamos el token
+        const verificationToken = await generarJWT(usuario._id, usuario.rol);
+        const token = new Token(object);
+        token.token = verificationToken;
+
+
         const oauth2Client = new OAuth2(
             process.env.GOOGLE_CLIENT_ID, //Client ID
             process.env.SECRET_CLIENT, // Client Secret
@@ -171,16 +177,31 @@ const crearUsuario = async(req, res) => {
             }
         });
 
-        // creamos el token
-        const verificationToken = await generarJWT(usuario._id, usuario.rol);
-        const token = new Token(object);
-        token.token = verificationToken;
+        //var link = 'https://miroir.ovh/verificado/' + verificationToken;
+        var link = 'http://localhost:4200/verificado/' + verificationToken;
+        var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
+            '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
+            '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
+            '<p><a href="' + link + '" class="btn btn-primary">Verificarme</a></p>' +
+            '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:</h4><p>' + link + '</p>';
+        file = file.replace("KKMENSAJEPERSONALIZADOKK", mensaje);
 
-        const oauth2Client = new OAuth2(
-            "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-            "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
-            "https://developers.google.com/oauthplayground" // Redirect URL
-        );
+        var mailOptions = {
+            from: 'insight.abp@gmail.com',
+            to: email,
+            subject: 'Verificación de tu cuenta en Miroir',
+            html: file
+        };
+        transporter.sendMail(mailOptions, (error, response) => {
+            error ? console.log(error) : console.log(response);
+            transporter.close();
+        });
+
+        res.json({
+            ok: true,
+            msg: 'crear un usuario',
+            usuario
+        });
 
     } catch (error) {
         console.log(error);
