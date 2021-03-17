@@ -182,11 +182,11 @@ export class WebGLService {
     /*matrix.mat4.rotate(this.modelViewMatrix,  
       this.modelViewMatrix,  
       this.cubeRotation,    
-      [0, 0, 1]);      
+      [0, 0, 1]);      */
     matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       this.cubeRotation * .7,
-      [0, 1, 0]);      */
+      [0, 1, 0]);      
 
       
     const normalMatrix = matrix.mat4.create();
@@ -371,7 +371,7 @@ export class WebGLService {
   
   
   async initialiseBuffers() {
-    var malla = await this.miMotor.crearModelo(null, null, null, null, "coca.json"); 
+    var malla = await this.miMotor.crearModelo(null, null, null, null, "camisa1.json"); 
     malla = malla.getEntidad().getMalla();
     console.log(this.miMotor);
     const positionBuffer = this.gl.createBuffer();
