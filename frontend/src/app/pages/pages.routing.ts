@@ -23,6 +23,9 @@ import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component';
 import { SceneComponent } from '../scene/scene.component';
+import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
+import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component';
+import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 
 
 const routes: Routes = [
@@ -50,6 +53,8 @@ const routes: Routes = [
       { path: '**', redirectTo: ''}
     ]
   },
+
+
   {
     path: 'perfil', component: PerfilLayoutComponent, canActivate: [ PerfilGuard ], canActivateChild: [ PerfilGuard ],
     children: [
@@ -67,6 +72,16 @@ const routes: Routes = [
           { path: '', component: PerfilUsuarioComponent }
         ]
       },
+      { path:'contra', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
+        children: [
+          { path: '', component: CambioContraComponent }
+        ]
+      },
+      { path:'contracli', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],
+        children: [
+          { path: '', component: CambioContraComponent }
+        ]
+      },
 
       { path: '**', redirectTo: ''}
     ]
@@ -78,13 +93,16 @@ const routes: Routes = [
 
   { path:'admin', component: PerfilLayoutComponent, canActivate: [ AdminGuard ], canActivateChild: [ AdminGuard ],
     children:[
-      { path: '', component: NotAuthComponent },
+      //{ path: '', component: NotAuthComponent },
       { path:'usuarios', component: UsuariosComponent },
       { path:'usuarios/usuario/:uid', component: UsuarioComponent },
       { path:'prendas', component: PrendasComponent },
       { path:'prendas/prenda/:uid', component: PrendaComponent },
       { path:'clientes', component: ClientesComponent },
       { path:'clientes/cliente/:uid', component: ClienteComponent },
+      { path:'crear-datos', component: CrearDatosComponent },
+      { path: 'cuadro', component: CuadroUsuarioComponent },
+      { path:'perfil', component: PerfilUsuarioComponent },//added, not working
       { path: '**', redirectTo: '' }
     ]
   },

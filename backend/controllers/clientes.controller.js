@@ -19,12 +19,14 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
 
+//KPI
+const { sumarClienteKPI, restarClienteKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
+
 
 const obtenerClientes = async(req, res = response) => {
 
     //encontrar un unico Cliente
     const id = req.query.id;
-    await sleep(100);
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -32,13 +34,13 @@ const obtenerClientes = async(req, res = response) => {
         textoBusqueda = new RegExp(texto, 'i');
         //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
     }
-
+    await sleep(100);
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
+    const registropp = Number(process.env.DOCSPERPAGE);
 
 
 
@@ -136,6 +138,10 @@ const crearCliente = async(req, res) => {
         // almacenar en la BD
         await cliente.save();
 
+        // actualizar KPI
+        sumarClienteKPI();
+        insertarfechahoraUsuarioCliente('cliente', cliente.alta);
+
         // creamos el token
         const verificationToken = await generarJWT(cliente._id, cliente.rol);
         const token = new Token(object);
@@ -211,12 +217,12 @@ const actualizarCliente = async(req, res = response) => {
 
     // aunque venga el password aqui no se va a cambiar
     // si cambia el email, hay que comprobar que no exista en la BD
-    const { password, alta, email, cif, ...object } = req.body;
+    const { password, alta, email, nif, ...object } = req.body;
     const uid = req.params.id;
-
+    console.log('hola estoy en el back',req.body);
     try {
         // comprobar si existe o no existe el Cliente
-        const existeEmail = await cliente.findOne({ email: email });
+        const existeEmail = await Cliente.findOne({ email: email });
 
         if (existeEmail) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
@@ -232,8 +238,8 @@ const actualizarCliente = async(req, res = response) => {
         object.email = email;
 
         // comprobar si se quiere modificar el CIF  de Cliente
-        const existeCif = await cliente.findOne({ cif: cif });
-
+        const existeCif = await Cliente.findOne({ nif: nif });
+        /*
         if (existeCif) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
             if (existeCif._id != uid) {
@@ -243,9 +249,9 @@ const actualizarCliente = async(req, res = response) => {
                     msg: "CIF ya existe"
                 });
             }
-        }
+        }*/
         // aqui ya se ha comprobado el email
-        object.cif = cif;
+        object.nif = nif;
 
 
 
@@ -287,6 +293,9 @@ const borrarCliente = async(req, res = response) => {
 
         // lo eliminamos y devolvemos el Cliente recien eliminado 
         const resultado = await Cliente.findByIdAndDelete(uid);
+
+        //actualizar KPI
+        restarClienteKPI();
 
         res.json({
             ok: true,

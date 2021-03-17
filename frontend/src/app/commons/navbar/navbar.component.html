@@ -46,6 +46,11 @@
 
 <!--  NAVBAR INICIAL DE PAULA Y SERGIO -->
 <nav class="navbar navbar-expand-lg navbar-light">
+
+    <div id="navbar">
+
+    </div>
+
     <div class="container">
         <a class="navbar-brand" routerLink="/home"><img src="assets/Miroir banner.png" alt="logo miroir" width="90"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +66,10 @@
             </ul>
         </div>
         <button *ngIf='this.getIsLoged()==false' routerLink="/registrarse" class="btn btn-danger navbar-btn">Registro</button>
-        <button *ngIf='this.getIsLoged()==true' routerLink="/perfil" class="btn btn-danger navbar-btn">Perfil</button>
+
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="cliente"' routerLink="/perfil/cliente" class="btn btn-danger navbar-btn">Perfil</button>
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="usuario"' routerLink="/perfil/usuario" class="btn btn-danger navbar-btn">Perfil</button>
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="admin"' routerLink="/admin/perfil" class="btn btn-danger navbar-btn">Perfil</button>
     </div>
 
 </nav>

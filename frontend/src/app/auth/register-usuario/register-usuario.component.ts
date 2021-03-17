@@ -58,7 +58,6 @@ export class RegisterUsuarioComponent implements OnInit {
             confirmButtonText: 'Aceptar'
           }).then((result) => {
             // navegacion a login con router
-            localStorage.setItem('email', this.formRegister.value.email);
             this.router.navigateByUrl('/verificacion');
           });
 

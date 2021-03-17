@@ -30,6 +30,9 @@ import { PaginationComponent } from '../components/pagination/pagination.compone
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
 import { Pruebas1Component } from './pruebasMotor/pruebas1/pruebas1.component';
 import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component'
+import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
+import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component'
+import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,11 @@ import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component'
     PaginationComponent,
     ProgressbarComponent,
     Pruebas1Component,
-    Pruebas2Component
+    Pruebas2Component,
+    CrearDatosComponent,
+    CuadroUsuarioComponent,
+    CambioContraComponent,
+
 
 
   ],
@@ -63,6 +70,7 @@ import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component'
     PerfilLayoutComponent,
     Probador01Component,
     HomeComponent,
+
 
     ReactiveFormsModule,
   ],

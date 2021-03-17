@@ -16,14 +16,21 @@ const PrendaSchema = Schema({
         type: String,
         required: true,
     },
-    talla: {
+    visible: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
+    talla: [{
         type: String,
         required: true,
-    },
-    //OJOOOO !!!!!! HAY QUE revisar esta vaina !!!!
-    objeto: {
+    }],
+    imagen: {
         type: String,
-        default: './models/prueba.obj',
+    },
+    idCliente: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cliente'
     }
 
 }, { collection: 'Prendas' });
@@ -33,10 +40,8 @@ const PrendaSchema = Schema({
 PrendaSchema.method('toJSON', function() {
 
     const { __v, _id, ...object } = this.toObject();
-
     object.uid = _id;
     return object;
-
 });
 
 module.exports = model('Prendas', PrendaSchema);
