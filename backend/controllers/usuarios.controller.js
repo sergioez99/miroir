@@ -6,6 +6,9 @@ const Usuario = require('../models/usuarios.model');
 const Cliente = require('../models/clientes.model');
 const Token = require('../models/validaciontoken.model');
 
+//KPI
+const { sumarUsuarioKPI, restarUsuarioKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
+
 const sleep = (ms) => {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
@@ -90,159 +93,120 @@ const obtenerUsuarios = async(req, res = response) => {
 
 const crearUsuario = async(req, res) => {
 
-        const { email, password } = req.body;
+    const { email, password } = req.body;
 
-        try {
-            var file;
-            fs.readFile('assets/templates/email.html', 'utf8', function(err, data) {
-                if (err) console.log(err)
-                file = data;
-            });
+    try {
+        var file;
+        fs.readFile('assets/templates/email.html', 'utf8', function(err, data) {
+            if (err) console.log(err)
+            file = data;
+        });
 
-            let existeEmail = await Usuario.findOne({ email: email });
+        let existeEmail = await Usuario.findOne({ email: email });
 
-            if (!existeEmail) {
-                existeEmail = await Cliente.findOne({ email: email });
-            }
+        if (!existeEmail) {
+            existeEmail = await Cliente.findOne({ email: email });
+        }
 
-            if (existeEmail) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Email ya existe'
-                });
-            }
-
-            // generar cadena aleatoria para el cifrado
-            const salt = bcrypt.genSaltSync();
-            // hacer un hash de la contraseña
-            const cpassword = bcrypt.hashSync(password, salt);
-
-
-            // extraer la variable alta
-            const { alta, ...object } = req.body;
-            // crear objeto
-            const usuario = new Usuario(object);
-            usuario.password = cpassword;
-
-            // almacenar en la BD
-            await usuario.save();
-
-            // creamos el token
-            const verificationToken = await generarJWT(usuario._id, usuario.rol);
-            const token = new Token(object);
-            token.token = verificationToken;
-
-            const oauth2Client = new OAuth2(
-                "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-                "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
-                "https://developers.google.com/oauthplayground" // Redirect URL
-            );
-
-            oauth2Client.setCredentials({
-                //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
-                refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
-            });
-            const accessToken = oauth2Client.getAccessToken()
-
-            // guardamos el token de verificacion del email
-            await token.save();
-            // Enviamos el email al usuario
-            var transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true,
-                auth: {
-                    type: 'OAuth2',
-                    user: 'insight.abp@gmail.com',
-                    password: 'MiroirInsightABP',
-                    clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                    clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                    refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
-                    accessToken: accessToken
-                },
-                tls: {
-                    rejectUnauthorized: false
-                }
-            });
-
-            //var link = 'https://miroir.ovh/verificado/' + verificationToken;
-            var link = 'http://localhost:4200/verificado/' + verificationToken;
-            var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
-                '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
-                '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
-                '<p><a href="' + link + '" class="btn btn-primary">Verificarme</a></p>' +
-                '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:</h4><p>' + link + '</p>';
-            file = file.replace("KKMENSAJEPERSONALIZADOKK", mensaje);
-
-            var mailOptions = {
-                from: 'insight.abp@gmail.com',
-                to: email,
-                subject: 'Verificación de tu cuenta en Miroir',
-                html: file
-            };
-            transporter.sendMail(mailOptions, (error, response) => {
-                error ? console.log(error) : console.log(response);
-                transporter.close();
-            });
-
-            res.json({
-                ok: true,
-                msg: 'crear un usuario',
-                usuario
-            });
-
-        } catch (error) {
-            console.log(error);
+        if (existeEmail) {
             return res.status(400).json({
                 ok: false,
-                msg: 'error creando el usuario'
+                msg: 'Email ya existe'
             });
         }
-    }
-    /* Actualizar usuario 1.0
-    const actualizarUsuario = async(req, res = response) => {
 
-        // aunque venga el password aqui no se va a cambiar
-        // si cambia el email, hay que comprobar que no exista en la BD
-        const { password, alta, email, ...object } = req.body;
-        const uid = req.params.id;
+        // generar cadena aleatoria para el cifrado
+        const salt = bcrypt.genSaltSync();
+        // hacer un hash de la contraseña
+        const cpassword = bcrypt.hashSync(password, salt);
 
-        try {
-            // comprobar si existe o no existe el usuario
-            const existeEmail = await Usuario.findOne({ email: email });
 
-            if (existeEmail) {
-                // si existe, miramos que sea el suyo (que no lo esta cambiando)
-                if (existeEmail._id != uid) {
+        // extraer la variable alta
+        const { alta, ...object } = req.body;
+        // crear objeto
+        const usuario = new Usuario(object);
+        usuario.password = cpassword;
 
-                    return res.status(400).json({
-                        ok: false,
-                        msg: "Email ya existe"
-                    });
-                }
+        // almacenar en la BD
+        await usuario.save();
+
+        // actualizar KPI
+        sumarUsuarioKPI();
+        insertarfechahoraUsuarioCliente('usuario', usuario.alta);
+
+        // creamos el token
+        const verificationToken = await generarJWT(usuario._id, usuario.rol);
+        const token = new Token(object);
+        token.token = verificationToken;
+
+        const oauth2Client = new OAuth2(
+            "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
+            "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+            "https://developers.google.com/oauthplayground" // Redirect URL
+        );
+
+        oauth2Client.setCredentials({
+            //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
+            refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+        });
+        const accessToken = oauth2Client.getAccessToken()
+
+        // guardamos el token de verificacion del email
+        await token.save();
+        // Enviamos el email al usuario
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                type: 'OAuth2',
+                user: 'insight.abp@gmail.com',
+                password: 'MiroirInsightABP',
+                clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
+                clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
+                refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                accessToken: accessToken
+            },
+            tls: {
+                rejectUnauthorized: false
             }
-            // aqui ya se ha comprobado el email
-            object.email = email;
-            // new: true -> nos devuelve el usuario actualizado
-            const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
+        });
 
-            res.json({
-                ok: true,
-                msg: 'actualizarUsuario',
-                usuario
-            });
+        //var link = 'https://miroir.ovh/verificado/' + verificationToken;
+        var link = 'http://localhost:4200/verificado/' + verificationToken;
+        var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
+            '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
+            '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +
+            '<p><a href="' + link + '" class="btn btn-primary">Verificarme</a></p>' +
+            '<h4>Si tienes problemas para verificar la cuenta por alguna razón, por favor, copia este enlace en tu buscador:</h4><p>' + link + '</p>';
+        file = file.replace("KKMENSAJEPERSONALIZADOKK", mensaje);
 
-        } catch (error) {
-            console.log(error);
+        var mailOptions = {
+            from: 'insight.abp@gmail.com',
+            to: email,
+            subject: 'Verificación de tu cuenta en Miroir',
+            html: file
+        };
+        transporter.sendMail(mailOptions, (error, response) => {
+            error ? console.log(error) : console.log(response);
+            transporter.close();
+        });
 
-            res.status(400).json({
-                ok: false,
-                msg: 'Error actualizando usuario'
-            });
-        }
+        res.json({
+            ok: true,
+            msg: 'crear un usuario',
+            usuario
+        });
 
-    } 
-    */
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            ok: false,
+            msg: 'error creando el usuario'
+        });
+    }
+}
+
 
 const actualizarUsuario = async(req, res = response) => {
 
@@ -309,6 +273,9 @@ const borrarUsuario = async(req, res = response) => {
         // Delete -> debería ser el utilizado...?
         //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify 
         const resultado = await Usuario.findByIdAndDelete(uid);
+
+        // actualizar KPI
+        restarUsuarioKPI();
 
         res.json({
             ok: true,

@@ -13,6 +13,9 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
 
+//KPI
+const { sumarClienteKPI, restarClienteKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
+
 
 const obtenerClientes = async(req, res = response) => {
 
@@ -113,6 +116,10 @@ const crearCliente = async(req, res) => {
 
         // almacenar en la BD
         await cliente.save();
+
+        // actualizar KPI
+        sumarClienteKPI();
+        insertarfechahoraUsuarioCliente('cliente', cliente.alta);
 
         // creamos el token
         const verificationToken = await generarJWT(cliente._id, cliente.rol);
@@ -265,6 +272,9 @@ const borrarCliente = async(req, res = response) => {
 
         // lo eliminamos y devolvemos el Cliente recien eliminado 
         const resultado = await cliente.findByIdAndDelete(uid);
+
+        //actualizar KPI
+        restarClienteKPI();
 
         res.json({
             ok: true,

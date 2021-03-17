@@ -14,9 +14,50 @@ export class ChartService{
 
   constructor( private apiService :ApiService,
                private usuarioService :UsuarioService) {
+  }
 
+  getTotalUsuarios (){
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getTotalUsuariosChartCall(this.usuarioService.getToken()).subscribe( (res) => {
+
+        resolve(res['valor']);
+
+      }, (err) =>{
+        reject(err);
+      });
+
+    });
 
   }
+
+  getTotalClientes (){
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getTotalClientesChartCall(this.usuarioService.getToken()).subscribe( (res) => {
+
+        resolve(res['valor']);
+
+      }, (err) =>{
+        reject(err);
+      });
+
+    });
+
+  }
+
+  getTotalPrendas (){
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getTotalPrendasChartCall(this.usuarioService.getToken()).subscribe( (res) => {
+
+        resolve(res['valor']);
+
+      }, (err) =>{
+        reject(err);
+      });
+
+    });
+
+  }
+
 
   getAltasFechas(fecha_inicio, fecha_fin){
 
@@ -34,25 +75,11 @@ export class ChartService{
     });
   }
 
-  getUsuarios (){
+  getAltasHoras(){
+
 
     return new Promise ( (resolve, reject) => {
-      this.apiService.getUsuariosChartCall(this.usuarioService.getToken()).subscribe( (res) => {
-
-        console.log(res);
-        resolve(res);
-
-      }, (err) =>{
-        console.error(err);
-        reject(err);
-      });
-
-    });
-  }
-  getClientes (){
-
-    return new Promise ( (resolve, reject) => {
-      this.apiService.getClientesChartCall(this.usuarioService.getToken()).subscribe( (res) => {
+      this.apiService.getAltasHorasChartCall(this.usuarioService.getToken()).subscribe( (res) => {
 
         console.log(res);
         resolve(res);

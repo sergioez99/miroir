@@ -3,6 +3,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const Prenda = require('../models/prendas.model');
+//KPI
+const { sumarPrendaKPI, restarPrendaKPI } = require('./charts.controller');
 
 
 const obtenerPrendas = async(req, res = response) => {
@@ -99,6 +101,9 @@ const crearPrenda = async(req, res) => {
 
         await prenda.save();
 
+        //actualizar KPI
+        sumarPrendaKPI();
+
         res.json({
             ok: true,
             msg: 'crear una prenda',
@@ -176,6 +181,9 @@ const borrarPrenda = async(req, res = response) => {
         // Delete -> debería ser el utilizado...?
         //DeprecationWarning: Mongoose: findOneAndUpdate() and findOneAndDelete() without the useFindAndModify option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify 
         const resultado = await Prenda.findByIdAndDelete(uid);
+
+        //actualizar KPI
+        restarPrendaKPI();
 
         res.json({
             ok: true,

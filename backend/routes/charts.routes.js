@@ -10,28 +10,36 @@ const { validarJWT } = require('../middleware/validar-jwt');
 const router = Router();
 
 const {
-    obtenerTodosClientes,
-    obtenerTodosUsuarios,
-    obtenerUsuariosFecha,
+    obtenerTotalUsuarios,
+    obtenerTotalClientes,
+    obtenerTotalPrendas,
+    obtenerUsuariosClientesFecha,
+    obtenerUsuariosClientesHora,
 
 } = require('../controllers/charts.controller');
 
 
+router.get('/usuarios/total', [
+    validarJWT,
+], obtenerTotalUsuarios);
+
+router.get('/clientes/total', [
+    validarJWT,
+], obtenerTotalClientes);
+
+router.get('/prendas/total', [
+    validarJWT,
+], obtenerTotalPrendas);
 
 
 router.get('/usuarios/:fecha_inicio/:fecha_fin', [
     validarJWT,
 
-], obtenerUsuariosFecha);
+], obtenerUsuariosClientesFecha);
 
-router.get('/usuarios', [
+router.get('/usuarios/horas', [
     validarJWT,
 
-], obtenerTodosUsuarios);
-
-router.get('/clientes', [
-    validarJWT,
-
-], obtenerTodosClientes);
+], obtenerUsuariosClientesHora);
 
 module.exports = router;

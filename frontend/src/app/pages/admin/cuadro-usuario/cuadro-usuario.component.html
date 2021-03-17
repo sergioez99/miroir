@@ -1,22 +1,41 @@
 <div class='div-canvas'>
-    <canvas id="chart" width="800" height="400" style="border:1px solid #000000;"></canvas>
+    <canvas id="chartFechaAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
+
+    <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargarFechas();">
+
+        <mat-form-field appearance="fill">
+            <mat-label>Selecciona el rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input formControlName="fechaI" matStartDate placeholder="Start date">
+                <input formControlName="fechaF" matEndDate placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <div class="mir-box-buttons">
+            <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Cargar</button>
+        </div>
+
+    </form>
 </div>
 
-<form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargar();">
+<div class='div-canvas'>
+    <canvas id="chartHoraAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Selecciona el rango de fechas</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-            <input formControlName="fechaI" matStartDate placeholder="Start date">
-            <input formControlName="fechaF" matEndDate placeholder="End date">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-
-    <div class="mir-box-buttons">
-        <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Cargar</button>
-    </div>
+</div>
 
 
-</form>
+
+
+<div>
+    <p>Total usuarios: {{totalUsuarios}}</p>
+</div>
+
+<div>
+    <p>Total clientes: {{totalClientes}}</p>
+</div>
+
+<div>
+    <p>Total prendas: {{totalPrendas}}</p>
+</div>

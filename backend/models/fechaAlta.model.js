@@ -1,22 +1,22 @@
 const { Schema, model } = require('mongoose');
 
 // esquema de la base de datos
-const AltaUsuariosSchema = Schema({
+const fechaAltaSchema = Schema({
 
     fecha: {
         type: Date
     },
-    valorUsuarios: {
+    datoUsuarios: {
         type: Number
     },
-    valorClientes: {
+    datoClientes: {
         type: Number,
     }
 
-}, { collection: 'AltaUsuarios' });
+}, { collection: 'fechaAlta' });
 
 
-AltaUsuariosSchema.method('toJSON', function() {
+fechaAltaSchema.method('toJSON', function() {
 
     const { __v, _id, ...object } = this.toObject();
 
@@ -25,4 +25,4 @@ AltaUsuariosSchema.method('toJSON', function() {
 
 });
 
-module.exports = model('AltaUsuarios', AltaUsuariosSchema);
+module.exports = model('fechaAlta', fechaAltaSchema);

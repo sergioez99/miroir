@@ -103,25 +103,40 @@ export class ApiService {
     return this.http.post(this.url+'/api/datos/prendas', formData, { headers: headers });
   }
 
-  getUsuariosChartCall(token){
-    const headers = new HttpHeaders({
-      'x-token': token,
-    });
-    return this.http.get(this.url+'/api/chart/usuarios', { headers: headers });
-  }
 
-  getClientesChartCall(token){
-    const headers = new HttpHeaders({
-      'x-token': token,
-    });
-    return this.http.get(this.url+'/api/chart/clientes', { headers: headers });
-  }
-
+  // CHARTS
   getAltasFechasChartCall(token, fecha_inicio, fecha_fin){
     const headers = new HttpHeaders({
       'x-token': token,
     });
     return this.http.get(this.url+'/api/chart/usuarios/'+fecha_inicio+'/'+fecha_fin, { headers: headers });
+  }
+  getAltasHorasChartCall(token){
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/usuarios/horas', { headers: headers });
+  }
+
+
+  getTotalUsuariosChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/usuarios/total', { headers: headers });
+  }
+  getTotalClientesChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/clientes/total', { headers: headers });
+  }
+  getTotalPrendasChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/api/chart/prendas/total', { headers: headers });
   }
 
 }
