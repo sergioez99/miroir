@@ -1,4 +1,3 @@
-<p>prenda works!</p>
 <article class="mir-prenda-box">
 
     <h1 class="mir-title"> Crea tu prenda </h1>
@@ -62,6 +61,11 @@
                 <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
             </mat-select>
         </mat-form-field>
+
+        <!-- SELECCIONAR VISIBILIDAD -->
+
+        <mat-label>¿Quiere que la prenda sea pública?</mat-label>
+        <mat-checkbox matInput formControlName="visible">Visibilidad</mat-checkbox>
 
 
 

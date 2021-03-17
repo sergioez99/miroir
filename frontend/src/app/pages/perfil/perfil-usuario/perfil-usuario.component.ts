@@ -12,6 +12,7 @@ export class PerfilUsuarioComponent implements OnInit {
 
   public formMedidas: FormGroup | null = null;
 
+  @Input() email: string = '';
   @Input() peso :number;
   @Input() altura :number;
   @Input() pecho :number;
@@ -26,6 +27,7 @@ export class PerfilUsuarioComponent implements OnInit {
   ngOnInit(): void {
 
     // this.sexo = this.usuarioService.getSexo();
+    this.email=this.usuarioService.getEmail();
     this.peso = this.usuarioService.getPeso();
     this.altura = this.usuarioService.getAltura();
     this.pecho = this.usuarioService.getPecho();
@@ -33,6 +35,7 @@ export class PerfilUsuarioComponent implements OnInit {
     this.cadera = this.usuarioService.getCadera();
 
     this.formMedidas = this.fb.group({
+      email: this.email,
       peso: [this.peso, [Validators.required, Validators.min(10), Validators.max(200)]],
       altura: [this.altura, [Validators.required, Validators.min(100), Validators.max(200)]],
       pecho: [this.pecho, [Validators.required, Validators.min(10), Validators.max(200)]],

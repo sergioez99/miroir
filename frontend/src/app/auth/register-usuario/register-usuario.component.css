@@ -4,8 +4,16 @@
 }
 
 .mir-register-box {
-    max-width: 30em;
     margin: auto;
+
+    background: #fff;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    padding: 50px 85px; 
+    width: 645px;
 }
 
 .mir-box-buttons {
@@ -13,7 +21,8 @@
 }
 
 .mir-box-link {
-    text-align: right;
+    text-align: center;
+    margin-top: 80px;
 }
 
 .mir-title {
@@ -22,4 +31,121 @@
 
 .mir-block {
     display: block;
+}
+
+h1 {
+    line-height: 1.66;
+    margin: 0;
+    padding: 0;
+    font-weight: 900;
+    color: #222;
+    font-family: 'Montserrat';
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 40px; 
+}
+
+.mir-register-button:disabled{
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -ms-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -o-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -webkit-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: linear-gradient(to left, #808080, #C0C0C0);
+}
+
+.mir-register-button:disabled:hover{
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -ms-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -o-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: -webkit-linear-gradient(to left, #808080, #C0C0C0);
+    background-image: linear-gradient(to left, #808080, #C0C0C0);
+    
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+    -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+.mir-register-button {
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -ms-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -o-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -webkit-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: linear-gradient(to left, #fb9b02, #b388ff);
+}
+
+.mir-register-button:hover {
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -ms-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -o-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -webkit-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: linear-gradient(to left, #fb9b02, #b388ff); 
+    -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+    -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+}
+
+.loginhere-link {
+    font-weight: 700;
+    color: #222; 
+}
+
+.mat-button-disabled {
+    color: white;
 }

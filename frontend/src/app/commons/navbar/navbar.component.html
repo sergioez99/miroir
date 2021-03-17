@@ -47,13 +47,9 @@
 <!--  NAVBAR INICIAL DE PAULA Y SERGIO -->
 <nav class="navbar navbar-expand-lg navbar-light">
 
+    <div id="navbar">
 
-    <!-- foto de perfil -->
-    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark prop-pic" routerLink="/home" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-        <img [src]="imagenURL" alt="user" class="rounded-circle" width="31" height="31">
-
-    </a>
+    </div>
 
     <div class="container">
         <a class="navbar-brand" routerLink="/home"><img src="assets/Miroir banner.png" alt="logo miroir" width="90"></a>
@@ -70,7 +66,10 @@
             </ul>
         </div>
         <button *ngIf='this.getIsLoged()==false' routerLink="/registrarse" class="btn btn-danger navbar-btn">Registro</button>
-        <button *ngIf='this.getIsLoged()==true' routerLink="/perfil" class="btn btn-danger navbar-btn">Perfil</button>
+
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="cliente"' routerLink="/perfil/cliente" class="btn btn-danger navbar-btn">Perfil</button>
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="usuario"' routerLink="/perfil/usuario" class="btn btn-danger navbar-btn">Perfil</button>
+        <button *ngIf='this.getIsLoged()==true && this.tipo=="admin"' routerLink="/admin/perfil" class="btn btn-danger navbar-btn">Perfil</button>
     </div>
 
 </nav>

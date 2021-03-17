@@ -55,7 +55,7 @@ router.put('/:id', [
     check('activo', 'El estado debe ser true/false').optional().isBoolean(),
     check('nombre', 'El nombre es obligatorio.').not().isEmpty(),
     check('nombreEmpresa', 'El nombre de la empresa es obligatorio.').not().isEmpty(),
-    check('cif', 'El CIF es obligatorio.').not().isEmpty(),
+    check('nif', 'El CIF es obligatorio.').not().isEmpty(),
     check('telefono', 'El teléfono es obligatorio.').not().isEmpty(),
     validarCampos,
     validarRol

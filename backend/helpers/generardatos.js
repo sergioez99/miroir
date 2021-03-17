@@ -291,8 +291,3 @@ module.exports = { generarUsuarios, generarPrendas, generarClientes }
 /* for (let index = 0; index < 1000; index++) {
     crearDatosUsuarios(index);
 } */
-
-
-// let nombres = leerFichero('../datosBaseParaGenerar/nombres.json');
-
-//console.log(nombres);
