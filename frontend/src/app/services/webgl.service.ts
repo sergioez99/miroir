@@ -163,7 +163,7 @@ export class WebGLService {
 
 
   initialiseWebGLCanvas() {
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -205,15 +205,15 @@ export class WebGLService {
     //transformaciones
     matrix.mat4.translate(this.modelViewMatrix,    
       this.modelViewMatrix,    
-      [-7.0, 0.0, -5.0]); 
+      [0.0, 0.0, -5.0]); 
     /*matrix.mat4.rotate(this.modelViewMatrix,  
       this.modelViewMatrix,  
       this.cubeRotation,    
       [0, 0, 1]);      */
-    /*matrix.mat4.rotate(this.modelViewMatrix, 
+    matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       this.cubeRotation * .7,
-      [0, 1, 0]);      */
+      [0, 1, 0]);   
 
       
     const normalMatrix = matrix.mat4.create();
@@ -404,7 +404,7 @@ export class WebGLService {
   
   
   async initialiseBuffers() {
-    var malla = await this.miMotor.crearModelo(null, null, null, null, "coca.json"); 
+    var malla = await this.miMotor.crearModelo(null, null, null, null, "camisa2.json"); 
     malla = malla.getEntidad().getMalla();
     console.log(this.miMotor);
     const positionBuffer = this.gl.createBuffer();
