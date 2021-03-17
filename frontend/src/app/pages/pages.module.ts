@@ -55,7 +55,7 @@ import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.comp
     PaginationComponent,
     ProgressbarComponent,
     CrearDatosComponent,
-    CuadroUsuarioComponent
+    CuadroUsuarioComponent,
     CambioContraComponent,
 
 

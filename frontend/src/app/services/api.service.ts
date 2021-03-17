@@ -6,6 +6,7 @@ import { UsuarioForm } from '../interfaces/usuario-form.interface';
 import { ClienteForm } from '../interfaces/cliente-form.interface';
 import { RegisterClientForm } from '../interfaces/registro-cliente-form.interface';
 import { environment } from '../../environments/environment';
+import { FormBuilder } from '@angular/forms';
 
 
 @Injectable({
@@ -96,7 +97,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'x-token': token,
     });
-    return this.http.put(this.url+'/api/prendas/'+id, formData, { headers: headers });
+    return this.http.put(this.url+'/prendas/'+id, formData, { headers: headers });
   }
 
   borrarPrendaCall( uid: string, token) {
@@ -198,14 +199,14 @@ crearDatosPrendasCall( formData, token) {
     const headers = new HttpHeaders({
       'x-token': token,
     });
-    return this.http.get(this.url+'/api/chart/usuarios', { headers: headers });
+    return this.http.get(this.url+'/chart/usuarios', { headers: headers });
   }
 
   getClientesChartCall(token){
     const headers = new HttpHeaders({
       'x-token': token,
     });
-    return this.http.get(this.url+'/api/chart/clientes', { headers: headers });
+    return this.http.get(this.url+'/chart/clientes', { headers: headers });
   }
 
   subirArchivosCall(id, tipo, archivo: File, token){
@@ -218,7 +219,7 @@ crearDatosPrendasCall( formData, token) {
 
     console.log(headers);
 
-    return this.http.post(this.url+'/api/upload/'+tipo+'/'+id, datos, { headers: headers });
+    return this.http.post(this.url+'/upload/'+tipo+'/'+id, datos, { headers: headers });
   }
 
 
