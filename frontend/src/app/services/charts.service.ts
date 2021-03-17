@@ -64,7 +64,6 @@ export class ChartService{
     return new Promise ( (resolve, reject) => {
       this.apiService.getAltasFechasChartCall(this.usuarioService.getToken(), fecha_inicio, fecha_fin).subscribe( (res) => {
 
-        console.log(res);
         resolve(res);
 
       }, (err) =>{
@@ -81,7 +80,6 @@ export class ChartService{
     return new Promise ( (resolve, reject) => {
       this.apiService.getAltasHorasChartCall(this.usuarioService.getToken()).subscribe( (res) => {
 
-        console.log(res);
         resolve(res);
 
       }, (err) =>{

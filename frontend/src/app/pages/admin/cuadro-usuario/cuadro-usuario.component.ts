@@ -46,15 +46,15 @@ export class CuadroUsuarioComponent implements OnInit {
 
 
     this.cargarValoresFijos();
-    this.cargarChartFechasAlta(this.chart01, this.canvas01);
-    this.cargarChartHorasAlta(this.chart02, this.canvas02);
+    this.cargarChartFechasAlta();
+    this.cargarChartHorasAlta();
 
   }
-  cargarChartHorasAlta(chart, canvas){
+  cargarChartHorasAlta(){
 
     // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
-    if (chart){
-      chart.destroy();
+    if (this.chart02){
+      this.chart02.destroy();
     }
     this.chartServices.getAltasHoras().then( (res)=>{
 
@@ -62,7 +62,7 @@ export class CuadroUsuarioComponent implements OnInit {
       let usuarios = res['usuarios'];
       let clientes = res['clientes'];
 
-      chart = new Chart(canvas, {
+      this.chart02 = new Chart(this.canvas02, {
         type: "bar",
         data: {
             labels: labels, //eje x
@@ -97,14 +97,13 @@ export class CuadroUsuarioComponent implements OnInit {
     });
 
   }
-  cargarFechas(){
-    this.cargarChartFechasAlta(this.chart01, this.canvas01);
-  }
-  cargarChartFechasAlta(chart, canvas){
+
+  cargarChartFechasAlta(){
 
     // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
-    if (chart){
-      chart.destroy();
+    if (this.chart01){
+      console.log('anterior chart destruido');
+      this.chart01.destroy();
     }
 
     if(this.formFechas.valid){
@@ -112,15 +111,8 @@ export class CuadroUsuarioComponent implements OnInit {
       let fecha_inicial = this.formFechas.value.fechaI;
       let fecha_final = this.formFechas.value.fechaF;
 
-      console.log(fecha_inicial);
-        console.log(fecha_final);
-
       // hacer la peticion al backend (la creada para este chart)
       this.chartServices.getAltasFechas(fecha_inicial, fecha_final).then( (res)=>{
-
-        console.log('respuesta intentando conseguir los datos de fechas: ', res);
-
-        console.log(res['rango']);
 
         let labels = [];
         let aux;
@@ -130,27 +122,24 @@ export class CuadroUsuarioComponent implements OnInit {
 
         }
 
-
-        // let labels = this.datepipe.transform(res['rango'], 'yyyy-MM-dd');
-
         // let labels = res['rango'];
         let usuarios = res['usuarios'];
         let clientes = res['clientes'];
 
-        chart = new Chart(canvas, {
+        this.chart01 = new Chart(this.canvas01, {
           type: "line",
           data: {
               labels: labels, //eje x
               datasets: [{
-                label: 'Número de usuarios',
-                data: usuarios,
-                borderColor:"rgb(200, 92, 12)"
-            },{
-              label: 'Número de clientes',
-              data: clientes,
-              borderColor:"rgb(35, 17, 200)"
+                    label: 'Número de usuarios',
+                    data: usuarios,
+                    borderColor:"rgb(200, 92, 12)"
+                },{
+                    label: 'Número de clientes',
+                    data: clientes,
+                    borderColor:"rgb(35, 17, 200)"
 
-            }]
+                }]
           },
           options: {
               scales: {
