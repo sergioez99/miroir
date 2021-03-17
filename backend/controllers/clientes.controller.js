@@ -6,6 +6,12 @@ const Cliente = require('../models/clientes.model');
 const Usuario = require('../models/usuarios.model');
 const Token = require('../models/validaciontoken.model');
 
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
@@ -19,13 +25,19 @@ const obtenerClientes = async(req, res = response) => {
     //encontrar un unico Cliente
     const id = req.query.id;
 
-
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+        //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
+    await sleep(100);
     // paginacion
     // Number: tipar como numero (por si envian cosas raras)
     let desde = Number(req.query.desde) || 0;
     if (desde < 0)
         desde = 0;
-    const registropp = process.env.DOCSPERPAGES;
+    const registropp = Number(process.env.DOCSPERPAGE);
 
 
 
@@ -37,16 +49,25 @@ const obtenerClientes = async(req, res = response) => {
 
             // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
             [clientes, total] = await Promise.all([
-                cliente.findById(id),
-                cliente.countDocuments()
+                Cliente.findById(id),
+                Cliente.countDocuments()
             ]);
             // busqueda de varios Clientes
         } else {
-            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
-            [clientes, total] = await Promise.all([
-                cliente.find({}).skip(desde).limit(registropp),
-                cliente.countDocuments()
-            ]);
+
+            if (texto) {
+                [clientes, total] = await Promise.all([
+                    Cliente.find({ $or: [{ email: textoBusqueda }, { nombre: textoBusqueda }, { nombreEmpresa: textoBusqueda }] }).skip(desde).limit(registropp),
+                    Cliente.countDocuments({ $or: [{ email: textoBusqueda }, { nombre: textoBusqueda }, { nombreEmpresa: textoBusqueda }] })
+                ]);
+            } else {
+                // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                [clientes, total] = await Promise.all([
+                    Cliente.find({}).skip(desde).limit(registropp),
+                    Cliente.countDocuments()
+
+                ]);
+            }
         }
 
         res.json({
@@ -189,12 +210,12 @@ const actualizarCliente = async(req, res = response) => {
 
     // aunque venga el password aqui no se va a cambiar
     // si cambia el email, hay que comprobar que no exista en la BD
-    const { password, alta, email, cif, ...object } = req.body;
+    const { password, alta, email, nif, ...object } = req.body;
     const uid = req.params.id;
-
+    console.log('hola estoy en el back',req.body);
     try {
         // comprobar si existe o no existe el Cliente
-        const existeEmail = await cliente.findOne({ email: email });
+        const existeEmail = await Cliente.findOne({ email: email });
 
         if (existeEmail) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
@@ -210,8 +231,8 @@ const actualizarCliente = async(req, res = response) => {
         object.email = email;
 
         // comprobar si se quiere modificar el CIF  de Cliente
-        const existeCif = await cliente.findOne({ cif: cif });
-
+        const existeCif = await Cliente.findOne({ nif: nif });
+        /*
         if (existeCif) {
             // si existe, miramos que sea el suyo (que no lo esta cambiando)
             if (existeCif._id != uid) {
@@ -221,9 +242,9 @@ const actualizarCliente = async(req, res = response) => {
                     msg: "CIF ya existe"
                 });
             }
-        }
+        }*/
         // aqui ya se ha comprobado el email
-        object.cif = cif;
+        object.nif = nif;
 
 
 
@@ -254,7 +275,7 @@ const borrarCliente = async(req, res = response) => {
     try {
 
         // comprobamos que el Cliente existe
-        const existeCliente = await cliente.findById(uid);
+        const existeCliente = await Cliente.findById(uid);
 
         if (!existeCliente) {
             return res.status(400).json({
@@ -264,7 +285,7 @@ const borrarCliente = async(req, res = response) => {
         }
 
         // lo eliminamos y devolvemos el Cliente recien eliminado 
-        const resultado = await cliente.findByIdAndDelete(uid);
+        const resultado = await Cliente.findByIdAndDelete(uid);
 
         res.json({
             ok: true,

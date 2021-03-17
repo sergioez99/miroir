@@ -17,6 +17,10 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
+const http = require('http-server');
+const url = require('url');
+const opn = require('open');
+const destroyer = require('server-destroy');
 
 const obtenerUsuarios = async(req, res = response) => {
 
@@ -132,17 +136,18 @@ const crearUsuario = async(req, res) => {
             const token = new Token(object);
             token.token = verificationToken;
 
+
             const oauth2Client = new OAuth2(
-                "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-                "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+                process.env.GOOGLE_CLIENT_ID, //Client ID
+                process.env.SECRET_CLIENT, // Client Secret
                 "https://developers.google.com/oauthplayground" // Redirect URL
             );
 
             oauth2Client.setCredentials({
-                //refresh_token: "1//046UstTrqdKn-CgYIARAAGAQSNwF-L9IrcHglOO-_afasKEltUJYVEikfPp0LhoigrXTIRXN7_fD4uRtm_Ff1wUbXQ7iNy5QRYj0"
-                refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+                refresh_token: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q"
             });
-            const accessToken = oauth2Client.getAccessToken()
+            
+            const accessToken = await oauth2Client.getAccessToken();
 
             // guardamos el token de verificacion del email
             await token.save();
@@ -155,9 +160,9 @@ const crearUsuario = async(req, res) => {
                     type: 'OAuth2',
                     user: 'insight.abp@gmail.com',
                     password: 'MiroirInsightABP',
-                    clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                    clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                    refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                    clientId: process.env.GOOGLE_CLIENT_ID, //Client ID,
+                    clientSecret: process.env.SECRET_CLIENT, // Client Secret
+                    refreshToken: '1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q',
                     accessToken: accessToken
                 },
                 tls: {
@@ -199,50 +204,6 @@ const crearUsuario = async(req, res) => {
             });
         }
     }
-    /* Actualizar usuario 1.0
-    const actualizarUsuario = async(req, res = response) => {
-
-        // aunque venga el password aqui no se va a cambiar
-        // si cambia el email, hay que comprobar que no exista en la BD
-        const { password, alta, email, ...object } = req.body;
-        const uid = req.params.id;
-
-        try {
-            // comprobar si existe o no existe el usuario
-            const existeEmail = await Usuario.findOne({ email: email });
-
-            if (existeEmail) {
-                // si existe, miramos que sea el suyo (que no lo esta cambiando)
-                if (existeEmail._id != uid) {
-
-                    return res.status(400).json({
-                        ok: false,
-                        msg: "Email ya existe"
-                    });
-                }
-            }
-            // aqui ya se ha comprobado el email
-            object.email = email;
-            // new: true -> nos devuelve el usuario actualizado
-            const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
-
-            res.json({
-                ok: true,
-                msg: 'actualizarUsuario',
-                usuario
-            });
-
-        } catch (error) {
-            console.log(error);
-
-            res.status(400).json({
-                ok: false,
-                msg: 'Error actualizando usuario'
-            });
-        }
-
-    } 
-    */
 
 const actualizarUsuario = async(req, res = response) => {
 

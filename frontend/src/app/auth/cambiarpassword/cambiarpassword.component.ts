@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-// import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
 import { RecuperacionService } from '../../services/recuperacion.service';
 import {CustomValidators} from '../../services/auth.password.repeat.service';
@@ -19,11 +19,13 @@ export class CambiarpasswordComponent implements OnInit {
 
   public hide = true;
   public hideR = true;
+  private email;
 
   constructor( private fb: FormBuilder,
                private router: Router,
                private route: ActivatedRoute,
-               private recuperacionService :RecuperacionService) { }
+               private recuperacionService :RecuperacionService,
+               private usuarioService :UsuarioService) { }
 
   ngOnInit(): void {
     this.formRecovery = this.fb.group({
@@ -40,8 +42,10 @@ export class CambiarpasswordComponent implements OnInit {
   cambiarpassword() {
 
     //this.formRecovery.controls.['email'].setValue(localStorage.getItem('email'));
-    this.formRecovery.patchValue({ email : localStorage.getItem('email')});
-    console.log(localStorage.getItem('email'));
+    this.email = this.usuarioService.getEmail();
+    this.formRecovery.patchValue({ email : this.email });
+
+    if(this.formRecovery.valid){
 
     this.recuperacionService.cambiarPassword(this.formRecovery.value).then((response) =>{
 
@@ -63,4 +67,5 @@ export class CambiarpasswordComponent implements OnInit {
       });
     });
   }
+}
 }

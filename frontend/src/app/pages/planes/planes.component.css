@@ -5,6 +5,10 @@ h2{
     margin-bottom: 0px;
     margin-top: 40px;
 }
+
+li{
+    vertical-align: middle;
+}
 /*h2 y cerdito*/
 .stage {
     display: flex;
@@ -18,6 +22,10 @@ h2{
     animation-duration: 4s;
     animation-iteration-count: infinite;
    
+}
+
+a{
+    text-decoration: none;
 }
 .bounce-7 {
     animation-name: bounce-7;

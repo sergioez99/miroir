@@ -30,6 +30,7 @@ import { PaginationComponent } from '../components/pagination/pagination.compone
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component'
+import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,8 @@ import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.co
     ProgressbarComponent,
     CrearDatosComponent,
     CuadroUsuarioComponent
+    CambioContraComponent,
+
 
 
   ],

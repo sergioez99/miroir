@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Token = require('../models/validaciontoken.model');
 const Usuario = require('../models/usuarios.model');
+const Cliente = require('../models/clientes.model');
 
 const { generarJWT } = require('../helpers/jwt');
 const jwt = require('jsonwebtoken');
@@ -36,13 +37,13 @@ const recuperarPassword = async(req, res = response) => {
 
         //Autorización OAuth2 para mandar gmail
         const oauth2Client = new OAuth2(
-            "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-            "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+            process.env.GOOGLE_CLIENT_ID, //Client ID
+            process.env.SECRET_CLIENT, // Client Secret
             "https://developers.google.com/oauthplayground" // Redirect URL
         );
 
         oauth2Client.setCredentials({
-            refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+            refresh_token: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q"
         });
         const accessToken = oauth2Client.getAccessToken()
 
@@ -55,9 +56,9 @@ const recuperarPassword = async(req, res = response) => {
                 type: 'OAuth2',
                 user: 'insight.abp@gmail.com',
                 password: 'MiroirInsightABP',
-                clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.SECRET_CLIENT,
+                refreshToken: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q",
                 accessToken: accessToken
             },
             tls: {
@@ -110,7 +111,17 @@ const cambiarPassword = async(req, res = response) => {
     try{
         const email = req.body.email;
         const password = req.body.password;
-        const usuario = await Usuario.findOne( {email : email} );
+        const oldPassword = req.body.passwordOld;
+        let usuario=await Usuario.findOne( {email : email} );
+        if (req.body.rol=='ROL_USUARIO'){
+            console.log('es un USUARIO');
+        }
+
+        if (req.body.rol=='ROL_CLIENTE'){
+            usuario=await Cliente.findOne( {email : email} );
+            console.log('es un cliente');
+        }
+        
 
         if (!usuario) {
             return res.status(400).json({
@@ -118,12 +129,30 @@ const cambiarPassword = async(req, res = response) => {
             });
         }
 
-        // generar cadena aleatoria para el cifrado
-        const salt = bcrypt.genSaltSync();
-        // hacer un hash de la contraseña
-        const cpassword = bcrypt.hashSync(password, salt);
-        usuario.password = cpassword;
-        await usuario.save();
+        if(oldPassword){
+            const validPassword = bcrypt.compareSync(oldPassword, usuario.password)
+            if(validPassword){
+                 // generar cadena aleatoria para el cifrado
+                const salt = bcrypt.genSaltSync();
+                // hacer un hash de la contraseña
+                const cpassword = bcrypt.hashSync(password, salt);
+                usuario.password = cpassword;
+                await usuario.save();
+            }
+            else{
+                return res.status(400).json({
+                    msg: 'La contraseña no coincide'
+                });
+            }
+        }
+        else{
+            const salt = bcrypt.genSaltSync();
+            // hacer un hash de la contraseña
+            const cpassword = bcrypt.hashSync(password, salt);
+            usuario.password = cpassword;
+            await usuario.save();
+        }
+
 
         res.json({
             ok: true,

@@ -17,6 +17,7 @@ const { dbConnection } = require('./database/configdb');
 // Crear una aplicación de express
 const app = express();
 
+
 // llamar a nuestra cadena de conexion
 dbConnection();
 
@@ -40,6 +41,7 @@ app.use('/api/clientes', require('./routes/clientes.routes'));
 app.use('/api/login', require('./routes/auth.routes'));
 app.use('/api/verificacion', require('./routes/verificacion.routes'));
 app.use('/api/recuperar', require('./routes/password.routes'));
+app.use('/api/maya', require('./routes/maya.routes'));
 app.use('/api/prendas', require('./routes/prendas.routes'));
 
 //para subir archivos
@@ -54,6 +56,11 @@ app.use('/api/login', require('./routes/auth.routes'));
 app.use('/api/grupos', require('./routes/grupos.routes'));
 */
 
+
+
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ' + process.env.PORT);
 });
+
+
+
