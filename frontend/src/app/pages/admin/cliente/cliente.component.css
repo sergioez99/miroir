@@ -1,0 +1,90 @@
+section {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+
+    /*background: linear-gradient(to right, rgba(179, 136, 255, 0.8), rgba(251,155,2,0.8));*/
+   background-image: linear-gradient(rgba(179, 136, 255, 0.5), rgba(251,155,2,0.5)), url('../../../../assets/girl2.jpg');
+    padding: 10px 25px; 
+
+    height: 100%;
+}
+
+.centro {
+    background-color:white ;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #222;
+    font-weight: 400;
+    font-family: 'Montserrat';
+    padding: 35px 0; 
+    height: 730px;
+    width: 600px;
+    border-radius: 10px;
+    text-align: center;
+    align-items: center;
+}
+
+h1 {
+    line-height: 1.66;
+    margin: 0;
+    padding: 0;
+    font-weight: 900;
+    color: #222;
+    font-family: 'Montserrat';
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+}
+
+p{
+    font-size: 20px;
+}
+
+.boton {
+	margin-bottom: 10px;
+    width: 80%;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -ms-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -o-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -webkit-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: linear-gradient(to left, #fb9b02, #b388ff); 
+}
+.boton:hover {
+	margin-bottom: 10px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    border: none;
+    background-image: -moz-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -ms-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -o-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: -webkit-linear-gradient(to left, #fb9b02, #b388ff);
+    background-image: linear-gradient(to left, #fb9b02, #b388ff); 
+    -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+    -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+}

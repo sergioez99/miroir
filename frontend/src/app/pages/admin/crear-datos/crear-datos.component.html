@@ -1,8 +1,10 @@
-<p>crear-datos works!</p>
-
-<div>
+<h1>Generación de datos</h1>
+<div class ="container">
+    
+<div class="crear">
+    
     <form [formGroup]="formCrearUsuarios" (ngSubmit)="enviarUsuarios();">
-
+        <h2>Usuarios</h2>
 
         <!-- INPUT: CANTIDAD -->
         <mat-form-field appearance="outline" class="mir-block">
@@ -30,9 +32,10 @@
 
 </div>
 <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-<div>
+<div class="crear">
+    
     <form [formGroup]="formCrearClientes" (ngSubmit)="enviarClientes();">
-
+        <h2>Clientes</h2>
 
         <!-- INPUT: CANTIDAD -->
         <mat-form-field appearance="outline" class="mir-block">
@@ -60,9 +63,10 @@
 
 </div>
 <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-<div>
+<div class="crear">
+    
     <form class="mir-login-form" [formGroup]="formCrearPrendas" (ngSubmit)="enviarPrendas();">
-
+        <h2>Prendas</h2>
 
         <!-- INPUT: CANTIDAD -->
         <mat-form-field appearance="outline" class="mir-block">
@@ -88,4 +92,5 @@
 
     </form>
 
+</div>
 </div>

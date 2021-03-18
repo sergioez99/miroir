@@ -1,10 +1,8 @@
 
-<section>
-    <h2> Información del cliente </h2>
+<section class="section"><div class="centro">
+    <h1> Datos del cliente</h1>
     <article>
-        <header>
-            <p> Modifica tus datos: </p>
-        </header>
+        
 
         <form [formGroup]="formCliente" (ngSubmit)="actualizarCliente();">
             <div>
@@ -76,13 +74,13 @@
             </div>
 
             <div *ngIf="this.isNew; else noNew">
-                <button type="submit" mat-raised-button color="accent">Crear</button>
+                <button type="submit" mat-raised-button color="accent" class ="boton">Crear</button>
             </div>
             <ng-template #noNew>
-                <button type="submit" mat-raised-button color="accent">Actualizar</button>
+                <button type="submit" mat-raised-button color="accent" class ="boton">Actualizar</button>
             </ng-template>
         </form>
         
     </article>
-</section>
+</div></section>
 
