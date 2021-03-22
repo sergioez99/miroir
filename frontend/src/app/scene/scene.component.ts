@@ -48,9 +48,9 @@ export class SceneComponent implements OnInit, AfterViewInit {
 
    
 
-   async drawScene() {
+   drawScene() {
       // prepare the scene and update the viewport
       this.webglService.updateViewport();
-      await this.webglService.prepareScene();
+      this.webglService.prepareScene();
     }
 }
