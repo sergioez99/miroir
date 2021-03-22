@@ -76,7 +76,6 @@ export class ChartService{
 
   getAltasHoras(){
 
-
     return new Promise ( (resolve, reject) => {
       this.apiService.getAltasHorasChartCall(this.usuarioService.getToken()).subscribe( (res) => {
 
