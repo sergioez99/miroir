@@ -37,19 +37,13 @@ export class WebGLService {
   private projectionMatrix = matrix.mat4.create();
   private modelViewMatrix = matrix.mat4.create();
   private buffers: any
+  private buffers2: any
   private programInfo: any
 
   private cubeRotation = 0.0;
 
   //Variables árbol de la escena
   private miMotor;
-  private miNodo;
-  private miLuz;
-  private miCamara;
-  private Mallas;
-  private Textura;
-
-  private then = 0;
 
   constructor() {}
 
@@ -59,7 +53,6 @@ export class WebGLService {
     this.miMotor = new TMotorTAG();
     this.miMotor.crearLuz(null, null, null, null, null, null, null, null, null, null, null);
     this.miMotor.crearCamara(null, null, null, null, null, null, null, null, null, null);
-    this.Textura = new RTextura();
 
     // Iniciacializamos el contexto
     this.renderingContext =
@@ -102,11 +95,11 @@ export class WebGLService {
       },
     };
     // Inicializamos los buffers con lo que queremos dibujar
-    await this.initialiseBuffers().then(buffers => {this.buffers = buffers; console.log(buffers)});
-    console.log(this.buffers);
+    await this.initialiseBuffers("camisa2.json").then(buffers => {this.buffers = buffers; });
 
-    const texture = this.loadTexture();
-    console.log(texture);
+    await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
+
+    const texture = this.loadTexture(); //aqui fichero dentro
 
     // Tell WebGL we want to affect texture unit 0
     this.gl.activeTexture(this.gl.TEXTURE0);
@@ -118,9 +111,6 @@ export class WebGLService {
 
     // Tell the shader we bound the texture to texture unit 0
     this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
-
-    // Prepramos la escena para dibujar el contenido
-    this.prepareScene();
 
     return this.gl
   }
@@ -179,7 +169,7 @@ export class WebGLService {
     var radius = 200;
     
     // Compute a matrix for the camera
-    var cameraMatrix = matrix.mat4.create();
+    /*var cameraMatrix = matrix.mat4.create();
     matrix.mat4.rotateY(cameraMatrix, cameraMatrix, this.fieldOfView); //pongo field of view pq son radianes
     matrix.mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
 
@@ -197,7 +187,7 @@ export class WebGLService {
     matrix.mat4.invert(viewMatrix, cameraMatrix);
     var viewProjectionMatrix = matrix.mat4.create();
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
-
+    */
    
 
 
@@ -213,7 +203,9 @@ export class WebGLService {
     matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       this.cubeRotation * .7,
-      [0, 1, 0]);   
+      [0, 1, 0]);
+    
+        
 
       
     const normalMatrix = matrix.mat4.create();
@@ -254,6 +246,67 @@ export class WebGLService {
       viewProjectionMatrix);
     */
     this.cubeRotation = this.cubeRotation + 0.01;
+
+    // Dibujar camiseta
+    var vertexCount = 1700;
+    const type = this.gl.UNSIGNED_SHORT;
+    const offset = 0;
+    this.gl.drawElements(this.gl.LINE_LOOP, vertexCount, type, offset);
+
+    //
+    //
+    //
+    //
+
+    const texture = this.loadTexture();
+
+    // Tell WebGL we want to affect texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE0);
+
+    // Bind the texture to texture unit 0
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    // Tell the shader we bound the texture to texture unit 0
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+
+    this.bindVertexPosition(this.programInfo, this.buffers2);
+
+    this.bindVertexTextures(this.programInfo, this.buffers2);
+
+    this.bindVertexNormal(this.programInfo, this.buffers2);
+
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+
+    matrix.mat4.translate(this.modelViewMatrix,    
+      this.modelViewMatrix,    
+      [2.0, 0.0, 0.0]); 
+
+    matrix.mat4.rotate(this.modelViewMatrix, 
+      this.modelViewMatrix,  
+      -5,
+      [1, 0, 0]); 
+
+    // set the shader uniforms
+    this.gl.uniformMatrix4fv(
+      this.programInfo.uniformLocations.projectionMatrix,
+      false,
+      this.projectionMatrix
+    );
+    
+    this.gl.uniformMatrix4fv(
+      this.programInfo.uniformLocations.modelViewMatrix,
+      false,
+      this.modelViewMatrix
+    );
+    this.gl.uniformMatrix4fv(
+      this.programInfo.uniformLocations.normalMatrix,
+      false,
+      normalMatrix);
+
+    // Dibujar pantalon
+    vertexCount = 520;
+    this.gl.drawElements(this.gl.LINE_LOOP, vertexCount, type, offset);
+
   }
 
   resizeWebGLCanvas() {
@@ -266,11 +319,6 @@ export class WebGLService {
   }
 
   setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
-    /*this.gl.canvas.width = canvas.clientWidth;
-    this.gl.canvas.height = canvas.clientHeight;
-    */
-    
-    
     this.gl.canvas.width = window.outerWidth;
     this.gl.canvas.height = window.outerHeight;
     
@@ -403,8 +451,8 @@ export class WebGLService {
 
   
   
-  async initialiseBuffers() {
-    var malla = await this.miMotor.crearModelo(null, null, null, null, "camisa2.json"); 
+  async initialiseBuffers(fichero) {
+    var malla = await this.miMotor.crearModelo(null, null, null, null, fichero); 
     malla = malla.getEntidad().getMalla();
     console.log(this.miMotor);
     const positionBuffer = this.gl.createBuffer();
@@ -423,19 +471,6 @@ export class WebGLService {
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
         new Uint16Array(malla.getIndices()), this.gl.STATIC_DRAW);
 
-    /*var colors = [];
-  
-    for (var j = 0; j < mallas[0].getCoordtex().length; ++j) {
-      const c = mallas[0].getCoordtex()[j];
-  
-      // Repeat each color four times for the four vertices of the face
-      colors = colors.concat(c, c, c, c);
-    }
-  
-    const colorBuffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
-    */
     const textureCoordBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
 
@@ -501,9 +536,8 @@ export class WebGLService {
                   pixel);
                   
 
-    /*const mallas = this.Mallas.getMallas2();
-    var image = mallas[1].getTexturas();
-    console.log(image)
+    /*var malla = await this.miMotor.crearModelo(null, null, null, null, fichero); 
+    
     image.onload = () => {
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
@@ -521,14 +555,8 @@ export class WebGLService {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
       }
-      
-      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
-      this.gl.generateMipmap(this.gl.TEXTURE_2D);
-      
-    };*/
+    };
+    */
     
 
     return texture;

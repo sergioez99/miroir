@@ -48,14 +48,9 @@ export class SceneComponent implements OnInit, AfterViewInit {
 
    
 
-    private drawScene() {
+   async drawScene() {
       // prepare the scene and update the viewport
       this.webglService.updateViewport();
-      this.webglService.prepareScene();
-      // draw the scene
-      const vertexCount = 1700;
-      const type = this.gl.UNSIGNED_SHORT;
-      const offset = 0;
-      this.gl.drawElements(this.gl.TRIANGLE_FAN, vertexCount, type, offset);
+      await this.webglService.prepareScene();
     }
 }

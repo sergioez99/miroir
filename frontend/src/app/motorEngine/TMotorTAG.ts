@@ -67,9 +67,11 @@ export class TMotorTAG {
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
+        var malla = await this.gestorRecursos.getRecurso(fichero);
+
         //hay que ver si me pasan un fichero y creo aqui la malla o me pasan una malla directamente
         var entidad = new EModel();
-         await entidad.cargarModelo(fichero);
+        entidad.setMalla(malla);
         
 
         nuevo.setentidad(entidad);
