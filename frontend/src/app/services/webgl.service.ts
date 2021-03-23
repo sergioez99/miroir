@@ -29,13 +29,30 @@ export class WebGLService {
     return this.gl.canvas as Element
   }
   
-
+  //Variables proyección
   private fieldOfView = (45 * Math.PI) / 180; // radianes
   private aspect = 1;
   private zNear = 0.1;
-  private zFar = 3000.0;
+  private zFar = 100;
+
+  //Variables mouseevent proyección
+  private lastX = 0
+  private lastY = 0;
+  private dMouseX = 0
+  private dMouseY = 0;
+  private trackingMouseMotion = false;
+  private rotX = 0
+  private rotY = 0
+  private rotZ = 0
+  private trasX = 0
+  private trasY = 0
+  private trasZ = 0;
+
+  //Matrices
   private projectionMatrix = matrix.mat4.create();
   private modelViewMatrix = matrix.mat4.create();
+
+  //Buffers y shaders
   private buffers: any
   private buffers2: any
   private programInfo: any
@@ -167,16 +184,17 @@ export class WebGLService {
     //Cámara 
     var numFs = 5;
     var radius = 200;
+    var angulo;
     
     // Compute a matrix for the camera
-    /*var cameraMatrix = matrix.mat4.create();
-    matrix.mat4.rotateY(cameraMatrix, cameraMatrix, this.fieldOfView); //pongo field of view pq son radianes
+    var cameraMatrix = matrix.mat4.create();
+    matrix.mat4.rotateY(cameraMatrix, cameraMatrix, angulo);
     matrix.mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
 
     var cameraTarget = matrix.vec3.create();
-    cameraTarget = [0, -100, 0];
+    cameraTarget = [0, 0, 0];
     var cameraPosition = matrix.vec3.create();
-    cameraPosition = [500, 300, 500];
+    cameraPosition = [0, 0, 0];
     var up = matrix.vec3.create();
     up = [0, 1, 0];
 
@@ -187,7 +205,7 @@ export class WebGLService {
     matrix.mat4.invert(viewMatrix, cameraMatrix);
     var viewProjectionMatrix = matrix.mat4.create();
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
-    */
+    
    
 
 
@@ -226,7 +244,8 @@ export class WebGLService {
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.projectionMatrix,
       false,
-      this.projectionMatrix
+      //this.projectionMatrix
+      viewProjectionMatrix
     );
     
     this.gl.uniformMatrix4fv(
@@ -290,7 +309,8 @@ export class WebGLService {
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.projectionMatrix,
       false,
-      this.projectionMatrix
+      //this.projectionMatrix
+      viewProjectionMatrix
     );
     
     this.gl.uniformMatrix4fv(
@@ -324,7 +344,8 @@ export class WebGLService {
     
   }
 
-  updateViewport() {
+  updateMouseevent(rotX, rotY, rotZ) {
+    //Update del viewport para que se vea bien lol
     if (this.gl) {
       this.gl.viewport(
         0,
@@ -333,15 +354,20 @@ export class WebGLService {
         this.gl.drawingBufferHeight
       );
       this.initialiseWebGLCanvas();
-    } else {
+    } 
+    else {
       alert(
         'Error! WebGL has not been initialised! Ignoring updateViewport() call...'
       );
     }
+
+    this.rotX = rotX;
+    this.rotY = rotY;
+    this.rotZ = rotZ;
+      
   }
 
   updateWebGLCanvas() {
-    this.initialiseWebGLCanvas();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     this.aspect = this.clientCanvas.clientWidth / this.clientCanvas.clientHeight;
@@ -353,29 +379,18 @@ export class WebGLService {
       this.zNear,
       this.zFar
     );
+    this.modelViewMatrix = matrix.mat4.create();
 
-    this.setModelViewAsIdentity();
+    //Transformaciones de la projection matrix para mover con el ratón
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [this.trasX, 0, 0]);
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, this.trasY, 0]);
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, 0, this.trasZ]);
+    matrix.mat4.rotateX(this.projectionMatrix, this.projectionMatrix, this.rotX);
+    matrix.mat4.rotateY(this.projectionMatrix, this.projectionMatrix, this.rotY);
+    matrix.mat4.rotateZ(this.projectionMatrix, this.projectionMatrix, this.rotZ);
+    
   }
 
-  /*
-  private bindVertexColor(programInfo: any, buffers: any) {
-    const bufferSize = 4;
-    const type = this.gl.FLOAT;
-    const normalize = false;
-    const stride = 0;
-    const offset = 0;
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.color);
-    this.gl.vertexAttribPointer(
-      programInfo.attribLocations.vertexColor,
-      bufferSize,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-    this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-  }
-  */
 
   private bindVertexTextures(programInfo: any, buffers: any) {
     const num = 2; // every coordinate composed of 2 values
@@ -516,9 +531,6 @@ export class WebGLService {
     return (value & (value - 1)) == 0;
   }
 
-  private setModelViewAsIdentity() {
-    this.modelViewMatrix = matrix.mat4.create();
-  }
   private loadTexture() {
     const texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
