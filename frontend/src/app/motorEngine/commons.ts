@@ -1,4 +1,5 @@
-import { RMalla } from "./TRecurso";
+import { RMalla, RShader, RTextura } from "./TRecurso";
+import { environment } from '../../environments/environment';
 
 class TEntity {
 
@@ -14,6 +15,7 @@ class TEntity {
 class TRecurso {
 
     private nombre: string;
+    
     
 
     constructor() {
@@ -38,7 +40,7 @@ class TRecurso {
 
     async cargarFichero(fichero){
         var malla;
-        malla = new Malla();
+        var url = environment.base_url;
 
         return new Promise( (resolve, reject) =>{
 
@@ -46,18 +48,21 @@ class TRecurso {
                     var splitted = response.url.split(".", 2);
                     response.json().then(file =>{ 
                         if(splitted[1] == "json"){
+                            malla = new Malla();
                             malla.setVertices(file.model.meshes[0].verts);
                             malla.setCoordtex(file.model.meshes[0].uvs);
                             malla.setNormales(file.model.meshes[0].normals);
                             malla.setIndices(file.model.meshes[0].vertIndices);
                         }
                         else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
+                            //malla = new RTextura(); no deja hacer esto wtf
                             var imagen = new Image();
                             imagen.src = "http://localhost:4200/assets/"+fichero;
-                            malla.setTexturas(imagen);
+                            //malla.setTexturas(imagen);
+                            malla = imagen;
                         }
-                        console.log('terminar cargarFicheros');
                         resolve(malla);
+                        console.log('terminar cargarFicheros');
                 })
             })
         })

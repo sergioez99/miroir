@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { GLSLConstants } from '../../assets/GLSLConstants';
-import fragmentShaderSrc from '../../assets/toucan-fragment-shader.glsl';
-import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
+import fragmentShaderSrc from '../motorEngine/shaders/toucan-fragment-shader.glsl';
+import vertexShaderSrc from '../motorEngine/shaders/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
-import { TNode } from '../motorEngine/TNode';
-import { TEntity } from '../motorEngine/TEntity';
-import { RMalla, RTextura } from '../motorEngine/TRecurso';
-import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
-import { Malla } from '../motorEngine/commons';
+import { TRecurso } from '../motorEngine/commons';
 import { TMotorTAG } from '../motorEngine/TMotorTAG';
 
 
@@ -84,6 +80,8 @@ export class WebGLService {
 
     this.initialiseWebGLCanvas();
 
+    
+
     // Inicializamos los shaders
     let shaderProgram = this.initializeShaders();
 
@@ -112,28 +110,21 @@ export class WebGLService {
       },
     };
     // Inicializamos los buffers con lo que queremos dibujar
-    await this.initialiseBuffers("camisa2.json").then(buffers => {this.buffers = buffers; });
+    await this.initialiseBuffers("avatar2.json").then(buffers => {this.buffers = buffers; });
 
     await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
 
-    const texture = this.loadTexture(); //aqui fichero dentro
-
-    // Tell WebGL we want to affect texture unit 0
-    this.gl.activeTexture(this.gl.TEXTURE0);
-
-    // Bind the texture to texture unit 0
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-
     this.gl.useProgram(this.programInfo.program);
 
-    // Tell the shader we bound the texture to texture unit 0
-    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+    
 
     return this.gl
   }
 
   initializeShaders(): WebGLProgram {
     let shaderProgram = this.gl.createProgram();
+
+    console.log(fragmentShaderSrc);
 
     const compiledShaders = [];
     let fragmentShader = this.loadShader(
@@ -213,15 +204,14 @@ export class WebGLService {
     //transformaciones
     matrix.mat4.translate(this.modelViewMatrix,    
       this.modelViewMatrix,    
-      [0.0, 0.0, -5.0]); 
-    /*matrix.mat4.rotate(this.modelViewMatrix,  
-      this.modelViewMatrix,  
-      this.cubeRotation,    
-      [0, 0, 1]);      */
-    matrix.mat4.rotate(this.modelViewMatrix, 
+      [0.0, -2.5, -5.0]); 
+    /*matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       this.cubeRotation * .7,
       [0, 1, 0]);
+      */
+     
+    
     
         
 
@@ -229,6 +219,19 @@ export class WebGLService {
     const normalMatrix = matrix.mat4.create();
     matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
     matrix.mat4.transpose(normalMatrix, normalMatrix);
+
+    var texture = this.loadTexture(0); //aqui fichero dentro
+
+    // Tell WebGL we want to affect texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE0);
+
+    // Bind the texture to texture unit 0
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    
+
+    // Tell the shader we bound the texture to texture unit 0
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
     this.bindVertexPosition(this.programInfo, this.buffers);
 
@@ -267,7 +270,7 @@ export class WebGLService {
     this.cubeRotation = this.cubeRotation + 0.01;
 
     // Dibujar camiseta
-    var vertexCount = 1700;
+    var vertexCount = 69855;
     const type = this.gl.UNSIGNED_SHORT;
     const offset = 0;
     this.gl.drawElements(this.gl.LINE_LOOP, vertexCount, type, offset);
@@ -277,16 +280,16 @@ export class WebGLService {
     //
     //
 
-    const texture = this.loadTexture();
+    var texture = this.loadTexture(2);
 
     // Tell WebGL we want to affect texture unit 0
-    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.gl.activeTexture(this.gl.TEXTURE1);
 
     // Bind the texture to texture unit 0
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
     // Tell the shader we bound the texture to texture unit 0
-    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
     this.bindVertexPosition(this.programInfo, this.buffers2);
 
@@ -299,11 +302,11 @@ export class WebGLService {
     matrix.mat4.translate(this.modelViewMatrix,    
       this.modelViewMatrix,    
       [2.0, 0.0, 0.0]); 
-
     matrix.mat4.rotate(this.modelViewMatrix, 
       this.modelViewMatrix,  
       -5,
-      [1, 0, 0]); 
+      [1, 0, 0]);
+    
 
     // set the shader uniforms
     this.gl.uniformMatrix4fv(
@@ -344,7 +347,15 @@ export class WebGLService {
     
   }
 
-  updateMouseevent(rotX, rotY, rotZ) {
+  updateMouseevent(rotZ) {
+    
+    //this.trasX = rotZ;
+    //this.trasY = rotZ;
+    this.rotY = rotZ;
+      
+  }
+
+  updateViewport(){
     //Update del viewport para que se vea bien lol
     if (this.gl) {
       this.gl.viewport(
@@ -360,11 +371,6 @@ export class WebGLService {
         'Error! WebGL has not been initialised! Ignoring updateViewport() call...'
       );
     }
-
-    this.rotX = rotX;
-    this.rotY = rotY;
-    this.rotZ = rotZ;
-      
   }
 
   updateWebGLCanvas() {
@@ -388,6 +394,7 @@ export class WebGLService {
     matrix.mat4.rotateX(this.projectionMatrix, this.projectionMatrix, this.rotX);
     matrix.mat4.rotateY(this.projectionMatrix, this.projectionMatrix, this.rotY);
     matrix.mat4.rotateZ(this.projectionMatrix, this.projectionMatrix, this.rotZ);
+    
     
   }
 
@@ -531,7 +538,7 @@ export class WebGLService {
     return (value & (value - 1)) == 0;
   }
 
-  private loadTexture() {
+  private loadTexture(num) {
     const texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
@@ -542,7 +549,10 @@ export class WebGLService {
     const border = 0;
     const srcFormat = this.gl.RGBA;
     const srcType = this.gl.UNSIGNED_BYTE;
-    const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    if(num == 2)
+      var pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    else
+      var pixel = new Uint8Array([0, 126, 126, 255]);
     this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
                   width, height, border, srcFormat, srcType,
                   pixel);
