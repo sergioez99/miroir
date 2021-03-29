@@ -15,7 +15,8 @@ const {
     obtenerTotalPrendas,
     obtenerUsuariosClientesFecha,
     obtenerUsuariosClientesHora,
-    obtenerUsosPrendas
+    obtenerUsosPrendas,
+    obtenerUsosPrendasCliente
 
 } = require('../controllers/charts.controller');
 
@@ -47,5 +48,9 @@ router.get('/usos', [
     validarJWT,
 
 ], obtenerUsosPrendas);
+
+router.get('/usosCliente', [
+], obtenerUsosPrendasCliente);
+
 
 module.exports = router;

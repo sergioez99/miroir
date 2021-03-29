@@ -178,6 +178,13 @@ export class ApiService {
     return this.http.get(this.url+'/chart/usos', { headers: headers });
   }
 
+  getUsosCliente(token){
+    const headers = new HttpHeaders({
+      'id': token,
+    });
+    return this.http.get(this.url+'/chart/usosCliente', { headers: headers });
+  }
+
 
 
 

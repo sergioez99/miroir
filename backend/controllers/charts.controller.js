@@ -449,7 +449,7 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 
 const obtenerUsosPrendas = async(req, res = response) => {
     console.log("hola????")
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    //salirSiUsuarioNoAdmin(req.header('x-token'));
 
 
     try {
@@ -463,6 +463,50 @@ const obtenerUsosPrendas = async(req, res = response) => {
             
             nPrenda.push(await Prenda.findById(busqueda[i].idPrenda));
             nomPrenda.push(nPrenda[i].nombre);
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'prendas usadas',
+            prenda: prendas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de los usos de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
+const obtenerUsosPrendasCliente = async(req, res = response) => {
+    
+    let id = req.header('id');
+
+    try {
+        const busqueda = await prendasUsadas.find();
+        const prendasClientes = await Prenda.find(); //aqui 
+
+        console.log(prendasClientes);
+        
+        let prendas = [], veces = [];
+        let nPrenda = [], nomPrenda = [];
+
+        for (let x = 0; x < prendasClientes.length; x++) {
+            if(prendasClientes[x].idCliente == id) {
+                prendas[x] = busqueda[x].idPrenda
+                veces[x] = busqueda[x].usos;
+
+                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(nPrenda[x].nombre);
+            }
+
         }
 
         return res.json({
@@ -677,6 +721,7 @@ module.exports = {
     obtenerUsuariosClientesFecha,
     obtenerUsuariosClientesHora,
     obtenerUsosPrendas,
+    obtenerUsosPrendasCliente,
 
     // funciones para modificar datos KPI en el backend
     insertarfechahoraUsuarioCliente,

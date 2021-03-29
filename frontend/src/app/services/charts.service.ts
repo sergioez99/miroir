@@ -106,4 +106,19 @@ export class ChartService{
     });
   }
 
+  getUsosPrendasCliente(){
+
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getUsosCliente(this.usuarioService.getID()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
 }

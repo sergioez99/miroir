@@ -18,6 +18,7 @@ export class SidebarService {
     { titulo: 'Tu Perfil', icono: 'person', sub: false, url: '/perfil/cliente/'},
     { titulo: 'Prendas', icono: 'pages', sub: false, url: '/perfil/cliente/prendas'},
     { titulo: 'Cambiar contraseña', icono: 'history_edu', sub: false, url: '/perfil/contracli'},
+    { titulo: 'Cuadro', icono: 'history_edu', sub: false, url: '/perfil/'},
   ];
   menuUsuario: sidebarItem[]=[
     { titulo: 'Perfil', icono: 'person', sub: false, url: '/perfil/usuario/'},
