@@ -69,15 +69,15 @@ export class CuadroUsuarioComponent implements OnInit {
             datasets: [{
               label: 'Número de usuarios',
               data: usuarios,
-              backgroundColor: "rgba(200, 92, 12, 0.3)",
-              borderColor:"rgb(200, 92, 12)",
-              borderWidth:1
+              backgroundColor: "rgba(179, 136, 255, 0.3)",
+              borderColor:"rgb(179, 136, 255)",
+              borderWidth:2
           },{
             label: 'Número de clientes',
             data: clientes,
-            backgroundColor: "rgba(35, 17, 200, 0.3)",
-            borderColor:"rgb(35, 17, 200)",
-            borderWidth:1
+            backgroundColor: "rgba(251, 155, 2, 0.3)",
+            borderColor:"rgb(251, 155, 2)",
+            borderWidth:2
 
           }]
         },
@@ -133,11 +133,15 @@ export class CuadroUsuarioComponent implements OnInit {
               datasets: [{
                     label: 'Número de usuarios',
                     data: usuarios,
-                    borderColor:"rgb(200, 92, 12)"
+                    backgroundColor: "rgba(179, 136, 255, 0.3)",
+                    borderColor:"rgb(179, 136, 255)",
+                    borderWidth:2
                 },{
                     label: 'Número de clientes',
                     data: clientes,
-                    borderColor:"rgb(35, 17, 200)"
+                    backgroundColor: "rgba(251, 155, 2, 0.3)",
+                    borderColor:"rgb(251, 155, 2)",
+                    borderWidth:2
 
                 }]
           },

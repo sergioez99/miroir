@@ -1,40 +1,47 @@
-<div class='div-canvas'>
-    <canvas id="chartFechaAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
+<h1> Cuadros de mandos </h1>
+<div class="container">
+    <div class='div-canvas'>
+        <h2>Registros por día</h2>
+        <canvas id="chartFechaAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
 
-    <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargarChartFechasAlta();">
+        <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargarChartFechasAlta();">
 
-        <mat-form-field appearance="fill">
-            <mat-label>Selecciona el rango de fechas</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-                <input formControlName="fechaI" matStartDate placeholder="Start date">
-                <input formControlName="fechaF" matEndDate placeholder="End date">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Selecciona el rango de fechas</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input formControlName="fechaI" matStartDate placeholder="Start date">
+                    <input formControlName="fechaF" matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
 
-        <div class="mir-box-buttons">
-            <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Cargar</button>
+            <div class="mir-box-buttons">
+                <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit" class="boton">Cargar</button>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class='div-canvas arriba'>
+        <h2>Horas de registro</h2>
+        <canvas id="chartHoraAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
+
+    </div>
+
+    <div class="div-canvas2">
+        <h2>Total de registrados</h2>
+        <div class="container3">
+            <p>Total usuarios: {{totalUsuarios}}</p>
+
+            <p>Total clientes: {{totalClientes}}</p>
+
+            <p>Total prendas: {{totalPrendas}}</p>
         </div>
+    </div>
 
-    </form>
-</div>
+    <br>
 
-<div class='div-canvas'>
-    <canvas id="chartHoraAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
-</div>
-
-
-
-
-<div>
-    <p>Total usuarios: {{totalUsuarios}}</p>
-</div>
-
-<div>
-    <p>Total clientes: {{totalClientes}}</p>
-</div>
-
-<div>
-    <p>Total prendas: {{totalPrendas}}</p>
 </div>
