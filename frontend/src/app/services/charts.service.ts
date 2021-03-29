@@ -90,4 +90,20 @@ export class ChartService{
     });
   }
 
+  getUsosPrendas(){
+
+
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getUsos(this.usuarioService.getToken()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
 }

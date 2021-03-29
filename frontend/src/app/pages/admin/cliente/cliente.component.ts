@@ -85,7 +85,6 @@ export class ClienteComponent implements OnInit {
     this.activo=true;
     this.validado=true;
     this.uid='nuevo';
-    this.email='ejemplo@gmail.com';
     /*this.empresa='Nombre empresa';
     this.nombre='Nombre propietario';
     this.NIF='NIF';
@@ -107,7 +106,6 @@ export class ClienteComponent implements OnInit {
 
 
       this.clienteService.actualizarDatosCliente(this.formCliente.value).then((response) => {
-
         // medidas introducidas correctamente
 
         Swal.fire({
@@ -118,10 +116,10 @@ export class ClienteComponent implements OnInit {
         });
 
       }).catch((error) =>{
-
+        console.log(error);
         Swal.fire({
-          title: 'Faltan campos por rellenar',
-          text: error,
+          title: 'Ha habido un error.',
+          text: 'Por favor, revise los campos.',
           icon: 'error',
           confirmButtonText: 'Volver a intentar',
         });

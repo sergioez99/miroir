@@ -33,6 +33,7 @@ import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component'
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component'
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
+import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.comp
     CrearDatosComponent,
     CuadroUsuarioComponent,
     CambioContraComponent,
+    CuadroClienteComponent,
 
 
 

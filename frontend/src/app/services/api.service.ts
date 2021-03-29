@@ -170,6 +170,17 @@ export class ApiService {
     });
     return this.http.get(this.url+'/chart/usuarios/horas', { headers: headers });
   }
+
+  getUsos(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/chart/usos', { headers: headers });
+  }
+
+
+
+
   crearClienteCall (token :string, id :string, formData :ClienteForm){
 
     console.log ('crear cliente call', formData);

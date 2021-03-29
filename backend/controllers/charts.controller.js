@@ -6,6 +6,7 @@ const Prenda = require('../models/prendas.model');
 const DatoKPI = require('../models/datosGenericos.model');
 const fechaAlta = require('../models/fechaAlta.model');
 const horaAlta = require('../models/horaAlta.model');
+const prendasUsadas = require('../models/prendasUsadas.model');
 const { infoToken } = require('../helpers/infotoken');
 
 // PARA BORRAR PORQUE DE MOMENTO NO SE USA
@@ -328,6 +329,28 @@ const restarPrendaKPI = async() => {
         return error;
     }
 }
+const sumarUsoPrenda = async(id) => {
+
+    try {
+                db = await prendasUsadas.findOne({ idPrenda: id });
+                if (!db) {
+                    db = new prendasUsadas();
+                    db.idPrenda = id;
+                    db.usos = 1;
+                } else{
+                    db.usos++;
+                }
+
+                await db.save();
+
+                return true;
+        }
+    catch (error) {
+        return error;
+    }
+}
+
+
 
 const obtenerUsuariosClientesFecha = async(req, res = response) => {
 
@@ -424,6 +447,44 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 
 }
 
+const obtenerUsosPrendas = async(req, res = response) => {
+    console.log("hola????")
+    salirSiUsuarioNoAdmin(req.header('x-token'));
+
+
+    try {
+        const busqueda = await prendasUsadas.find();
+
+        let prendas = [], veces = [];
+        let nPrenda = [], nomPrenda = [];
+        for (let i = 0; i < busqueda.length; i++) {
+            prendas[i] = busqueda[i].idPrenda;
+            veces[i] = busqueda[i].usos;
+            
+            nPrenda.push(await Prenda.findById(busqueda[i].idPrenda));
+            nomPrenda.push(nPrenda[i].nombre);
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'prendas usadas',
+            prenda: prendas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de los usos de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
 
 
 
@@ -502,8 +563,6 @@ const obtenerTotalPrendas = async(req, res = response) => {
         });
     }
 }
-
-
 
 
 
@@ -617,6 +676,7 @@ module.exports = {
     obtenerTotalClientes,
     obtenerUsuariosClientesFecha,
     obtenerUsuariosClientesHora,
+    obtenerUsosPrendas,
 
     // funciones para modificar datos KPI en el backend
     insertarfechahoraUsuarioCliente,
@@ -625,5 +685,6 @@ module.exports = {
     sumarClienteKPI,
     restarClienteKPI,
     sumarPrendaKPI,
-    restarPrendaKPI
+    restarPrendaKPI,
+    sumarUsoPrenda,
 }

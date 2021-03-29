@@ -22,6 +22,9 @@ export class CuadroUsuarioComponent implements OnInit {
   public canvas02;
   public chart02:Chart;
 
+  public canvas03;
+  public chart03:Chart;
+
   public totalUsuarios;
   public totalClientes;
   public totalPrendas;
@@ -33,6 +36,7 @@ export class CuadroUsuarioComponent implements OnInit {
   ngOnInit():void {
     this.canvas01 = <HTMLCanvasElement> document.querySelector('#chartFechaAltaUsuario');
     this.canvas02 = <HTMLCanvasElement> document.querySelector('#chartHoraAltaUsuario');
+    this.canvas03 = <HTMLCanvasElement> document.querySelector('#chartPrendasUsadas');
 
     // preparar el formulario de fechas
     let fechaF = new Date(Date.now());
@@ -48,6 +52,7 @@ export class CuadroUsuarioComponent implements OnInit {
     this.cargarValoresFijos();
     this.cargarChartFechasAlta();
     this.cargarChartHorasAlta();
+    this.cargarChartUsos();
 
   }
   cargarChartHorasAlta(){
@@ -191,4 +196,75 @@ export class CuadroUsuarioComponent implements OnInit {
 
 
   }
+
+  cargarChartUsos(){
+    console.log("empieza cargar usos");
+    // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
+    if (this.chart03){
+      this.chart03.destroy();
+    }
+    this.chartServices.getUsosPrendas().then( (res)=>{
+  
+      let prendas = res['prenda'];
+      let usos = res['usos'];
+      let nombres = res['nombres'];
+      let aux, aux1, aux2;
+
+      for (let i = 0; i < usos.length-1; i++){
+        for (let j = i+1; j < usos.length; j++){
+          if(usos[j] > usos[i]) {
+            aux = usos[i];
+            aux1 = prendas[i];
+            aux2 = nombres[i];
+            usos[i] = usos[j];
+            prendas[i] = prendas[j];
+            nombres[i] = nombres [j];
+            usos[j] = aux; 
+            prendas[j] = aux1; 
+            nombres[j] = aux2; 
+          }
+        }
+      }
+      console.log(nombres)
+
+      let prendasM = [];
+      let usosM = [];
+      let nombresM = [];
+
+      let top = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      for(let a = 0; a < prendas.length && a < 10; a++) {
+        prendasM.push(prendas[a]);
+        usosM.push(usos[a]);
+        nombresM.push(nombres[a]);
+      }
+      this.chart03 = new Chart(this.canvas03, {
+        type: "bar",
+        data: {
+            labels: nombresM, //eje x
+            datasets: [{
+            label: 'Número de usos',
+            data: usosM,
+            backgroundColor: "rgba(251, 155, 2, 0.3)",
+            borderColor:"rgb(251, 155, 2)",
+            borderWidth:2
+  
+          }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                    }
+                }]
+            }
+        }
+      });
+    }).catch(error=>{
+      console.log(error);
+    });
+  
+  }
 }
+
