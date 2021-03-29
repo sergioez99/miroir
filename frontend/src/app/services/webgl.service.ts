@@ -114,6 +114,7 @@ export class WebGLService {
 
     await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
 
+    
     this.gl.useProgram(this.programInfo.program);
 
     
@@ -172,6 +173,17 @@ export class WebGLService {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
+    //Preparamos la animación de rotación
+    //transformaciones
+    matrix.mat4.translate(this.modelViewMatrix,    
+      this.modelViewMatrix,    
+      [0.0, -2.5, -5.0]); 
+    matrix.mat4.rotateY(this.modelViewMatrix, 
+      this.modelViewMatrix,  
+      this.rotY);
+    
+    
+     
     //Cámara 
     var numFs = 5;
     var radius = 200;
@@ -179,13 +191,15 @@ export class WebGLService {
     
     // Compute a matrix for the camera
     var cameraMatrix = matrix.mat4.create();
-    matrix.mat4.rotateY(cameraMatrix, cameraMatrix, angulo);
-    matrix.mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
+    //console.log(cameraMatrix);
 
     var cameraTarget = matrix.vec3.create();
-    cameraTarget = [0, 0, 0];
+    //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
+    cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
+    cameraTarget = [0,0,0];
     var cameraPosition = matrix.vec3.create();
-    cameraPosition = [0, 0, 0];
+    //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
+    cameraPosition = [0, 0, -10];
     var up = matrix.vec3.create();
     up = [0, 1, 0];
 
@@ -196,22 +210,6 @@ export class WebGLService {
     matrix.mat4.invert(viewMatrix, cameraMatrix);
     var viewProjectionMatrix = matrix.mat4.create();
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
-    
-   
-
-
-    //Preparamos la animación de rotación
-    //transformaciones
-    matrix.mat4.translate(this.modelViewMatrix,    
-      this.modelViewMatrix,    
-      [0.0, -2.5, -5.0]); 
-    /*matrix.mat4.rotate(this.modelViewMatrix, 
-      this.modelViewMatrix,  
-      this.cubeRotation * .7,
-      [0, 1, 0]);
-      */
-     
-    
     
         
 
@@ -247,10 +245,10 @@ export class WebGLService {
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.projectionMatrix,
       false,
-      //this.projectionMatrix
+      //projectionMatrix
       viewProjectionMatrix
     );
-    
+
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.modelViewMatrix,
       false,
@@ -261,26 +259,20 @@ export class WebGLService {
       false,
       normalMatrix);
 
-    /*
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.viewProjectionMatrix,
-      false,
-      viewProjectionMatrix);
-    */
+ 
     this.cubeRotation = this.cubeRotation + 0.01;
 
     // Dibujar camiseta
     var vertexCount = 69855;
     const type = this.gl.UNSIGNED_SHORT;
     const offset = 0;
-    this.gl.drawElements(this.gl.LINE_LOOP, vertexCount, type, offset);
-
+    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
     //
     //
     //
     //
 
-    var texture = this.loadTexture(2);
+    /*var texture = this.loadTexture(2);
 
     // Tell WebGL we want to affect texture unit 0
     this.gl.activeTexture(this.gl.TEXTURE1);
@@ -307,28 +299,10 @@ export class WebGLService {
       -5,
       [1, 0, 0]);
     
-
-    // set the shader uniforms
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.projectionMatrix,
-      false,
-      //this.projectionMatrix
-      viewProjectionMatrix
-    );
-    
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.modelViewMatrix,
-      false,
-      this.modelViewMatrix
-    );
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.normalMatrix,
-      false,
-      normalMatrix);
-
     // Dibujar pantalon
-    vertexCount = 520;
-    this.gl.drawElements(this.gl.LINE_LOOP, vertexCount, type, offset);
+    vertexCount = 1567;
+    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+    */
 
   }
 
@@ -352,7 +326,8 @@ export class WebGLService {
     //this.trasX = rotZ;
     //this.trasY = rotZ;
     this.rotY = rotZ;
-      
+    //this.rotY = rotZ * Math.PI / 180;
+
   }
 
   updateViewport(){
@@ -388,12 +363,14 @@ export class WebGLService {
     this.modelViewMatrix = matrix.mat4.create();
 
     //Transformaciones de la projection matrix para mover con el ratón
-    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [this.trasX, 0, 0]);
+    /*matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [this.trasX, 0, 0]);
     matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, this.trasY, 0]);
-    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, 0, this.trasZ]);
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, 0, this.rotY]);
     matrix.mat4.rotateX(this.projectionMatrix, this.projectionMatrix, this.rotX);
     matrix.mat4.rotateY(this.projectionMatrix, this.projectionMatrix, this.rotY);
     matrix.mat4.rotateZ(this.projectionMatrix, this.projectionMatrix, this.rotZ);
+    */
+    
     
     
   }
@@ -486,6 +463,7 @@ export class WebGLService {
       new Float32Array(malla.getVertices()),
       this.gl.STATIC_DRAW
     );
+
 
     const indexBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);

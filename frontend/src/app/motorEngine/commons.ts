@@ -50,9 +50,21 @@ class TRecurso {
                         if(splitted[1] == "json"){
                             malla = new Malla();
                             malla.setVertices(file.model.meshes[0].verts);
-                            malla.setCoordtex(file.model.meshes[0].uvs);
+                            malla.setCoordtex(file.model.meshes[0].uvs[0]);
                             malla.setNormales(file.model.meshes[0].normals);
                             malla.setIndices(file.model.meshes[0].vertIndices);
+                            //malla.setIndices(file.model.meshes[0].face.vertElementIndices);
+                            //console.log(file.model.meshes[0].face.vertElementIndices.concat(file.model.meshes[0].vertIndices))
+                            
+                           /*malla.setVertices(file.vertices);
+                           malla.setCoordtex(file.uvs);
+                           malla.setNormales(file.normals);
+                           malla.setIndices(file.faces);
+                           console.log(file.vertices);
+                           console.log(file.uvs);
+                           console.log(file.normals);
+                           console.log(file.faces);
+                        */
                         }
                         else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
                             //malla = new RTextura(); no deja hacer esto wtf

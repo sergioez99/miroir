@@ -84,7 +84,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
         //Rotacion z
           this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
           this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;            
-          this.rotZ += 3 * this.dMouseX;
+          this.rotZ += 30 * this.dMouseX;
           this.rotZ %= 360;
           
       }
