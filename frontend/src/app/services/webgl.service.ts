@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { GLSLConstants } from '../../assets/GLSLConstants';
-import fragmentShaderSrc from '../../assets/toucan-fragment-shader.glsl';
-import vertexShaderSrc from '../../assets/toucan-vertex-shader.glsl';
+import fragmentShaderSrc from '../motorEngine/shaders/toucan-fragment-shader.glsl';
+import vertexShaderSrc from '../motorEngine/shaders/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
-import { TNode } from '../motorEngine/TNode';
-import { TEntity } from '../motorEngine/TEntity';
-import { RMalla, RTextura } from '../motorEngine/TRecurso';
-import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
-import { Malla } from '../motorEngine/commons';
+import { TRecurso } from '../motorEngine/commons';
 import { TMotorTAG } from '../motorEngine/TMotorTAG';
 
 
@@ -29,27 +25,38 @@ export class WebGLService {
     return this.gl.canvas as Element
   }
   
-
+  //Variables proyección
   private fieldOfView = (45 * Math.PI) / 180; // radianes
   private aspect = 1;
   private zNear = 0.1;
-  private zFar = 3000.0;
+  private zFar = 100;
+
+  //Variables mouseevent proyección
+  private lastX = 0
+  private lastY = 0;
+  private dMouseX = 0
+  private dMouseY = 0;
+  private trackingMouseMotion = false;
+  private rotX = 0
+  private rotY = 0
+  private rotZ = 0
+  private trasX = 0
+  private trasY = 0
+  private trasZ = 0;
+
+  //Matrices
   private projectionMatrix = matrix.mat4.create();
   private modelViewMatrix = matrix.mat4.create();
+
+  //Buffers y shaders
   private buffers: any
+  private buffers2: any
   private programInfo: any
 
   private cubeRotation = 0.0;
 
   //Variables árbol de la escena
   private miMotor;
-  private miNodo;
-  private miLuz;
-  private miCamara;
-  private Mallas;
-  private Textura;
-
-  private then = 0;
 
   constructor() {}
 
@@ -59,7 +66,6 @@ export class WebGLService {
     this.miMotor = new TMotorTAG();
     this.miMotor.crearLuz(null, null, null, null, null, null, null, null, null, null, null);
     this.miMotor.crearCamara(null, null, null, null, null, null, null, null, null, null);
-    this.Textura = new RTextura();
 
     // Iniciacializamos el contexto
     this.renderingContext =
@@ -73,6 +79,8 @@ export class WebGLService {
     this.setWebGLCanvasDimensions(canvas);
 
     this.initialiseWebGLCanvas();
+
+    
 
     // Inicializamos los shaders
     let shaderProgram = this.initializeShaders();
@@ -102,31 +110,22 @@ export class WebGLService {
       },
     };
     // Inicializamos los buffers con lo que queremos dibujar
-    await this.initialiseBuffers().then(buffers => {this.buffers = buffers; console.log(buffers)});
-    console.log(this.buffers);
+    await this.initialiseBuffers("avatar2.json").then(buffers => {this.buffers = buffers; });
 
-    const texture = this.loadTexture();
-    console.log(texture);
+    await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
 
-    // Tell WebGL we want to affect texture unit 0
-    this.gl.activeTexture(this.gl.TEXTURE0);
-
-    // Bind the texture to texture unit 0
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-
+    
     this.gl.useProgram(this.programInfo.program);
 
-    // Tell the shader we bound the texture to texture unit 0
-    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
-
-    // Prepramos la escena para dibujar el contenido
-    this.prepareScene();
+    
 
     return this.gl
   }
 
   initializeShaders(): WebGLProgram {
     let shaderProgram = this.gl.createProgram();
+
+    console.log(fragmentShaderSrc);
 
     const compiledShaders = [];
     let fragmentShader = this.loadShader(
@@ -174,19 +173,33 @@ export class WebGLService {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
+    //Preparamos la animación de rotación
+    //transformaciones
+    matrix.mat4.translate(this.modelViewMatrix,    
+      this.modelViewMatrix,    
+      [0.0, -2.5, -5.0]); 
+    matrix.mat4.rotateY(this.modelViewMatrix, 
+      this.modelViewMatrix,  
+      this.rotY);
+    
+    
+     
     //Cámara 
     var numFs = 5;
     var radius = 200;
+    var angulo;
     
     // Compute a matrix for the camera
     var cameraMatrix = matrix.mat4.create();
-    matrix.mat4.rotateY(cameraMatrix, cameraMatrix, this.fieldOfView); //pongo field of view pq son radianes
-    matrix.mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
+    //console.log(cameraMatrix);
 
     var cameraTarget = matrix.vec3.create();
-    cameraTarget = [0, -100, 0];
+    //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
+    cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
+    cameraTarget = [0,0,0];
     var cameraPosition = matrix.vec3.create();
-    cameraPosition = [500, 300, 500];
+    //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
+    cameraPosition = [0, 0, -10];
     var up = matrix.vec3.create();
     up = [0, 1, 0];
 
@@ -197,28 +210,26 @@ export class WebGLService {
     matrix.mat4.invert(viewMatrix, cameraMatrix);
     var viewProjectionMatrix = matrix.mat4.create();
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
-
-   
-
-
-    //Preparamos la animación de rotación
-    //transformaciones
-    matrix.mat4.translate(this.modelViewMatrix,    
-      this.modelViewMatrix,    
-      [0.0, 0.0, -5.0]); 
-    /*matrix.mat4.rotate(this.modelViewMatrix,  
-      this.modelViewMatrix,  
-      this.cubeRotation,    
-      [0, 0, 1]);      */
-    matrix.mat4.rotate(this.modelViewMatrix, 
-      this.modelViewMatrix,  
-      this.cubeRotation * .7,
-      [0, 1, 0]);   
+    
+        
 
       
     const normalMatrix = matrix.mat4.create();
     matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
     matrix.mat4.transpose(normalMatrix, normalMatrix);
+
+    var texture = this.loadTexture(0); //aqui fichero dentro
+
+    // Tell WebGL we want to affect texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE0);
+
+    // Bind the texture to texture unit 0
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    
+
+    // Tell the shader we bound the texture to texture unit 0
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
     this.bindVertexPosition(this.programInfo, this.buffers);
 
@@ -234,9 +245,10 @@ export class WebGLService {
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.projectionMatrix,
       false,
-      this.projectionMatrix
+      //projectionMatrix
+      viewProjectionMatrix
     );
-    
+
     this.gl.uniformMatrix4fv(
       this.programInfo.uniformLocations.modelViewMatrix,
       false,
@@ -247,13 +259,51 @@ export class WebGLService {
       false,
       normalMatrix);
 
-    /*
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.viewProjectionMatrix,
-      false,
-      viewProjectionMatrix);
-    */
+ 
     this.cubeRotation = this.cubeRotation + 0.01;
+
+    // Dibujar camiseta
+    var vertexCount = 69855;
+    const type = this.gl.UNSIGNED_SHORT;
+    const offset = 0;
+    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+    //
+    //
+    //
+    //
+
+    /*var texture = this.loadTexture(2);
+
+    // Tell WebGL we want to affect texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE1);
+
+    // Bind the texture to texture unit 0
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    // Tell the shader we bound the texture to texture unit 0
+    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+
+    this.bindVertexPosition(this.programInfo, this.buffers2);
+
+    this.bindVertexTextures(this.programInfo, this.buffers2);
+
+    this.bindVertexNormal(this.programInfo, this.buffers2);
+
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+
+    matrix.mat4.translate(this.modelViewMatrix,    
+      this.modelViewMatrix,    
+      [2.0, 0.0, 0.0]); 
+    matrix.mat4.rotate(this.modelViewMatrix, 
+      this.modelViewMatrix,  
+      -5,
+      [1, 0, 0]);
+    
+    // Dibujar pantalon
+    vertexCount = 1567;
+    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+    */
+
   }
 
   resizeWebGLCanvas() {
@@ -266,17 +316,22 @@ export class WebGLService {
   }
 
   setWebGLCanvasDimensions(canvas: HTMLCanvasElement) {
-    /*this.gl.canvas.width = canvas.clientWidth;
-    this.gl.canvas.height = canvas.clientHeight;
-    */
-    
-    
     this.gl.canvas.width = window.outerWidth;
     this.gl.canvas.height = window.outerHeight;
     
   }
 
-  updateViewport() {
+  updateMouseevent(rotZ) {
+    
+    //this.trasX = rotZ;
+    //this.trasY = rotZ;
+    this.rotY = rotZ;
+    //this.rotY = rotZ * Math.PI / 180;
+
+  }
+
+  updateViewport(){
+    //Update del viewport para que se vea bien lol
     if (this.gl) {
       this.gl.viewport(
         0,
@@ -285,7 +340,8 @@ export class WebGLService {
         this.gl.drawingBufferHeight
       );
       this.initialiseWebGLCanvas();
-    } else {
+    } 
+    else {
       alert(
         'Error! WebGL has not been initialised! Ignoring updateViewport() call...'
       );
@@ -293,7 +349,6 @@ export class WebGLService {
   }
 
   updateWebGLCanvas() {
-    this.initialiseWebGLCanvas();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     this.aspect = this.clientCanvas.clientWidth / this.clientCanvas.clientHeight;
@@ -305,29 +360,21 @@ export class WebGLService {
       this.zNear,
       this.zFar
     );
+    this.modelViewMatrix = matrix.mat4.create();
 
-    this.setModelViewAsIdentity();
+    //Transformaciones de la projection matrix para mover con el ratón
+    /*matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [this.trasX, 0, 0]);
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, this.trasY, 0]);
+    matrix.mat4.translate(this.projectionMatrix, this.projectionMatrix, [0, 0, this.rotY]);
+    matrix.mat4.rotateX(this.projectionMatrix, this.projectionMatrix, this.rotX);
+    matrix.mat4.rotateY(this.projectionMatrix, this.projectionMatrix, this.rotY);
+    matrix.mat4.rotateZ(this.projectionMatrix, this.projectionMatrix, this.rotZ);
+    */
+    
+    
+    
   }
 
-  /*
-  private bindVertexColor(programInfo: any, buffers: any) {
-    const bufferSize = 4;
-    const type = this.gl.FLOAT;
-    const normalize = false;
-    const stride = 0;
-    const offset = 0;
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.color);
-    this.gl.vertexAttribPointer(
-      programInfo.attribLocations.vertexColor,
-      bufferSize,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-    this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-  }
-  */
 
   private bindVertexTextures(programInfo: any, buffers: any) {
     const num = 2; // every coordinate composed of 2 values
@@ -403,8 +450,8 @@ export class WebGLService {
 
   
   
-  async initialiseBuffers() {
-    var malla = await this.miMotor.crearModelo(null, null, null, null, "camisa2.json"); 
+  async initialiseBuffers(fichero) {
+    var malla = await this.miMotor.crearModelo(null, null, null, null, fichero); 
     malla = malla.getEntidad().getMalla();
     console.log(this.miMotor);
     const positionBuffer = this.gl.createBuffer();
@@ -417,25 +464,13 @@ export class WebGLService {
       this.gl.STATIC_DRAW
     );
 
+
     const indexBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
         new Uint16Array(malla.getIndices()), this.gl.STATIC_DRAW);
 
-    /*var colors = [];
-  
-    for (var j = 0; j < mallas[0].getCoordtex().length; ++j) {
-      const c = mallas[0].getCoordtex()[j];
-  
-      // Repeat each color four times for the four vertices of the face
-      colors = colors.concat(c, c, c, c);
-    }
-  
-    const colorBuffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
-    */
     const textureCoordBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
 
@@ -481,10 +516,7 @@ export class WebGLService {
     return (value & (value - 1)) == 0;
   }
 
-  private setModelViewAsIdentity() {
-    this.modelViewMatrix = matrix.mat4.create();
-  }
-  private loadTexture() {
+  private loadTexture(num) {
     const texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
@@ -495,15 +527,17 @@ export class WebGLService {
     const border = 0;
     const srcFormat = this.gl.RGBA;
     const srcType = this.gl.UNSIGNED_BYTE;
-    const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    if(num == 2)
+      var pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    else
+      var pixel = new Uint8Array([0, 126, 126, 255]);
     this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
                   width, height, border, srcFormat, srcType,
                   pixel);
                   
 
-    /*const mallas = this.Mallas.getMallas2();
-    var image = mallas[1].getTexturas();
-    console.log(image)
+    /*var malla = await this.miMotor.crearModelo(null, null, null, null, fichero); 
+    
     image.onload = () => {
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
@@ -521,14 +555,8 @@ export class WebGLService {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
       }
-      
-      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
-      this.gl.generateMipmap(this.gl.TEXTURE_2D);
-      
-    };*/
+    };
+    */
     
 
     return texture;

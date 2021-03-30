@@ -590,11 +590,6 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
 
 
 
-
-
-
-
-
 const obtenerTotalUsuarios = async(req, res = response) => {
 
     salirSiUsuarioNoAdmin(req.header('x-token'));

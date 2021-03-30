@@ -1,4 +1,5 @@
-import { RMalla } from "./TRecurso";
+import { RMalla, RShader, RTextura } from "./TRecurso";
+import { environment } from '../../environments/environment';
 
 class TEntity {
 
@@ -14,6 +15,7 @@ class TEntity {
 class TRecurso {
 
     private nombre: string;
+    
     
 
     constructor() {
@@ -37,47 +39,46 @@ class TRecurso {
     }
 
     async cargarFichero(fichero){
-        var file, malla;
-        malla = new Malla();
+        var malla;
+        var url = environment.base_url;
 
         return new Promise( (resolve, reject) =>{
 
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function() {
-                if (req.readyState === 4) {
-                    file = req.response;
-
-                    var splitted = fichero.split(".", 2);
-                    
-                    if(splitted[1] == "json"){
-                        file = JSON.parse(file);
-                        malla.setVertices(file.model.meshes[0].verts);
-                        console.log(file);
-                        malla.setCoordtex(file.model.meshes[0].uvs);
-                        malla.setNormales(file.model.meshes[0].normals);
-                        malla.setIndices(file.model.meshes[0].vertIndices);
-                        /*
-                        //Para el cubo
-                        malla.setVertices(file.positions);
-                        malla.setCoordtex(file.textureCoordinates);
-                        malla.setNormales(file.vertexNormals);
-                        malla.setIndices(file.index);*/
-
-                    }
-                    else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
-                        var imagen = new Image();
-                        imagen.src = "http://localhost:4200/assets/"+fichero;
-                        malla.setTexturas(imagen);
-                    }
-                    resolve(malla);
-                }
-            }
-            req.open('GET', "http://localhost:4200/assets/"+fichero);
-            req.send();
-            console.log('terminar cargarFicheros');
-        });
-    
-    }
+            fetch("http://localhost:4200/assets/"+fichero).then(response =>{
+                    var splitted = response.url.split(".", 2);
+                    response.json().then(file =>{ 
+                        if(splitted[1] == "json"){
+                            malla = new Malla();
+                            malla.setVertices(file.model.meshes[0].verts);
+                            malla.setCoordtex(file.model.meshes[0].uvs[0]);
+                            malla.setNormales(file.model.meshes[0].normals);
+                            malla.setIndices(file.model.meshes[0].vertIndices);
+                            //malla.setIndices(file.model.meshes[0].face.vertElementIndices);
+                            //console.log(file.model.meshes[0].face.vertElementIndices.concat(file.model.meshes[0].vertIndices))
+                            
+                           /*malla.setVertices(file.vertices);
+                           malla.setCoordtex(file.uvs);
+                           malla.setNormales(file.normals);
+                           malla.setIndices(file.faces);
+                           console.log(file.vertices);
+                           console.log(file.uvs);
+                           console.log(file.normals);
+                           console.log(file.faces);
+                        */
+                        }
+                        else if (splitted[1] == "png" || splitted[1] == "jpg" || splitted[1] == "jpeg" || splitted[1] == "bmp"){
+                            //malla = new RTextura(); no deja hacer esto wtf
+                            var imagen = new Image();
+                            imagen.src = "http://localhost:4200/assets/"+fichero;
+                            //malla.setTexturas(imagen);
+                            malla = imagen;
+                        }
+                        resolve(malla);
+                        console.log('terminar cargarFicheros');
+                })
+            })
+        })
+    };
 }
 
 class Malla {

@@ -5,18 +5,24 @@ export class gestorRecursos {
     private recursos: TRecurso[];
 
     constructor(){
+        this.recursos = []
     }
 
-    getRecurso(nombre) {
+    async getRecurso(nombre) {
         let miRecurso;
+        let encontrado = false;
 
-        for(let i in this.recursos)
-            if(this.recursos[i].getNombre === nombre)
-                miRecurso = this.recursos[i];
+        for(let i = 0; i < this.recursos.length && !encontrado; i++)
+            if(this.recursos[i].getNombre === nombre){
+                miRecurso = this.recursos[i];                 
+                encontrado = true;             
+            }
         
-        if(miRecurso == null) {
+        if(!encontrado) {
             miRecurso = new TRecurso();
-            miRecurso.cargarFichero(nombre);
+            await miRecurso.cargarFichero(nombre).then( (res)=>{
+                miRecurso=<TRecurso>res;
+            })
             this.recursos.push(miRecurso);
         }
 

@@ -1,9 +1,9 @@
 <h1> Cuadros de mandos </h1>
-<div class ="container">
+<div class="container">
     <div class='div-canvas'>
         <h2>Registros por día</h2>
         <canvas id="chartFechaAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
-        
+
         <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargarChartFechasAlta();">
 
             <mat-form-field appearance="fill">
@@ -21,23 +21,23 @@
             </div>
 
         </form>
-        
+
     </div>
-        
+
 
     <div class='div-canvas arriba'>
         <h2>Horas de registro</h2>
         <canvas id="chartHoraAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
-        
+
     </div>
 
-    <div class ="div-canvas2">
+    <div class="div-canvas2">
         <h2>Total de registrados</h2>
-        <div class ="container3">
+        <div class="container3">
             <p>Total usuarios: {{totalUsuarios}}</p>
-    
+
             <p>Total clientes: {{totalClientes}}</p>
-    
+
             <p>Total prendas: {{totalPrendas}}</p>
         </div>
     </div>
