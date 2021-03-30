@@ -7,6 +7,7 @@ const DatoKPI = require('../models/datosGenericos.model');
 const fechaAlta = require('../models/fechaAlta.model');
 const horaAlta = require('../models/horaAlta.model');
 const prendasUsadas = require('../models/prendasUsadas.model');
+const tallasUsadas = require('../models/tallasUsadas.model');
 const { infoToken } = require('../helpers/infotoken');
 
 // PARA BORRAR PORQUE DE MOMENTO NO SE USA
@@ -492,8 +493,6 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
     try {
         const busqueda = await prendasUsadas.find();
         const prendasClientes = await Prenda.find(); //aqui 
-
-        console.log(prendasClientes);
         
         let prendas = [], veces = [];
         let nPrenda = [], nomPrenda = [];
@@ -521,6 +520,64 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 
     } catch (error) {
         console.log('error recuperando la info de los usos de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
+const obtenerTallasPrendasCliente = async(req, res = response) => {
+    
+    let id = req.header('id');
+    console.log("charts controller");
+
+    try {
+        const busqueda = await tallasUsadas.find(); //id, talla, usos
+        const prendasClientes = await Prenda.find(); //aqui 
+        console.log(busqueda);
+
+        let existe = false;
+        
+        let prendas = [], veces = [], tallas = [];
+        let nPrenda = [], nomPrenda = [];
+
+        for (let x = 0; x < prendasClientes.length; x++) {
+            if(prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
+                prendas[x] = busqueda[x].idPrenda //añado el id de la prenda a prendas
+                
+                for (let i = 0; i < tallas.length && !existe; i++) {
+                    if(tallas[i] == busqueda[x].talla) {
+                        existe = true;
+                        veces[i] = veces[i] + busqueda[x].usos;
+                    }  
+                }
+                if(!existe) {
+                    tallas.push(busqueda[x].talla);
+                    veces.push(busqueda[x].usos);
+                }
+                else
+                    existe = false;
+
+                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(nPrenda[x].nombre);
+            }
+
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'tallas usadas',
+            talla: tallas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de las tallas de las prendas');
         return res.status(400).json({
             ok: false,
             msg: 'error recuperando la información',
@@ -722,6 +779,7 @@ module.exports = {
     obtenerUsuariosClientesHora,
     obtenerUsosPrendas,
     obtenerUsosPrendasCliente,
+    obtenerTallasPrendasCliente,
 
     // funciones para modificar datos KPI en el backend
     insertarfechahoraUsuarioCliente,

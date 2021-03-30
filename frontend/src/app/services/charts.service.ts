@@ -121,4 +121,20 @@ export class ChartService{
     });
   }
 
+  getUsosTallasCliente(){
+
+    return new Promise ( (resolve, reject) => {
+      console.log("chart service hola")
+      this.apiService.getUsosTallasCliente(this.usuarioService.getID()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
 }

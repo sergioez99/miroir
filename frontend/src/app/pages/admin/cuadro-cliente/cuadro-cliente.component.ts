@@ -21,6 +21,12 @@ export class CuadroClienteComponent implements OnInit {
   public canvas02;
   public chart02:Chart;
 
+  public canvas03;
+  public chart03:Chart;
+
+  public canvas04;
+  public chart04:Chart;
+
   constructor(private usuarioService :UsuarioService, private chartServices :ChartService) {
     this.uid = this.usuarioService.getID();
 
@@ -35,6 +41,12 @@ export class CuadroClienteComponent implements OnInit {
 
     this.canvas02 = <HTMLCanvasElement> document.querySelector('#chartPrendasUsadas2');
     this.cargarChartUsos2();
+
+    this.canvas03 = <HTMLCanvasElement> document.querySelector('#chartTallasUsadas');
+    this.cargarChartTallas();
+
+    this.canvas04 = <HTMLCanvasElement> document.querySelector('#chartTallasUsadas2');
+    this.cargarChartTallas2();
   }
 
   cargarChartUsos(){
@@ -71,7 +83,6 @@ export class CuadroClienteComponent implements OnInit {
       let usosM = [];
       let nombresM = [];
 
-      let top = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       for(let a = 0; a < prendas.length && a < 5; a++) {
         prendasM.push(prendas[a]);
         usosM.push(usos[a]);
@@ -104,7 +115,6 @@ export class CuadroClienteComponent implements OnInit {
     }).catch(error=>{
       console.log(error);
     });
-  
   }
 
   cargarChartUsos2(){
@@ -141,7 +151,6 @@ export class CuadroClienteComponent implements OnInit {
       let usosM = [];
       let nombresM = [];
 
-      let top = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       for(let a = 0; a < prendas.length && a < 5; a++) {
         prendasM.push(prendas[a]);
         usosM.push(usos[a]);
@@ -154,8 +163,8 @@ export class CuadroClienteComponent implements OnInit {
             datasets: [{
             label: 'Número de usos',
             data: usosM,
-            backgroundColor: "rgba(251, 155, 2, 0.3)",
-            borderColor:"rgb(251, 155, 2)",
+            backgroundColor: "rgba(179, 136, 255, 0.3)",
+            borderColor:"rgb(179, 136, 255)",
             borderWidth:2
   
           }]
@@ -177,4 +186,145 @@ export class CuadroClienteComponent implements OnInit {
   
   }
 
+
+
+cargarChartTallas(){
+  console.log("empieza cargar tallas");
+  // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
+  if (this.chart03){
+    this.chart03.destroy();
+  }
+  this.chartServices.getUsosTallasCliente().then((res)=>{
+
+    let tallas = res['talla'];
+    let usos = res['usos'];
+    let nombres = res['nombres'];
+    let aux, aux1, aux2;
+
+    for (let i = 0; i < usos.length-1; i++){
+      for (let j = i+1; j < usos.length; j++){
+        if(usos[j] > usos[i]) {
+          aux = usos[i];
+          aux1 = tallas[i];
+          aux2 = nombres[i];
+          usos[i] = usos[j];
+          tallas[i] = tallas[j];
+          nombres[i] = nombres [j];
+          usos[j] = aux; 
+          tallas[j] = aux1; 
+          nombres[j] = aux2; 
+        }
+      }
+    }
+    console.log(nombres)
+
+    let prendasM = [];
+    let usosM = [];
+    let nombresM = [];
+
+    for(let a = 0; a < tallas.length && a < 5; a++) {
+      prendasM.push(tallas[a]);
+      usosM.push(usos[a]);
+      nombresM.push(nombres[a]);
+    }
+    this.chart03 = new Chart(this.canvas03, {
+      type: "bar",
+      data: {
+          labels:  tallas, //eje x
+          datasets: [{
+          label: 'Número de usos',
+          data: usosM,
+          backgroundColor: "rgba(179, 136, 255, 0.3)",
+          borderColor:"rgb(179, 136, 255)",
+          borderWidth:2
+
+        }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      suggestedMin: 0,
+                      suggestedMax: 10,
+                  }
+              }]
+          }
+      }
+    });
+  }).catch(error=>{
+    console.log(error);
+  });
+
 }
+
+cargarChartTallas2(){
+  console.log("empieza cargar tallas");
+  // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
+  if (this.chart04){
+    this.chart04.destroy();
+  }
+  this.chartServices.getUsosTallasCliente().then( (res)=>{
+
+    let tallas = res['talla'];
+    let usos = res['usos'];
+    let nombres = res['nombres'];
+    let aux, aux1, aux2;
+
+    for (let i = 0; i < usos.length-1; i++){
+      for (let j = i+1; j < usos.length; j++){
+        if(usos[j] < usos[i]) {
+          aux = usos[i];
+          aux1 = tallas[i];
+          aux2 = nombres[i];
+          usos[i] = usos[j];
+          tallas[i] = tallas[j];
+          nombres[i] = nombres [j];
+          usos[j] = aux; 
+          tallas[j] = aux1; 
+          nombres[j] = aux2; 
+        }
+      }
+    }
+    console.log(nombres)
+
+    let prendasM = [];
+    let usosM = [];
+    let nombresM = [];
+
+    for(let a = 0; a < tallas.length && a < 5; a++) {
+      prendasM.push(tallas[a]);
+      usosM.push(usos[a]);
+      nombresM.push(nombres[a]);
+    }
+    this.chart04 = new Chart(this.canvas04, {
+      type: "bar",
+      data: {
+          labels:  tallas, //eje x
+          datasets: [{
+          label: 'Número de usos',
+          data: usosM,
+          backgroundColor: "rgba(251, 155, 2, 0.3)",
+          borderColor:"rgb(251, 155, 2)",
+          borderWidth:2
+
+        }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      suggestedMin: 0,
+                      suggestedMax: 10,
+                  }
+              }]
+          }
+      }
+    });
+  }).catch(error=>{
+    console.log(error);
+  });
+
+}
+
+}
+
