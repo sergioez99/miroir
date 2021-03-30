@@ -180,11 +180,8 @@ private malla: Malla;
   }
   
 
-  async cargarModelo (fichero) {
-    var nuevo = new TRecurso();
-    await nuevo.cargarFichero(fichero).then( (res)=>{
-        this.malla=<Malla>res;
-    })
+  setMalla(malla){
+    this.malla = malla;
   }
 
   getMalla(){

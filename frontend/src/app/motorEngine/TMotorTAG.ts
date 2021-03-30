@@ -1,6 +1,6 @@
 import { TNode } from "./TNode";
 import { gestorRecursos } from "./gestorRecursos";
-import { mat4, vec3 } from "gl-matrix";
+import * as matrix from 'gl-matrix';
 import { ECamera, ELight, EModel } from "./TEntity";
 import { TEntity } from "./commons";
 
@@ -23,7 +23,7 @@ export class TMotorTAG {
         this.gestorRecursos = new gestorRecursos();
     }
 
-    crearNodo(padre:TNode, trasl:vec3, rot:vec3, esc:vec3) {
+    crearNodo(padre:TNode, trasl:matrix.vec3, rot:matrix.vec3, esc:matrix.vec3) {
         if(padre == null)
             padre = this.raiz;
 
@@ -33,7 +33,7 @@ export class TMotorTAG {
 
         return nuevo;
     }
-    crearCamara(padre:TNode, trasl:vec3, rot:vec3, esc:vec3, esPerspectiva, cercano, lejano, derecha, izquierda, superior, inferior) {
+    crearCamara(padre:TNode, trasl:matrix.vec3, rot:matrix.vec3, esc:matrix.vec3, esPerspectiva, cercano, lejano, derecha, izquierda, superior, inferior) {
         if(padre == null)
             padre = this.raiz;
         var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
@@ -46,7 +46,7 @@ export class TMotorTAG {
 
         return nuevo;
     }
-    crearLuz(padre:TNode, trasl:vec3, rot:vec3, esc:vec3, tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat) {
+    crearLuz(padre:TNode, trasl:matrix.vec3, rot:matrix.vec3, esc:matrix.vec3, tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat) {
         if(padre == null)
             padre = this.raiz;
         var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
@@ -60,16 +60,18 @@ export class TMotorTAG {
         return nuevo;
 
     }
-    async crearModelo(padre:TNode, trasl:vec3, rot:vec3, esc:vec3, fichero) {
+    async crearModelo(padre:TNode, trasl:matrix.vec3, rot:matrix.vec3, esc:matrix.vec3, fichero, textura) {
         if(padre == null)
             padre = this.raiz;
         var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
+        var malla = await this.gestorRecursos.getRecurso(fichero);
+
         //hay que ver si me pasan un fichero y creo aqui la malla o me pasan una malla directamente
         var entidad = new EModel();
-         await entidad.cargarModelo(fichero);
+        entidad.setMalla(malla);
         
 
         nuevo.setentidad(entidad);
@@ -78,19 +80,19 @@ export class TMotorTAG {
     }
 
     dibujarEscena(){
-        var matrizId:mat4 =[1, 0, 0, 0,
-                            0, 1, 0, 0,
-                            0, 0, 1, 0, 
-                            0, 0, 0, 1]; //matriz identidad.
+        var matrizId = matrix.mat4.create();
 
         for (var i = 0; i < this.registroLuces.length; i++) {
             if(this.lucesActivas[i] == true){
                 var matrizLuz = this.registroLuces[i].getTransformMatrix();
-                //pasarle la matrizLuz a GL?
-            }
-                
+                //Decirle a gl que use las luces (buscar)
+            }  
         }
-            //me he perdido
+        var cameraMatrix = this.registroCamaras[this.camaraActiva].getTransformMatrix();
+        var viewMatrix = matrix.mat4.create();
+        matrix.mat4.invert(viewMatrix, cameraMatrix);
+        //Pasarle la matriz a gl (set el uniform de la matriz aquí)
+        //Dudassss de como hacer el viewport
     }
 
     registrarCamara(cam:TNode){
