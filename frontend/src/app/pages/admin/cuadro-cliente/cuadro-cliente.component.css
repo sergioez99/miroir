@@ -44,7 +44,7 @@ h2 {
   .div-canvas{
     padding: 10px;
     display:grid;
-    grid-template-rows: 70px 420px 110px;
+    grid-template-rows: 70px 420px;
     align-items:center;
     
     margin: 10px 15px;
@@ -68,7 +68,7 @@ h2 {
     .div-canvas{
         padding: 10px;
         display:grid;
-        grid-template-rows: 40px 220px 90px;
+        grid-template-rows: 40px 220px;
         align-items:center;
         
         margin: 10px 15px;
