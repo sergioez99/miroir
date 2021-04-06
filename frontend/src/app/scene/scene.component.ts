@@ -22,6 +22,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
   private rotX = 0; rotY = 0; rotZ = 0;
   private lastX = 0; lastY = 0; trackingMouseMotion = false; dMouseX = 0; dMouseY = 0; rollCamera = true;
   private trasX = 0; trasY = 0; trasZ = 0;
+  private scale = 1; // zoom
 
   constructor(private router :Router,
     private route: ActivatedRoute,
@@ -34,7 +35,6 @@ export class SceneComponent implements OnInit, AfterViewInit {
         return;
       }
       await this.webglService.initialiseWebGLContext(this.canvas.nativeElement).then(gl => this.gl = gl);
-      // Set up to draw the scene periodically.
       const drawSceneInterval = interval(this._60fpsInterval);
       drawSceneInterval.subscribe(() => {
         this.drawScene();
@@ -50,10 +50,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
    
 
    drawScene() {
-      // Eventos de ratón aquí por el elemento canvas html
-      // If a mouse button is pressed, save the current mouse location
-      // and start tracking mouse motion.  
-    
+    // Eventos de ratón aquí por el elemento canvas html
     
     this.canvas.nativeElement.addEventListener('mousedown', e => {
       var x = e.clientX;
@@ -95,8 +92,29 @@ export class SceneComponent implements OnInit, AfterViewInit {
       this.webglService.updateMouseevent(this.rotZ);
       
     })
+
+    this.canvas.nativeElement.addEventListener('wheel', e => {
+      e.preventDefault();
+
+      if(e.deltaY < 0){
+        this.scale = this.scale + 0.001;
+      }
+      else{
+        this.scale = this.scale - 0.001;
+      }
+
+      if(this.scale < 1){
+        this.scale = 1;
+      }
+
+      //this.scale = Math.min(Math.max(.125, this.scale), 4);
      
-      this.webglService.updateViewport()
-      this.webglService.prepareScene();
+      this.webglService.updateZoom(this.scale);
+    }, {
+      passive: false
+    })
+
+      this.webglService.updateViewport();
+      this.webglService.dibujadoTemporal();
     }
 }

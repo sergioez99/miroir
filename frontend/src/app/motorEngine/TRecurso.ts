@@ -35,6 +35,9 @@ export class RTextura extends TRecurso {
       super();
     }
 
+    setImagen(imagen){
+        this.imagenTextura = imagen;
+    }
 
     getImagen(){
         return this.imagenTextura;
