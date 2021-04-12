@@ -33,7 +33,7 @@ export class TMotorTAG {
         return this.gl.canvas as Element
     }
 
-    //Variables proyección
+    //letiables proyección
     private fieldOfView = (45 * Math.PI) / 180; // radianes
     private aspect = 1;
     private zNear = 0.1;
@@ -61,7 +61,7 @@ export class TMotorTAG {
         if (padre == null)
             padre = this.raiz;
 
-        var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
 
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
@@ -72,12 +72,12 @@ export class TMotorTAG {
         if (padre == null)
             padre = this.raiz;
 
-        var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
 
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        var entidad = new ECamera(esPerspectiva, cercano, lejano, derecha, izquierda, superior, inferior);
+        let entidad = new ECamera(esPerspectiva, cercano, lejano, derecha, izquierda, superior, inferior);
 
         nuevo.setentidad(entidad);
 
@@ -86,11 +86,11 @@ export class TMotorTAG {
     crearLuz(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat) {
         if (padre == null)
             padre = this.raiz;
-        var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        var entidad = new ELight(tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat);
+        let entidad = new ELight(tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat);
 
         nuevo.setentidad(entidad);
 
@@ -100,24 +100,22 @@ export class TMotorTAG {
     async crearModelo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, prenda, textura) {
         if (padre == null)
             padre = this.raiz;
-        var nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        var malla = await this.gestorRecursos.getRecurso(prenda);
+        let malla = await this.gestorRecursos.getRecurso(prenda);
 
         //No sé si esto va aquí
-        var text = await this.gestorRecursos.getRecurso(textura);
-        var RText = new RTextura();
-        RText.setImagen(text);
+        let text = await this.gestorRecursos.getRecurso(textura);
         //malla.setTextura(RText);
-        var texture = await this.loadTexture(text);
+        let texture = await this.loadTexture(text);
         console.log(texture);
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
 
-        var entidad = new EModel();
+        let entidad = new EModel();
         entidad.setMalla(malla);
 
         nuevo.setentidad(entidad);
@@ -125,16 +123,16 @@ export class TMotorTAG {
     }
 
     dibujarEscena() {
-        var matrizId = matrix.mat4.create();
+        let matrizId = matrix.mat4.create();
 
-        for (var i = 0; i < this.registroLuces.length; i++) {
+        for (let i = 0; i < this.registroLuces.length; i++) {
             if (this.lucesActivas[i] == true) {
-                var matrizLuz = this.registroLuces[i].getTransformMatrix();
+                let matrizLuz = this.registroLuces[i].getTransformMatrix();
                 //Decirle a gl que use las luces (buscar)
             }
         }
-        var cameraMatrix = this.registroCamaras[this.camaraActiva].getTransformMatrix();
-        var viewMatrix = matrix.mat4.create();
+        let cameraMatrix = this.registroCamaras[this.camaraActiva].getTransformMatrix();
+        let viewMatrix = matrix.mat4.create();
         matrix.mat4.invert(viewMatrix, cameraMatrix);
         //Pasarle la matriz a gl (set el uniform de la matriz aquí)
         //Dudassss de como hacer el viewport
@@ -227,16 +225,16 @@ export class TMotorTAG {
     // --------------------- Iniciar el probador -----------------------
     async iniciarProbador(avatar, texturaAvatar, prenda, textura) {
         //Creamos la cámara y la luz
-        var luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
-        this.registrarLuz(luz);
-        this.setLuzActiva(0, true);
+        //let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
+        //this.registrarLuz(luz);
+        //this.setLuzActiva(0, true);
 
-        var camara = this.crearCamara(null, null, null, null, true, 0.1, 500, null, null, 1, null);
-        this.registrarCamara(camara);
-        this.setCamaraActiva(0);
-        
-        this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-        this.setViewportActivo(0);
+        //let camara = this.crearCamara(null, null, null, null, true, 0.1, 500, null, null, 1, null);
+        //this.registrarCamara(camara);
+        //this.setCamaraActiva(0);
+
+        //this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+        //this.setViewportActivo(0);
 
 
 
@@ -248,12 +246,12 @@ export class TMotorTAG {
 
         //aquí podriamos llamar a los draws
         //this.dibujarEscena();
-        
+
     }
 
     async initialiseBuffers(prenda, textura) {
-        var modelo = await this.crearModelo(null, null, null, null, prenda, textura);
-        var malla = modelo.getEntidad().getMalla();
+        let modelo = await this.crearModelo(null, null, null, null, prenda, textura);
+        let malla = modelo.getEntidad().getMalla();
         const positionBuffer = this.gl.createBuffer();
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
@@ -327,11 +325,11 @@ export class TMotorTAG {
 
 
     // ----------------- Dibujado TEMPORAL ----------------
-    updateMouseevent(rotZ){
+    updateMouseevent(rotZ) {
         this.rotY = rotZ;
     }
 
-    updateZoom(zoom){
+    updateZoom(zoom) {
         this.zoom = zoom;
     }
 
@@ -349,34 +347,34 @@ export class TMotorTAG {
             this.rotY);
         matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
-            [this.zoom,this.zoom,this.zoom]);
+            [this.zoom, this.zoom, this.zoom]);
 
         // Compute a matrix for the camera
-        var cameraMatrix = matrix.mat4.create();
+        let cameraMatrix = matrix.mat4.create();
         //console.log(cameraMatrix);
 
-        var cameraTarget = matrix.vec3.create();
+        let cameraTarget = matrix.vec3.create();
         //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
         cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
         cameraTarget = [0, 0, 0];
-        var cameraPosition = matrix.vec3.create();
+        let cameraPosition = matrix.vec3.create();
         //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
         cameraPosition = [0, 0, -12];
-        var up = matrix.vec3.create();
+        let up = matrix.vec3.create();
         up = [0, 1, 0];
 
         // Compute the camera's matrix using look at.
         matrix.mat4.lookAt(cameraMatrix, cameraPosition, cameraTarget, up);
 
-        var viewMatrix = matrix.mat4.create();
+        let viewMatrix = matrix.mat4.create();
         matrix.mat4.invert(viewMatrix, cameraMatrix);
-        var viewProjectionMatrix = matrix.mat4.create();
+        let viewProjectionMatrix = matrix.mat4.create();
         matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
 
 
 
 
-        var normalMatrix = matrix.mat4.create();
+        let normalMatrix = matrix.mat4.create();
         matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
         matrix.mat4.transpose(normalMatrix, normalMatrix);
 
@@ -411,9 +409,9 @@ export class TMotorTAG {
             normalMatrix);
 
 
-        
+
         // Dibujar camiseta
-        var vertexCount = 10752;
+        let vertexCount = 10752;
         const type = this.gl.UNSIGNED_SHORT;
         const offset = 0;
         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
@@ -422,7 +420,7 @@ export class TMotorTAG {
         //
         //
 
-        /*var texture = this.loadTexture(2);
+        /*let texture = this.loadTexture(2);
     
         // Tell WebGL we want to affect texture unit 0
         this.gl.activeTexture(this.gl.TEXTURE1);
@@ -461,51 +459,46 @@ export class TMotorTAG {
         return (value & (value - 1)) == 0;
     }
 
-    private loadTexture(text) {
+    async loadTexture(image) {
         const texture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
         const level = 0;
         const internalFormat = this.gl.RGBA;
-        const width = 1;
-        const height = 1;
-        const border = 0;
         const srcFormat = this.gl.RGBA;
         const srcType = this.gl.UNSIGNED_BYTE;
-        var pixel = new Uint8Array([0, 126, 126, 255]);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-            width, height, border, srcFormat, srcType,
-            pixel);
-            
 
-        var image = new Image();
-        console.log("fuera del onload")
-        image.onload = () => {
-        console.log("dentro del onload");
-          this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-          this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-                        srcFormat, srcType, image);
-          // WebGL1 has different requirements for power of 2 images
-          // vs non power of 2 images so check if the image is a
-          // power of 2 in both dimensions.
-          if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+        //Textura de color azul
+        /*let pixel = new Uint8Array([0, 126, 126, 255]);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+            1, 1, 0, srcFormat, srcType,
+            pixel);
+            */
+        
+        //let pixels = new Uint8Array(image);
+        //console.log(pixels);
+
+        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+            srcFormat, srcType, image);
+        
+
+        
+        // WebGL1 has different requirements for power of 2 images
+        // vs non power of 2 images so check if the image is a
+        // power of 2 in both dimensions.
+        if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
             // Yes, it's a power of 2. Generate mips.
             this.gl.generateMipmap(this.gl.TEXTURE_2D);
-          } else {
-            // No, it's not a power of 2. Turn off mips and set
+        } else {
+            // No, it's not a power of 2. Turn of mips and set
             // wrapping to clamp to edge
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-          }
-        };
-        image.src = text.src;
-        console.log(image);
+        }
+        return texture;
+    };
 
-       
-        if(image.complete)
-            return texture;
-    }
 
 
     // -----------------  Setters y registros de cámara, viewport y luces -------------

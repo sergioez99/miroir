@@ -17,7 +17,7 @@ export class WebGLService {
 
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    await this.miMotor.iniciarProbador("camisa3.json", "CamisaRoja.jpg", "camiseta1.json", "CamisetaRoja.jpg"); //El segundo modelo no lo pinta
+    await this.miMotor.iniciarProbador("camisa3.json", "Miroir M.png", "camiseta1.json", "CamisetaRoja.jpg"); //El segundo modelo no lo pinta
     return gl;
   }
 

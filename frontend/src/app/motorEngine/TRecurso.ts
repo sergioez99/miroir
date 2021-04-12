@@ -17,9 +17,14 @@ export class RMalla extends TRecurso {
       super();
     }
 
+
     draw() {
         for(let i in this.mallas)
             this.mallas[i].draw();
+    }
+    
+    addMallas(malla){
+        this.mallas.push(malla);
     }
 
     getMallas(){
