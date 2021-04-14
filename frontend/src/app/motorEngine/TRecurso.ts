@@ -1,7 +1,4 @@
 import { TRecurso, Malla } from './commons';
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { promise } from 'protractor';
-import { ApiService } from '../services/api.service';
 
 export class RMalla extends TRecurso {
 
@@ -16,7 +13,6 @@ export class RMalla extends TRecurso {
     constructor() {
       super();
     }
-
 
     draw() {
         for(let i in this.mallas)

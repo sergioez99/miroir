@@ -1,6 +1,3 @@
-import { RMalla, RShader, RTextura } from "./TRecurso";
-import { environment } from '../../environments/environment';
-
 class TEntity {
 
     getEntity() {

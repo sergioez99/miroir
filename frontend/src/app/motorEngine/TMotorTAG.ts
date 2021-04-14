@@ -1,16 +1,14 @@
 import { TNode } from "./TNode";
 import { gestorRecursos } from "./gestorRecursos";
 import { ECamera, ELight, EModel } from "./TEntity";
-import { TEntity } from "./commons";
+
 
 //Imports de GL, motor gráfico y tal
 import { GLSLConstants } from '../../assets/GLSLConstants';
 import fragmentShaderSrc from '../motorEngine/shaders/toucan-fragment-shader.glsl';
 import vertexShaderSrc from '../motorEngine/shaders/toucan-vertex-shader.glsl';
 import * as matrix from 'gl-matrix';
-import { RTextura } from "./TRecurso";
-import { RtlScrollAxisType } from "@angular/cdk/platform";
-import { waitForAsync } from "@angular/core/testing";
+
 
 export class TMotorTAG {
 
@@ -19,7 +17,7 @@ export class TMotorTAG {
 
     private registroCamaras: TNode[];
     private registroLuces: TNode[];
-    private registroViewports: TNode[];
+    private registroViewports: number[][];
     private camaraActiva: number;
     private viewportActivo: number;
     private lucesActivas: boolean[];
@@ -50,18 +48,23 @@ export class TMotorTAG {
 
     private rotY;
     private zoom = 1;
+    private vertexCount;
 
 
     constructor() {
         this.raiz = new TNode(null, null, null, null, null, null, null);
         this.gestorRecursos = new gestorRecursos();
+        this.registroCamaras = [];
+        this.registroLuces = [];
+        this.lucesActivas = [];
+        this.registroViewports = [[]]
     }
 
     crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
         if (padre == null)
             padre = this.raiz;
 
-        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
 
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
@@ -72,7 +75,7 @@ export class TMotorTAG {
         if (padre == null)
             padre = this.raiz;
 
-        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
 
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
@@ -86,7 +89,7 @@ export class TMotorTAG {
     crearLuz(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, tipo, intensidad, apertura, atenAngular, atenCte, atenLineal, atenCuadrat) {
         if (padre == null)
             padre = this.raiz;
-        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
@@ -100,17 +103,14 @@ export class TMotorTAG {
     async crearModelo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, prenda, textura) {
         if (padre == null)
             padre = this.raiz;
-        let nuevo = new TNode(null, padre, null, null, trasl, rot, esc);
+        let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
         let malla = await this.gestorRecursos.getRecurso(prenda);
 
-        //No sé si esto va aquí
         let text = await this.gestorRecursos.getRecurso(textura);
-        //malla.setTextura(RText);
         let texture = await this.loadTexture(text);
-        console.log(texture);
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
@@ -123,19 +123,48 @@ export class TMotorTAG {
     }
 
     dibujarEscena() {
-        let matrizId = matrix.mat4.create();
-
         for (let i = 0; i < this.registroLuces.length; i++) {
             if (this.lucesActivas[i] == true) {
                 let matrizLuz = this.registroLuces[i].getTransformMatrix();
                 //Decirle a gl que use las luces (buscar)
             }
         }
+
+        //CÁMARA
+
         let cameraMatrix = this.registroCamaras[this.camaraActiva].getTransformMatrix();
+        let cameraTarget = matrix.vec3.create();
+        //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
+        cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
+        cameraTarget = [0, 0, 0];
+        let cameraPosition = matrix.vec3.create();
+        //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
+        cameraPosition = [0, 0, -12];
+        let up = matrix.vec3.create();
+        up = [0, 1, 0];
+
+        matrix.mat4.lookAt(cameraMatrix, cameraPosition, cameraTarget, up);
+
         let viewMatrix = matrix.mat4.create();
         matrix.mat4.invert(viewMatrix, cameraMatrix);
-        //Pasarle la matriz a gl (set el uniform de la matriz aquí)
-        //Dudassss de como hacer el viewport
+        let viewProjectionMatrix = matrix.mat4.create();
+        matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
+
+        //Le pasamos la info a GL
+        this.gl.uniformMatrix4fv(
+            this.programInfo.uniformLocations.projectionMatrix,
+            false,
+            //this.projectionMatrix
+            viewProjectionMatrix
+        );
+
+
+        // VIEWPORT
+        this.updateViewport();
+
+
+        // DIBUJAR MODELOS
+        this.gestorRecursos.dibujarMallas();
     }
 
     // ---------------- Inicializar el contexto de GL y los shaders ----------------
@@ -187,8 +216,6 @@ export class TMotorTAG {
     initializeShaders(): WebGLProgram {
         let shaderProgram = this.gl.createProgram();
 
-        console.log(fragmentShaderSrc);
-
         const compiledShaders = [];
         let fragmentShader = this.loadShader(
             fragmentShaderSrc,
@@ -224,19 +251,17 @@ export class TMotorTAG {
 
     // --------------------- Iniciar el probador -----------------------
     async iniciarProbador(avatar, texturaAvatar, prenda, textura) {
-        //Creamos la cámara y la luz
-        //let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
-        //this.registrarLuz(luz);
-        //this.setLuzActiva(0, true);
+        //Creamos la cámara, la luz y el viewport del probador
+        let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
+        this.registrarLuz(luz);
+        this.setLuzActiva(0, true);
 
-        //let camara = this.crearCamara(null, null, null, null, true, 0.1, 500, null, null, 1, null);
-        //this.registrarCamara(camara);
-        //this.setCamaraActiva(0);
+        let camara = this.crearCamara(null, null, null, null, true, 0.1, 500, null, null, 1, null);
+        this.registrarCamara(camara);
+        this.setCamaraActiva(0);
 
-        //this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-        //this.setViewportActivo(0);
-
-
+        this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
+        this.setViewportActivo(0);
 
 
         //Cargamos los modelos y sus buffers
@@ -244,9 +269,8 @@ export class TMotorTAG {
         await this.initialiseBuffers(avatar, texturaAvatar).then(buffers => { this.buffers = buffers; });
         //await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
 
-        //aquí podriamos llamar a los draws
-        //this.dibujarEscena();
-
+        //El dibujar iría desde el service (para que se dibuje constantemente)
+        this.dibujarEscena();
     }
 
     async initialiseBuffers(prenda, textura) {
@@ -256,6 +280,7 @@ export class TMotorTAG {
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
+        this.vertexCount = malla.getIndices().length;
 
         this.gl.bufferData(
             this.gl.ARRAY_BUFFER,
@@ -351,7 +376,6 @@ export class TMotorTAG {
 
         // Compute a matrix for the camera
         let cameraMatrix = matrix.mat4.create();
-        //console.log(cameraMatrix);
 
         let cameraTarget = matrix.vec3.create();
         //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
@@ -411,10 +435,9 @@ export class TMotorTAG {
 
 
         // Dibujar camiseta
-        let vertexCount = 10752;
         const type = this.gl.UNSIGNED_SHORT;
         const offset = 0;
-        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+        this.gl.drawElements(this.gl.TRIANGLES, this.vertexCount, type, offset);
         //
         //
         //
@@ -476,25 +499,20 @@ export class TMotorTAG {
             */
         
         //let pixels = new Uint8Array(image);
-        //console.log(pixels);
+
+        //let pixels = new Uint8Array(image);
 
         this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
             srcFormat, srcType, image);
-        
 
         
-        // WebGL1 has different requirements for power of 2 images
-        // vs non power of 2 images so check if the image is a
-        // power of 2 in both dimensions.
         if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
-            // Yes, it's a power of 2. Generate mips.
             this.gl.generateMipmap(this.gl.TEXTURE_2D);
         } else {
-            // No, it's not a power of 2. Turn of mips and set
-            // wrapping to clamp to edge
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR);
         }
         return texture;
     };
@@ -516,9 +534,13 @@ export class TMotorTAG {
         this.lucesActivas[nLuz] = activa;
     }
 
-    registrarViewport(x: number, y: number, alto: number, ancho: number) {
-        //esto no lo entiendo
+    registrarViewport(x: number, y: number, alto: number, ancho: number, nViewport: number) {
+        this.registroViewports[nViewport].push(x);
+        this.registroViewports[nViewport].push(y);
+        this.registroViewports[nViewport].push(alto);
+        this.registroViewports[nViewport].push(ancho);
     }
+
     setViewportActivo(nViewport: number) {
         this.viewportActivo = nViewport;
     }
@@ -534,12 +556,16 @@ export class TMotorTAG {
     }
 
     updateViewport() {
-        //Update del viewport para que se vea bien lol
         if (this.gl) {
             this.gl.viewport(
+                /*this.registroViewports[this.viewportActivo][0],
+                this.registroViewports[this.viewportActivo][1],
+                this.registroViewports[this.viewportActivo][2],
+                this.registroViewports[this.viewportActivo][3]
+                */
                 0,
                 0,
-                this.gl.drawingBufferWidth,
+                this.gl.drawingBufferWidth, 
                 this.gl.drawingBufferHeight
             );
             this.gl.clearColor(1.0, 1.0, 1.0, 1.0);

@@ -1,21 +1,21 @@
-import { arch } from "node:os";
-import { env } from "node:process";
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
-import { decode } from 'jpeg-js'
 
 export class gestorRecursos {
 
     private recursos: TRecurso[];
+    private tipoRecurso;
+    private recursoMalla: RMalla;
+    private recursoTextura: RTextura;
 
     constructor(){
-        this.recursos = []
+        this.recursos = [];
+        this.recursoMalla = new RMalla();
+        this.recursoTextura = new RTextura();
     }
 
     async getRecurso(nombre) {
         let miRecurso;
-        let recursoMalla = new RMalla()
-        let recursoTextura = new RTextura()
         let encontrado = false;
 
         for(let i = 0; i < this.recursos.length && !encontrado; i++)
@@ -26,15 +26,15 @@ export class gestorRecursos {
         
         if(!encontrado) {
             miRecurso = await this.cargarFichero(nombre);
-            if(typeof(miRecurso) == typeof(Malla)){
-                recursoMalla.addMallas(miRecurso);
-                recursoMalla.setNombre(nombre);
-                this.recursos.push(recursoMalla);
+            if(this.tipoRecurso == 1){
+                this.recursoMalla.addMallas(miRecurso);
+                this.recursoMalla.setNombre(nombre);
+                this.recursos.push(this.recursoMalla);
             }   
             else{
-                recursoTextura.setImagen(miRecurso);
-                recursoTextura.setNombre(nombre);
-                this.recursos.push(recursoTextura);
+                this.recursoTextura.setImagen(miRecurso);
+                this.recursoTextura.setNombre(nombre);
+                this.recursos.push(this.recursoTextura);
             }
         }
 
@@ -63,10 +63,11 @@ export class gestorRecursos {
         let archivo = await this.leerArchivoRed("http://localhost:4200/assets/"+fichero);
         switch (partes[1]) {
             case 'json':
+                this.tipoRecurso = 1;
                 let file = await archivo.json();
                 let malla = new Malla();
                                                         
-                malla.setCoordtex(file.model.meshes[0].uvs);
+                malla.setCoordtex(file.model.meshes[0].uvs[0]);
                 malla.setNormales(file.model.meshes[0].normals);
 
                 var indices = [];
@@ -78,26 +79,31 @@ export class gestorRecursos {
                     indices.push(file.model.meshes[0].verts[pos+2]);
                 }
 
+
                 malla.setIndices(file.model.meshes[0].face.vertElementIndices);
-                console.log(file.model.meshes[0].face.vertElementIndices)
-                console.log(indices);
                 malla.setVertices(indices);
 
                 return malla;
         
             default:
                 // sera una imagen jpg, png...
-                
+                this.tipoRecurso = 2;
+
                 let miblob = await archivo.blob();
                 let contenidoBase64 = await this.contenidoBase64(miblob);
                 var imagen = new Image();
                 imagen.src = String(contenidoBase64);
                 return imagen;
                 
+                
                 /*let array = await archivo.arrayBuffer();
                 console.log(array);
                 return array*/
         }
     };
+
+    dibujarMallas(){
+        this.recursoMalla.draw();
+    }
 }
 
