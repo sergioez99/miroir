@@ -1,5 +1,6 @@
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
+import { environment } from '../../environments/environment.prod';
 
 export class gestorRecursos {
 
@@ -14,23 +15,23 @@ export class gestorRecursos {
         this.recursoTextura = new RTextura();
     }
 
-    async getRecurso(nombre) {
+    async getRecurso(nombre, ticket, tipo) {
         let miRecurso;
         let encontrado = false;
 
         for(let i = 0; i < this.recursos.length && !encontrado; i++)
             if(this.recursos[i].getNombre() === nombre){
-                miRecurso = this.recursos[i];                 
-                encontrado = true;             
+                miRecurso = this.recursos[i];
+                encontrado = true;
             }
-        
+
         if(!encontrado) {
-            miRecurso = await this.cargarFichero(nombre);
+            miRecurso = await this.cargarFichero(nombre, ticket, tipo);
             if(this.tipoRecurso == 1){
                 this.recursoMalla.addMallas(miRecurso);
                 this.recursoMalla.setNombre(nombre);
                 this.recursos.push(this.recursoMalla);
-            }   
+            }
             else{
                 this.recursoTextura.setImagen(miRecurso);
                 this.recursoTextura.setNombre(nombre);
@@ -57,16 +58,27 @@ export class gestorRecursos {
             fr.readAsDataURL(file);
         });
     }
-    async cargarFichero(fichero:string){
+    async cargarFichero(fichero:string, ticket, tipo){
         //let url = env.base_url + +fichero;
         let partes = fichero.split("."); // ["pepe","json"]  ["textura",".jpeg"]
-        let archivo = await this.leerArchivoRed("http://localhost:4200/assets/"+fichero);
+        let archivo;
         switch (partes[1]) {
             case 'json':
+
+                archivo = await this.leerArchivoRed(environment.base_url + '/ticket/modelo/' + tipo + '/' + ticket);
+
+                console.log(archivo);
+                debugger;
+
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
+
+                console.log(file);
                 let malla = new Malla();
-                                                        
+
+
+
+
                 malla.setCoordtex(file.model.meshes[0].uvs[0]);
                 malla.setNormales(file.model.meshes[0].normals);
 
@@ -84,8 +96,10 @@ export class gestorRecursos {
                 malla.setVertices(indices);
 
                 return malla;
-        
+
             default:
+                archivo = await this.leerArchivoRed(environment.base_url + '/ticket/textura/' + fichero + '/' + ticket);
+
                 // sera una imagen jpg, png...
                 this.tipoRecurso = 2;
 
@@ -94,8 +108,8 @@ export class gestorRecursos {
                 var imagen = new Image();
                 imagen.src = String(contenidoBase64);
                 return imagen;
-                
-                
+
+
                 /*let array = await archivo.arrayBuffer();
                 console.log(array);
                 return array*/

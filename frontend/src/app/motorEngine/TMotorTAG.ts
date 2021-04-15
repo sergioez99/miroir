@@ -100,16 +100,27 @@ export class TMotorTAG {
         return nuevo;
 
     }
-    async crearModelo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, prenda, textura) {
+    async crearModelo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3, prenda, textura, ticket, tipo) {
         if (padre == null)
             padre = this.raiz;
         let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        let malla = await this.gestorRecursos.getRecurso(prenda);
+        /*
+          prenda: archivo json que desees
+          ticket: protección
+          tipo: tipo de archivo json (avatar, prenda)
+         */
+        let malla = await this.gestorRecursos.getRecurso(prenda, ticket, tipo);
 
-        let text = await this.gestorRecursos.getRecurso(textura);
+        // TODOS LOS NOMBRES DE ARCHIVO DE TEXTURAS
+
+        /*
+          textura: nombre de archivo de textura
+          ticket:
+        */
+        let text = await this.gestorRecursos.getRecurso(textura, ticket, tipo);
         let texture = await this.loadTexture(text);
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
@@ -182,7 +193,7 @@ export class TMotorTAG {
         this.gl.canvas.width = window.outerWidth;
         this.gl.canvas.height = window.outerHeight
 
-        //Fondo en blanco y propiedades 
+        //Fondo en blanco y propiedades
         this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.depthFunc(this.gl.LEQUAL);
@@ -250,7 +261,7 @@ export class TMotorTAG {
     }
 
     // --------------------- Iniciar el probador -----------------------
-    async iniciarProbador(avatar, texturaAvatar, prenda, textura) {
+    async iniciarProbador(ticket, avatar, texturaAvatar, prenda, textura) {
         //Creamos la cámara, la luz y el viewport del probador
         let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
         this.registrarLuz(luz);
@@ -263,18 +274,18 @@ export class TMotorTAG {
         this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
         this.setViewportActivo(0);
 
-
         //Cargamos los modelos y sus buffers
         //Inicializamos los buffers con lo que queremos dibujar
-        await this.initialiseBuffers(avatar, texturaAvatar).then(buffers => { this.buffers = buffers; });
+        await this.initialiseBuffers(ticket, 'avatar', avatar, texturaAvatar).then(buffers => { this.buffers = buffers; });
         //await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
 
         //El dibujar iría desde el service (para que se dibuje constantemente)
         this.dibujarEscena();
+
     }
 
-    async initialiseBuffers(prenda, textura) {
-        let modelo = await this.crearModelo(null, null, null, null, prenda, textura);
+    async initialiseBuffers(ticket, tipo, prenda, textura) {
+        let modelo = await this.crearModelo(null, null, null, null, prenda, textura, ticket, tipo);
         let malla = modelo.getEntidad().getMalla();
         const positionBuffer = this.gl.createBuffer();
 
@@ -444,32 +455,32 @@ export class TMotorTAG {
         //
 
         /*let texture = this.loadTexture(2);
-    
+
         // Tell WebGL we want to affect texture unit 0
         this.gl.activeTexture(this.gl.TEXTURE1);
-    
+
         // Bind the texture to texture unit 0
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    
+
         // Tell the shader we bound the texture to texture unit 0
         this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
-    
+
         this.bindVertexPosition(this.programInfo, this.buffers2);
-    
+
         this.bindVertexTextures(this.programInfo, this.buffers2);
-    
+
         this.bindVertexNormal(this.programInfo, this.buffers2);
-    
+
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-    
-        matrix.mat4.translate(this.modelViewMatrix,    
-          this.modelViewMatrix,    
-          [2.0, 0.0, 0.0]); 
-        matrix.mat4.rotate(this.modelViewMatrix, 
-          this.modelViewMatrix,  
+
+        matrix.mat4.translate(this.modelViewMatrix,
+          this.modelViewMatrix,
+          [2.0, 0.0, 0.0]);
+        matrix.mat4.rotate(this.modelViewMatrix,
+          this.modelViewMatrix,
           -5,
           [1, 0, 0]);
-        
+
         // Dibujar pantalon
         vertexCount = 1567;
         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
@@ -497,7 +508,7 @@ export class TMotorTAG {
             1, 1, 0, srcFormat, srcType,
             pixel);
             */
-        
+
         //let pixels = new Uint8Array(image);
 
         //let pixels = new Uint8Array(image);
@@ -505,7 +516,7 @@ export class TMotorTAG {
         this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
             srcFormat, srcType, image);
 
-        
+
         if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
             this.gl.generateMipmap(this.gl.TEXTURE_2D);
         } else {
@@ -565,7 +576,7 @@ export class TMotorTAG {
                 */
                 0,
                 0,
-                this.gl.drawingBufferWidth, 
+                this.gl.drawingBufferWidth,
                 this.gl.drawingBufferHeight
             );
             this.gl.clearColor(1.0, 1.0, 1.0, 1.0);

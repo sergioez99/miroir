@@ -606,25 +606,27 @@ const modeloTicket = async(req, res = response) => {
                         // aqui habra que definir las condiciones que diferencian un modelo de otro
 
                         let modelo = 1;
-                        if (imc > 25) {
-                            modelo += 3;
-                        }
-                        if (imc > 18.5) {
+                        if (altura > 170) {
                             modelo += 3;
                         }
                         if (altura > 180) {
-                            modelo += 1;
+                            modelo += 3;
                         }
-                        if (altura > 160) {
+                        if (imc > 20) {
                             modelo += 1;
+                            if (cintura > 80) {
+                                modelo += 1;
+                            }
                         }
 
 
-                        path = `${process.env.PATHUPLOAD}/modelo/avatar/${modelo}.json`;
+                        path = `${process.env.PATHUPLOAD}/modelo/${modelo}.json`;
+                        console.log(path);
+
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/avatar/default.json`;
+                            path = `${process.env.PATHUPLOAD}/modelo/default.json`;
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);
@@ -670,7 +672,7 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${talla}/${aux.modelo}`;
+                                    path = `${process.env.PATHUPLOAD}/modelo/${aux.modelo}`;
                                     break;
                                 }
                             }
@@ -679,7 +681,7 @@ const modeloTicket = async(req, res = response) => {
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/default.json`;
+                            path = `${process.env.PATHUPLOAD}/modelo/default.json`;
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);
@@ -706,15 +708,8 @@ const modeloTicket = async(req, res = response) => {
                         // habrá que buscar el tipo de textura que necesita esta prenda (de momento nanai)
 
                         // const texturaPrenda = '1.jpg';
-                        const texturasPrenda = prendaBD.textura;
-                        let texturaPrenda = null;
+                        const texturaPrenda = prendaBD.textura;
 
-
-                        if (texturasPrenda.length == 1) {
-                            texturaPrenda = texturasPrenda[0];
-                        } else {
-                            // pues no se...
-                        }
 
                         let texturaFinal = null;
 
@@ -1038,6 +1033,8 @@ const texturaTicket = async(req, res = response) => {
 const texturaTicket = async(req, res = response) => {
     console.log('hola');
 }
+
+
 module.exports = {
     obtenerClave,
     cambiarClave,

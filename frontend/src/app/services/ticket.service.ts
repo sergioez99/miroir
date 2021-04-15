@@ -94,7 +94,9 @@ export class TicketService {
 
         console.log('respuesta validar ticket: ', res);
 
+        resolve(res);
 
+/*
         Promise.all([
           this.obtenerArchivoTicket('avatar', ticket),
           this.obtenerArchivoTicket('prenda', ticket),
@@ -111,6 +113,7 @@ export class TicketService {
         }).finally( ()=>{
           resolve({'avatar': this.avatar, 'prenda': this.prenda, 'vertex': this.vertex, 'fragment': this.fragment});
         });
+        */
 
          /*   this.obtenerModeloTicket('avatar', ticket).then(resp => {
 

@@ -112,7 +112,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'scene', component: TicketComponent,
+    path: 'scene',
     children: [
       { path: '', component: SceneComponent },
       { path: '**', redirectTo: ''}
