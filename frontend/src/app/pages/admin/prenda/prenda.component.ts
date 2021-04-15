@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 //para mensajes de alerta
@@ -26,6 +26,12 @@ export class PrendaComponent implements OnInit {
 
   uid;
 
+  // lista de las posibles texturas
+  texturasList: string[] = ['diffuse', 'normal', 'height', 'roughness', 'AO'];
+  // nombre de las diferentes grupos de texturas (textura0, textura1, ...)
+  texturas :string[];
+  // dentro de una textura, cuales se van a subir (diffuse, normal, ...)
+  texturasSeleccionadas: string[][];
 
   archivoASubir: Array<File>;
 
@@ -38,6 +44,11 @@ export class PrendaComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.texturas = [];
+    this.texturasSeleccionadas = [];
+    this.texturasSeleccionadas[0] = [];
+
     this.uid = this.route.snapshot.params['uid'];
 
     console.log('uid undefined???: ', this.uid);
@@ -113,6 +124,8 @@ export class PrendaComponent implements OnInit {
     }
 
   }
+
+
 
   enviar() {
 
@@ -315,6 +328,18 @@ export class PrendaComponent implements OnInit {
 
     console.log(this.archivoASubir);
 
+  }
+
+  pruebas() {
+    console.log('seleccionados: ', this.seleccionados);
+    console.log('texturas seleccionadas: ',this.texturasSeleccionadas);
+    console.log('texturas que ya ni recuerdo que guarda',this.texturas);
+    this.formPrenda.addControl(`textura${this.texturas.length}`, this.fb.control(null, Validators.required));
+    this.texturas.push(`textura${this.texturas.length}`);
+
+    console.log(this.texturasSeleccionadas);
+
+    console.log(this.formPrenda);
   }
 
 }

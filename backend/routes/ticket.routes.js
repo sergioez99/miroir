@@ -42,6 +42,6 @@ router.get('/obtener/', [
 
 router.get('/validar/:ticket', [], validacionTicket);
 router.get('/modelo/:tipo/:ticket', [], modeloTicket);
-router.get('/textura/:clase/:numero/:tipo/:ticket', [], texturaTicket);
+// router.get('/textura/:clase/:numero/:tipo/:ticket', [], texturaTicket);
 
 module.exports = router;

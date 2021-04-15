@@ -72,6 +72,27 @@
 
                 </div>
 
+                <!-- INPUT TEXTURAS-->
+                <div>
+                    <button mat-button type="button" (click)="pruebas()"> Añadir Material </button>
+                    <div *ngFor="let item of texturas; let i = index">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Seleccione la talla</mat-label>
+                            <mat-select formControlName="{{texturas[i]}}" [(ngModel)]="texturasSeleccionadas">
+                                <mat-option *ngFor="let topping of texturasList" [value]="topping">{{topping}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!--INPUT: textura -->
+                        <div *ngFor="let items of texturasSeleccionadas">
+                            Archivo {{items}}:
+
+                        </div>
+
+                    </div>
+
+                </div>
+
 
 
                 <button mat-raised-button color="accent" type="submit" class="boton">Crear Prenda</button>

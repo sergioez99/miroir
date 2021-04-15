@@ -469,9 +469,55 @@ const validacionTicket = async(req, res = response) => {
 
                 await probador.save();
 
+                // conseguir modelo de avatar y modelo de prenda
+
+                // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
+                const altura = usuario.altura;
+                const peso = usuario.peso;
+                const pecho = usuario.pecho;
+                const cintura = usuario.cintura;
+                const cadera = usuario.cadera;
+                const imc = peso / ((altura / 100) * (altura / 100));
+
+                let modelo = 1;
+                if (altura > 170) {
+                    modelo += 3;
+                }
+                if (altura > 180) {
+                    modelo += 3;
+                }
+                if (imc > 20) {
+                    modelo += 1;
+                    if (cintura > 80) {
+                        modelo += 1;
+                    }
+                }
+
+                // aqui ya tenemos el modelo del avatar
+                const avatarFichero = `${modelo}.json`;
+
+                // ahora la prenda, con la talla averiguaremos el modelo que tenemos que devolver
+                let prendaFichero = 'default.json';
+
+                // habrá que buscar el modelo de esta prenda con esta talla
+
+                const modelosPrenda = prenda.modelo;
+
+                if (modelosPrenda) {
+                    for (let i = 0; i < modelosPrenda.length; i++) {
+                        let aux = await ModeloPrenda.findById(modelosPrenda[i]);
+                        if (aux.talla == talla) {
+                            prendaFichero = aux.modelo;
+                            break;
+                        }
+                    }
+                }
+
                 return res.json({
                     ok: true,
-                    msg: 'se ha validado correctamente el ticket'
+                    msg: 'se ha validado correctamente el ticket',
+                    avatar: avatarFichero,
+                    prenda: prendaFichero
                 });
 
             }

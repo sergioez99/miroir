@@ -23,9 +23,6 @@ const TicketSchema = Schema({
         ref: 'Prenda',
         required: true
     },
-    textura: {
-        type: String,
-    },
     talla: {
         type: String,
         required: true,
