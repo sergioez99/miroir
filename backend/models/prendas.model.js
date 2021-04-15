@@ -28,6 +28,14 @@ const PrendaSchema = Schema({
     imagen: {
         type: String,
     },
+    modelo: [{
+        type: Schema.Types.ObjectId,
+        ref: 'ModeloPrenda'
+    }],
+    textura: [{
+        type: Schema.Types.ObjectId,
+        ref: 'TexturaPrenda'
+    }],
     idCliente: {
         type: Schema.Types.ObjectId,
         ref: 'Cliente'

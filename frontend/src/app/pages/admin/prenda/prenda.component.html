@@ -1,80 +1,83 @@
-<section class="section"><div class="centro">
-    <article class="mir-prenda-box">
-    
-        <h1 class="mir-title"> Datos de la prenda </h1>
-        <form class="mir-prenda-form" [formGroup]="formPrenda" (ngSubmit)="enviar();">
-    
-    
-    
-            <!--INPUT: PRENDA -->
-    
-            <input (change)="cambioArchivo($event)" type="file" id="archivo" formControlName="archivo">
-    
-    
-            <!-- identificador-->
-    
-            <mat-form-field class="example-full-width">
-                <mat-label>Identificador de la prenda</mat-label>
-                <input matInput placeholder="Identificador de la prenda" type="text" formControlName="identificador">
-    
-                <!-- ERRORES -->
-                <mat-error *ngIf="formPrenda.get('identificador').hasError('required');">
-                    El identificador es <strong>necesario</strong>
-                </mat-error>
-    
-            </mat-form-field>
-    
-    
-    
-            <!-- NOMBRE DE LA PRENDA-->
-    
-            <mat-form-field class="example-full-width">
-                <mat-label>Nombre de la prenda</mat-label>
-                <input matInput placeholder="Nombre de la prenda" type="text" formControlName="nombre">
-    
-                <!-- ERRORES -->
-                <mat-error *ngIf="formPrenda.get('nombre').hasError('required');">
-                    El nombre es <strong>necesario</strong>
-                </mat-error>
-    
-            </mat-form-field>
-    
-    
-            <!-- DESCRIPCION DE LA PRENDA-->
-    
-            <mat-form-field class="example-full-width">
-                <mat-label>Descripción de la prenda</mat-label>
-                <textarea matInput placeholder="Camisa, Camiseta ..." formControlName="descripcion"></textarea>
-    
-                <!-- ERRORES -->
-                <mat-error *ngIf="formPrenda.get('descripcion').hasError('required');">
-                    La descripción es <strong>necesaria</strong>
-                </mat-error>
-    
-            </mat-form-field>
-    
-            <!-- SELECCIONAR LA TALLA -->
-    
-            <mat-form-field appearance="fill">
-                <mat-label>Seleccione la talla</mat-label>
-                <mat-select formControlName="talla" multiple>
-                    <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-    
-            <!-- SELECCIONAR VISIBILIDAD -->
-    
-            <mat-label>¿Quiere que la prenda sea pública?</mat-label>
-            <mat-checkbox matInput formControlName="visible">Visibilidad</mat-checkbox>
-    
-    
-    
-    
-            <button mat-raised-button color="accent" type="submit"  class="boton">Crear Prenda</button>
-    
-    
-    
-        </form>
-    
-    </article>
-    </div></section>
+<section class="section">
+    <div class="centro">
+        <article class="mir-prenda-box">
+
+            <h1 class="mir-title"> Datos de la prenda </h1>
+            <form class="mir-prenda-form" [formGroup]="formPrenda" (ngSubmit)="enviar();">
+
+
+                <!-- identificador-->
+
+                <mat-form-field class="example-full-width">
+                    <mat-label>Identificador de la prenda</mat-label>
+                    <input matInput placeholder="Identificador de la prenda" type="text" formControlName="identificador">
+
+                    <!-- ERRORES -->
+                    <mat-error *ngIf="formPrenda.get('identificador').hasError('required');">
+                        El identificador es <strong>necesario</strong>
+                    </mat-error>
+
+                </mat-form-field>
+
+
+
+                <!-- NOMBRE DE LA PRENDA-->
+
+                <mat-form-field class="example-full-width">
+                    <mat-label>Nombre de la prenda</mat-label>
+                    <input matInput placeholder="Nombre de la prenda" type="text" formControlName="nombre">
+
+                    <!-- ERRORES -->
+                    <mat-error *ngIf="formPrenda.get('nombre').hasError('required');">
+                        El nombre es <strong>necesario</strong>
+                    </mat-error>
+
+                </mat-form-field>
+
+
+                <!-- DESCRIPCION DE LA PRENDA-->
+
+                <mat-form-field class="example-full-width">
+                    <mat-label>Descripción de la prenda</mat-label>
+                    <textarea matInput placeholder="Camisa, Camiseta ..." formControlName="descripcion"></textarea>
+
+                    <!-- ERRORES -->
+                    <mat-error *ngIf="formPrenda.get('descripcion').hasError('required');">
+                        La descripción es <strong>necesaria</strong>
+                    </mat-error>
+
+                </mat-form-field>
+
+
+                <!-- SELECCIONAR VISIBILIDAD -->
+                <br>
+                <mat-label>¿Quiere que la prenda sea pública?</mat-label>
+                <mat-checkbox matInput formControlName="visible">Visibilidad</mat-checkbox>
+                <br>
+
+
+                <!-- SELECCIONAR LA TALLA -->
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Seleccione la talla</mat-label>
+                    <mat-select formControlName="talla" multiple [(ngModel)]="seleccionados">
+                        <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+
+                <!--INPUT: PRENDA -->
+                <div *ngFor="let item of seleccionados">
+                    Archivo {{item}}: <input (change)="cambioArchivo($event)" type="file" id="archivo" formControlName="archivo{{item}}">
+
+                </div>
+
+
+
+                <button mat-raised-button color="accent" type="submit" class="boton">Crear Prenda</button>
+
+            </form>
+
+        </article>
+    </div>
+</section>

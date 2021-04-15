@@ -13,10 +13,12 @@ import { MaterialModule } from './material/material.module';
 import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 
 import { DatePipe } from '@angular/common';
+import { TicketComponent } from './ticket/ticket.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TicketComponent
 
   ],
   imports: [

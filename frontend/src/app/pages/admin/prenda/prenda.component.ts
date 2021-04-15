@@ -22,6 +22,8 @@ export class PrendaComponent implements OnInit {
   tallas: string[] = ['XS', 'S', 'M', 'L', 'XL'];
   toppingList: string[] = ['XS', 'S', 'M', 'L', 'XL'];
 
+  seleccionados: string[];
+
   uid;
 
 
@@ -83,9 +85,14 @@ export class PrendaComponent implements OnInit {
           nombre: [nombre, Validators.required],
           descripcion: [descripcion, Validators.required],
           visible: [visible, Validators.required],
-          archivo: [archivo],
           identificador: [identificador, Validators.required],
           idCliente: [idCliente],
+          archivoXS: [archivo],
+          archivoS: [archivo],
+          archivoM: [archivo],
+          archivoL: [archivo],
+          archivoXL: [archivo],
+
         });
       });
     }
@@ -95,9 +102,13 @@ export class PrendaComponent implements OnInit {
         nombre: [nombre, Validators.required],
         descripcion: [descripcion, Validators.required],
         visible: [visible, Validators.required],
-        archivo: [archivo],
         identificador: [identificador, Validators.required],
         idCliente: [idCliente],
+        archivoXS: [archivo],
+        archivoS: [archivo],
+        archivoM: [archivo],
+        archivoL: [archivo],
+        archivoXL: [archivo],
       });
     }
 
