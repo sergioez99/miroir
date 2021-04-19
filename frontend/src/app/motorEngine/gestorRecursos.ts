@@ -82,6 +82,13 @@ export class gestorRecursos {
 
                 malla.setIndices(file.model.meshes[0].face.vertElementIndices);
                 malla.setVertices(indices);
+                console.log(file.model.meshes[0].face.vertElementIndices);
+
+                malla.setTexturas(file.materials[0].maps[0].file)
+
+                malla.setDiffuse(file.materials[0].diffuse);
+                malla.setSpecular(file.materials[0].specular);
+                malla.setGlossiness(file.materials[0].glossiness)
 
                 return malla;
         

@@ -32,7 +32,10 @@ class Malla {
     private normales;
     private coordtex;
     private indices;
-    private texturas; //Textura[];
+    private texturas = []; //Textura[];
+    private diffuse;
+    private specular;
+    private glossiness;
 
     constructor(){
 
@@ -67,11 +70,34 @@ class Malla {
     }
 
     setTexturas(v) {
-        this.texturas = v;
+        this.texturas.push(v);
     }
     getTexturas() {
         return this.texturas;
     }
+
+    setDiffuse(v) {
+        this.diffuse = v
+    }
+    getDiffuse() {
+        return this.diffuse;
+    }
+
+    setSpecular(v) {
+        this.specular = v
+    }
+    getSpecular() {
+        return this.specular;
+    }
+
+    setGlossiness(v) {
+        this.glossiness = v
+    }
+    getGlossiness() {
+        return this.glossiness
+    }
+
+    
 
     draw(){
 

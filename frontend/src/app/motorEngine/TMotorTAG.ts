@@ -5,8 +5,8 @@ import { ECamera, ELight, EModel } from "./TEntity";
 
 //Imports de GL, motor gráfico y tal
 import { GLSLConstants } from '../../assets/GLSLConstants';
-import fragmentShaderSrc from '../motorEngine/shaders/toucan-fragment-shader.glsl';
-import vertexShaderSrc from '../motorEngine/shaders/toucan-vertex-shader.glsl';
+import fragmentShaderSrc from '../motorEngine/shaders/fragment-shader-final.glsl';
+import vertexShaderSrc from '../motorEngine/shaders/vertex-shader-final.glsl';
 import * as matrix from 'gl-matrix';
 
 
@@ -49,6 +49,9 @@ export class TMotorTAG {
     private rotY;
     private zoom = 1;
     private vertexCount;
+    private vertexCount2;
+    private malla;
+    private modelos 
 
 
     constructor() {
@@ -58,6 +61,7 @@ export class TMotorTAG {
         this.registroLuces = [];
         this.lucesActivas = [];
         this.registroViewports = [[]]
+        this.modelos = 0;
     }
 
     crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
@@ -107,12 +111,20 @@ export class TMotorTAG {
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
+        
         let malla = await this.gestorRecursos.getRecurso(prenda);
 
-        let text = await this.gestorRecursos.getRecurso(textura);
-        let texture = await this.loadTexture(text);
-        this.gl.activeTexture(this.gl.TEXTURE0);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        let text = await this.gestorRecursos.getRecurso(malla.getTexturas()[0]);
+        
+        if(this.modelos == 0){
+            let tex = await this.loadTexture(2);
+            this.gl.activeTexture(this.gl.TEXTURE0);
+        }else{
+            let texture = await this.loadTexture(text);
+            this.gl.activeTexture(this.gl.TEXTURE1);
+        }     
+        this.modelos++;
+
 
 
         let entidad = new EModel();
@@ -164,7 +176,7 @@ export class TMotorTAG {
 
 
         // DIBUJAR MODELOS
-        this.gestorRecursos.dibujarMallas();
+        //this.gestorRecursos.dibujarMallas();
     }
 
     // ---------------- Inicializar el contexto de GL y los shaders ----------------
@@ -204,6 +216,13 @@ export class TMotorTAG {
                 modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
                 normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
                 uSampler: this.gl.getUniformLocation(shaderProgram, 'uSampler'),
+                matDiffuse: this.gl.getUniformLocation(shaderProgram, 'TMaterial.Difusse'),
+                matSpecular: this.gl.getUniformLocation(shaderProgram, 'TMaterial.Specular'),
+                matShininess: this.gl.getUniformLocation(shaderProgram, 'TMaterial.Shininess'),
+                lightPosition: this.gl.getUniformLocation(shaderProgram, 'TLight.Position'),
+                lightAmbiental: this.gl.getUniformLocation(shaderProgram, 'TLight.Ambiental'),
+                lightDiffuse: this.gl.getUniformLocation(shaderProgram, 'TLight.Difusse'),
+                lightSpecular: this.gl.getUniformLocation(shaderProgram, 'TLight.Specular'),
             },
         };
 
@@ -267,7 +286,7 @@ export class TMotorTAG {
         //Cargamos los modelos y sus buffers
         //Inicializamos los buffers con lo que queremos dibujar
         await this.initialiseBuffers(avatar, texturaAvatar).then(buffers => { this.buffers = buffers; });
-        //await this.initialiseBuffers("pantalon.json").then(buffers => {this.buffers2 = buffers; });
+        await this.initialiseBuffers(prenda, textura).then(buffers => {this.buffers2 = buffers; });
 
         //El dibujar iría desde el service (para que se dibuje constantemente)
         this.dibujarEscena();
@@ -275,16 +294,16 @@ export class TMotorTAG {
 
     async initialiseBuffers(prenda, textura) {
         let modelo = await this.crearModelo(null, null, null, null, prenda, textura);
-        let malla = modelo.getEntidad().getMalla();
+        this.malla = modelo.getEntidad().getMalla();
         const positionBuffer = this.gl.createBuffer();
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
-        this.vertexCount = malla.getIndices().length;
+        this.vertexCount = this.malla.getIndices().length;
 
         this.gl.bufferData(
             this.gl.ARRAY_BUFFER,
-            new Float32Array(malla.getVertices()),
+            new Float32Array(this.malla.getVertices()),
             this.gl.STATIC_DRAW
         );
 
@@ -294,18 +313,18 @@ export class TMotorTAG {
 
 
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
-            new Uint16Array(malla.getIndices()), this.gl.STATIC_DRAW);
+            new Uint16Array(this.malla.getIndices()), this.gl.STATIC_DRAW);
 
         const textureCoordBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
 
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getCoordtex()),
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.malla.getCoordtex()),
             this.gl.STATIC_DRAW);
 
         const normalBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
 
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getNormales()), this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.malla.getNormales()), this.gl.STATIC_DRAW);
 
         return {
             position: positionBuffer,
@@ -358,32 +377,42 @@ export class TMotorTAG {
         this.zoom = zoom;
     }
 
-    dibujadoTemporal() {
+    async dibujadoTemporal() {
         this.resizeWebGLCanvas();
         this.updateWebGLCanvas();
 
         //Preparamos la animación de rotación
         //transformaciones
+
         matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0.0, -2.5, -5.0]);
+            [0,-3,0])
+        matrix.mat4.rotateY(this.modelViewMatrix,
+            this.modelViewMatrix,
+            180 * Math.PI / 180)
+        matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix,
+            90 * Math.PI / 180)
+        
+            
         matrix.mat4.rotateY(this.modelViewMatrix,
             this.modelViewMatrix,
             this.rotY);
         matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
             [this.zoom, this.zoom, this.zoom]);
+        
 
         // Compute a matrix for the camera
         let cameraMatrix = matrix.mat4.create();
 
         let cameraTarget = matrix.vec3.create();
         //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
-        cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
+        //cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
         cameraTarget = [0, 0, 0];
         let cameraPosition = matrix.vec3.create();
         //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
-        cameraPosition = [0, 0, -12];
+        cameraPosition = [0, 0, -10];
         let up = matrix.vec3.create();
         up = [0, 1, 0];
 
@@ -402,8 +431,13 @@ export class TMotorTAG {
         matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
         matrix.mat4.transpose(normalMatrix, normalMatrix);
 
+        /*let text = await this.loadTexture(1);
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, text);
+        */
+
         // Tell the shader we bound the texture to texture unit 0
-        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
         this.bindVertexPosition(this.programInfo, this.buffers);
 
@@ -414,6 +448,11 @@ export class TMotorTAG {
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
+        //Uniforms de luces
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50,-10,-10]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [1.0, 1.0, 1.0]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [1.0, 1.0, 1.0]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [1.0, 0.5, 0.31]);
 
         // set the shader uniforms
         this.gl.uniformMatrix4fv(
@@ -433,27 +472,36 @@ export class TMotorTAG {
             normalMatrix);
 
 
+        //AVATAR
+        this.gl.uniform1i(this.programInfo.uniformLocations.matDiffuse, this.raiz.getChildren()[2].getEntidad().getMalla().getDiffuse());
+        this.gl.uniform1i(this.programInfo.uniformLocations.matSpecular, this.raiz.getChildren()[2].getEntidad().getMalla().getSpecular());
+        this.gl.uniform1i(this.programInfo.uniformLocations.matShininess, this.raiz.getChildren()[2].getEntidad().getMalla().getGlossiness());
+
 
         // Dibujar camiseta
         const type = this.gl.UNSIGNED_SHORT;
         const offset = 0;
-        this.gl.drawElements(this.gl.TRIANGLES, this.vertexCount, type, offset);
+        this.gl.drawElements(this.gl.TRIANGLES, 388704, type, offset);
         //
         //
         //
         //
 
-        /*let texture = this.loadTexture(2);
-    
-        // Tell WebGL we want to affect texture unit 0
+        matrix.mat4.scale(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0.0328,0.0328,0.0328])
+
+        
+        /*let texture = await this.loadTexture(2);
         this.gl.activeTexture(this.gl.TEXTURE1);
-    
-        // Bind the texture to texture unit 0
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        */
     
-        // Tell the shader we bound the texture to texture unit 0
-        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
-    
+            
+            
+       
+        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+
         this.bindVertexPosition(this.programInfo, this.buffers2);
     
         this.bindVertexTextures(this.programInfo, this.buffers2);
@@ -461,19 +509,34 @@ export class TMotorTAG {
         this.bindVertexNormal(this.programInfo, this.buffers2);
     
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-    
-        matrix.mat4.translate(this.modelViewMatrix,    
-          this.modelViewMatrix,    
-          [2.0, 0.0, 0.0]); 
-        matrix.mat4.rotate(this.modelViewMatrix, 
-          this.modelViewMatrix,  
-          -5,
-          [1, 0, 0]);
         
         // Dibujar pantalon
-        vertexCount = 1567;
-        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
-        */
+
+
+        // set the shader uniforms
+        this.gl.uniformMatrix4fv(
+            this.programInfo.uniformLocations.projectionMatrix,
+            false,
+            //this.projectionMatrix
+            viewProjectionMatrix
+        );
+        this.gl.uniformMatrix4fv(
+            this.programInfo.uniformLocations.modelViewMatrix,
+            false,
+            this.modelViewMatrix
+        );
+        this.gl.uniformMatrix4fv(
+            this.programInfo.uniformLocations.normalMatrix,
+            false,
+            normalMatrix);
+
+        //PRENDA
+        this.gl.uniform1i(this.programInfo.uniformLocations.matDiffuse, this.raiz.getChildren()[3].getEntidad().getMalla().getDiffuse());
+        this.gl.uniform1i(this.programInfo.uniformLocations.matSpecular, this.raiz.getChildren()[3].getEntidad().getMalla().getSpecular());
+        this.gl.uniform1i(this.programInfo.uniformLocations.matShininess, this.raiz.getChildren()[3].getEntidad().getMalla().getGlossiness());
+        
+        this.gl.drawElements(this.gl.TRIANGLES, this.vertexCount, type, offset);
+        
 
     }
 
@@ -496,14 +559,22 @@ export class TMotorTAG {
         this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
             1, 1, 0, srcFormat, srcType,
             pixel);
-            */
+
         
-        //let pixels = new Uint8Array(image);
+        }*/
+            
 
-        //let pixels = new Uint8Array(image);
-
-        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-            srcFormat, srcType, image);
+       
+        if(image == 2){
+            let pixel = new Uint8Array([45, 50, 37, 255]);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+                1, 1, 0, srcFormat, srcType,
+                pixel);
+            }
+        else{
+            this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+                srcFormat, srcType, image);
+        }
 
         
         if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
