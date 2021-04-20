@@ -101,15 +101,13 @@ export class UsuarioComponent implements OnInit {
   }
   actualizarUsuario(){
     if (this.formMedidas.valid) {
-
       
       this.usuarioService.actualizarMedidasUsuario(this.formMedidas.value).then((response) => {
-
         // medidas introducidas correctamente
 
         Swal.fire({
           title: 'Felicidades',
-          text: 'Sus medidas han sido actualizadas correctamente',
+          text: 'Sus datos han sido actualizados correctamente',
           icon: 'success',
           confirmButtonText: 'Aceptar',
         });

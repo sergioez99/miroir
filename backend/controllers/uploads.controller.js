@@ -38,10 +38,11 @@ const subirArchivo = async(req, res = response) => {
     //creamos las variables para la ruta de la api (/api/:tipo/:id)
     const tipo = req.params.tipo; //fotoperfil o prendas
     const id = req.params.id;
+    const talla = req.header('talla');
     //Estructura con las extensiones permitidas
     const archivosValidos = {
         fotoperfil: ['jpg', 'jpeg', 'png'],
-        prenda: ['obj', 'jpg', 'jpeg', 'png']
+        prenda: ['obj', 'jpg', 'json', 'fbx']
     }
 
     //comprobamos el nombre del archivo y nos fijamos en su extension
@@ -50,6 +51,8 @@ const subirArchivo = async(req, res = response) => {
     const nombrePartido = archivo.name.split('.'); //hola.hadsf.uasdf.uas.jpeg
     //cogemos el ultimo
     const extension = nombrePartido[nombrePartido.length - 1];
+
+    let path = `${process.env.PATHUPLOAD}/`;
 
     switch (tipo) {
         case 'fotoperfil':
@@ -62,6 +65,7 @@ const subirArchivo = async(req, res = response) => {
 
             }
             //validarTipoItem();
+            path += tipo;
             break;
 
         case 'prenda':
@@ -73,6 +77,7 @@ const subirArchivo = async(req, res = response) => {
                 });
             }
             //validarTipoItem();
+            path += `modelo/${tipo}`;
             break;
 
         default:
@@ -85,7 +90,7 @@ const subirArchivo = async(req, res = response) => {
     }
 
     //anyadimos tipo para que cree carpetas distintas (fotoperfil y prendas)
-    const path = `${process.env.PATHUPLOAD}/${tipo}`;
+    // const path = `${process.env.PATHUPLOAD}/${tipo}`;
     const nombreArchivo = `${uuidv4()}.${extension}`
         // path con su ruta base/carpeta para cada tipo/nombre dea archivo unico/extension
     const patharchivo = `${path}/${nombreArchivo}`;
@@ -103,11 +108,9 @@ const subirArchivo = async(req, res = response) => {
         }
     });
 
-    console.log('hemos llegado!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-
     //una vez cargado el archivo en nuestro sistema, 
     //actualizamos la base de datos
-    actualizarBD(tipo, path, nombreArchivo, id)
+    actualizarBD(tipo, path, nombreArchivo, id, talla)
         .then(valor => {
             //controlar valor
             if (!valor) {

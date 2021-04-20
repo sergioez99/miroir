@@ -1,0 +1,17 @@
+<div>
+    <button mat-raised-button class="mir-button" color="primary" (click)="obtenerClave()">cargar clave</button>
+
+    <button mat-raised-button class="mir-button" color="accent" (click)="cambiarClave()">nueva clave</button>
+
+    <hr>
+
+    <mat-form-field appearance="outline" class="mir-block">
+        <mat-label>Clave Actual</mat-label>
+        <input type="password" #claveInput disabled matInput [type]="hide ? 'password' : 'text'" value='{{clave}}'>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+
+    </mat-form-field>
+    <button mat-raised-button class="mir-button" (click)="copiarClave()"> Copiar clave </button>
+</div>

@@ -43,6 +43,7 @@ app.use('/api/verificacion', require('./routes/verificacion.routes'));
 app.use('/api/recuperar', require('./routes/password.routes'));
 app.use('/api/maya', require('./routes/maya.routes'));
 app.use('/api/prendas', require('./routes/prendas.routes'));
+app.use('/api/ticket', require('./routes/ticket.routes'));
 
 //para subir archivos
 app.use('/api/upload', require('./routes/uploads.routes'));
@@ -61,6 +62,3 @@ app.use('/api/grupos', require('./routes/grupos.routes'));
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ' + process.env.PORT);
 });
-
-
-

@@ -89,4 +89,51 @@ export class ChartService{
     });
   }
 
+  getUsosPrendas(){
+
+
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getUsos(this.usuarioService.getToken()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
+  getUsosPrendasCliente(){
+
+    return new Promise ( (resolve, reject) => {
+      this.apiService.getUsosCliente(this.usuarioService.getID()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
+  getUsosTallasCliente(){
+
+    return new Promise ( (resolve, reject) => {
+      console.log("chart service hola")
+      this.apiService.getUsosTallasCliente(this.usuarioService.getID()).subscribe( (res) => {
+        console.log("chart service" + res)
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
 }

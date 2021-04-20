@@ -25,7 +25,10 @@ import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component';
 import { SceneComponent } from '../scene/scene.component';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component';
+import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
+import { TicketComponent } from '../ticket/ticket.component';
+import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
 
 
 const routes: Routes = [
@@ -61,9 +64,10 @@ const routes: Routes = [
       { path: '', component: NotAuthComponent },
       { path:'cliente', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],
         children: [
-          { path: '', component: PerfilClienteComponent },
+          { path: '', component: CuadroClienteComponent },
           { path:'prendas', component: PrendasComponent },
           { path:'prendas/prenda/:uid', component: PrendaComponent },
+          { path:'clave', component: ClaveClienteComponent },
           { path: '**', component: NotAuthComponent }
         ]
       },
@@ -108,7 +112,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'scene', component: SceneComponent,
+    path: 'scene',
     children: [
       { path: '', component: SceneComponent },
       { path: '**', redirectTo: ''}

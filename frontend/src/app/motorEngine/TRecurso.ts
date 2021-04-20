@@ -1,7 +1,4 @@
 import { TRecurso, Malla } from './commons';
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { promise } from 'protractor';
-import { ApiService } from '../services/api.service';
 
 export class RMalla extends TRecurso {
 
@@ -21,6 +18,10 @@ export class RMalla extends TRecurso {
         for(let i in this.mallas)
             this.mallas[i].draw();
     }
+    
+    addMallas(malla){
+        this.mallas.push(malla);
+    }
 
     getMallas(){
         return this.mallas;
@@ -35,6 +36,9 @@ export class RTextura extends TRecurso {
       super();
     }
 
+    setImagen(imagen){
+        this.imagenTextura = imagen;
+    }
 
     getImagen(){
         return this.imagenTextura;

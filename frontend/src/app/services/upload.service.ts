@@ -23,7 +23,7 @@ export class UploadService{
                private router: Router,
                private usuarioService: UsuarioService) { }
 
-
+/*
   crearArchivoPrenda(id, archivo: Array<File>) :Promise<any>{
 
     let tipo = 'prenda';
@@ -50,6 +50,25 @@ export class UploadService{
     });
   }
 
+*/
 
+crearArchivoPrenda(id, archivo: Array<File>, talla) :Promise<any>{
+
+  let tipo = 'prenda';
+  return new Promise ( (resolve, reject)=>{
+
+    console.log('archivo en el servicio de subida: ', archivo);
+
+      this.apiService.subirArchivosCall(id, tipo, archivo[0], this.usuarioService.getToken(), talla).subscribe(res =>{
+
+        console.log('Respuesta del servidor: ', res);
+        resolve(true);
+
+      }, (error)=>{
+        console.warn('error respuesta api:; ', error);
+        reject(error);
+      });
+  });
+}
 
 }

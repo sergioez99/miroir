@@ -6,6 +6,8 @@ const Prenda = require('../models/prendas.model');
 const DatoKPI = require('../models/datosGenericos.model');
 const fechaAlta = require('../models/fechaAlta.model');
 const horaAlta = require('../models/horaAlta.model');
+const prendasUsadas = require('../models/prendasUsadas.model');
+const tallasUsadas = require('../models/tallasUsadas.model');
 const { infoToken } = require('../helpers/infotoken');
 
 // PARA BORRAR PORQUE DE MOMENTO NO SE USA
@@ -328,6 +330,28 @@ const restarPrendaKPI = async() => {
         return error;
     }
 }
+const sumarUsoPrenda = async(id) => {
+
+    try {
+                db = await prendasUsadas.findOne({ idPrenda: id });
+                if (!db) {
+                    db = new prendasUsadas();
+                    db.idPrenda = id;
+                    db.usos = 1;
+                } else{
+                    db.usos++;
+                }
+
+                await db.save();
+
+                return true;
+        }
+    catch (error) {
+        return error;
+    }
+}
+
+
 
 const obtenerUsuariosClientesFecha = async(req, res = response) => {
 
@@ -424,6 +448,144 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 
 }
 
+const obtenerUsosPrendas = async(req, res = response) => {
+    console.log("hola????")
+    //salirSiUsuarioNoAdmin(req.header('x-token'));
+
+
+    try {
+        const busqueda = await prendasUsadas.find();
+
+        let prendas = [], veces = [];
+        let nPrenda = [], nomPrenda = [];
+        for (let i = 0; i < busqueda.length; i++) {
+            prendas[i] = busqueda[i].idPrenda;
+            veces[i] = busqueda[i].usos;
+            
+            nPrenda.push(await Prenda.findById(busqueda[i].idPrenda));
+            nomPrenda.push(nPrenda[i].nombre);
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'prendas usadas',
+            prenda: prendas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de los usos de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
+const obtenerUsosPrendasCliente = async(req, res = response) => {
+    
+    let id = req.header('id');
+
+    try {
+        const busqueda = await prendasUsadas.find();
+        const prendasClientes = await Prenda.find(); //aqui 
+        
+        let prendas = [], veces = [];
+        let nPrenda = [], nomPrenda = [];
+
+        for (let x = 0; x < prendasClientes.length; x++) {
+            if(prendasClientes[x].idCliente == id) {
+                prendas[x] = busqueda[x].idPrenda
+                veces[x] = busqueda[x].usos;
+
+                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(nPrenda[x].nombre);
+            }
+
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'prendas usadas',
+            prenda: prendas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de los usos de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
+const obtenerTallasPrendasCliente = async(req, res = response) => {
+    
+    let id = req.header('id');
+    console.log("charts controller");
+
+    try {
+        const busqueda = await tallasUsadas.find(); //id, talla, usos
+        const prendasClientes = await Prenda.find(); //aqui 
+        console.log(busqueda);
+
+        let existe = false;
+        
+        let prendas = [], veces = [], tallas = [];
+        let nPrenda = [], nomPrenda = [];
+
+        for (let x = 0; x < prendasClientes.length; x++) {
+            if(prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
+                prendas[x] = busqueda[x].idPrenda //añado el id de la prenda a prendas
+                
+                for (let i = 0; i < tallas.length && !existe; i++) {
+                    if(tallas[i] == busqueda[x].talla) {
+                        existe = true;
+                        veces[i] = veces[i] + busqueda[x].usos;
+                    }  
+                }
+                if(!existe) {
+                    tallas.push(busqueda[x].talla);
+                    veces.push(busqueda[x].usos);
+                }
+                else
+                    existe = false;
+
+                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(nPrenda[x].nombre);
+            }
+
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'tallas usadas',
+            talla: tallas,
+            usos: veces,
+            nombres: nomPrenda
+            
+
+        });
+
+    } catch (error) {
+        console.log('error recuperando la info de las tallas de las prendas');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error recuperando la información',
+            error: error
+        });
+    }
+}
+
 
 
 
@@ -501,6 +663,108 @@ const obtenerTotalPrendas = async(req, res = response) => {
 
 
 
+
+
+const obtenerTodosUsuarios = async(req, res = response) => {
+
+    salirSiUsuarioNoAdmin(req.header('x-token'));
+
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+    }
+
+    await sleep(100);
+
+    try {
+
+
+        let usuarios, total;
+        // busqueda de un unico usuario
+
+
+        if (texto) {
+            [usuarios, total] = await Promise.all([
+                Usuario.find({ rol: textoBusqueda }).sort('alta', 1),
+                Usuario.countDocuments({ rol: textoBusqueda })
+            ]);
+        } else {
+            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+            [usuarios, total] = await Promise.all([
+                Usuario.find({}),
+                Usuario.countDocuments()
+            ]);
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'getUsuarios',
+            usuarios,
+            total
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            ok: false,
+            msg: 'error buscando el usuario'
+        });
+    }
+}
+
+
+const obtenerTodosClientes = async(req, res = response) => {
+
+    salirSiUsuarioNoAdmin(req.header('x-token'));
+
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    if (texto) {
+        textoBusqueda = new RegExp(texto, 'i');
+    }
+
+    await sleep(100);
+
+    try {
+
+
+        let usuarios, total;
+        // busqueda de un unico usuario
+
+        // pruebas que no funcionan
+        //$and: [{ rol: textoBusqueda }, created_at: { $gte: "Mon May 30 18:47:00 +0000 2015", $lt: "Sun May 30 20:40:36 +0000 2010" }]
+        if (texto) {
+            [usuarios, total] = await Promise.all([
+                Cliente.find({ rol: textoBusqueda }).sort('alta', 1),
+                Cliente.countDocuments({ rol: textoBusqueda })
+            ]);
+        } else {
+            // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+            [usuarios, total] = await Promise.all([
+                Cliente.find({}),
+                Cliente.countDocuments()
+            ]);
+        }
+
+        return res.json({
+            ok: true,
+            msg: 'getUsuarios',
+            clientes: usuarios,
+            total
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            ok: false,
+            msg: 'error buscando el usuario'
+        });
+    }
+}
+
+
+
 module.exports = {
     // devolver datos al frontend perfectamente formateados 
     obtenerTotalUsuarios,
@@ -508,6 +772,9 @@ module.exports = {
     obtenerTotalClientes,
     obtenerUsuariosClientesFecha,
     obtenerUsuariosClientesHora,
+    obtenerUsosPrendas,
+    obtenerUsosPrendasCliente,
+    obtenerTallasPrendasCliente,
 
     // funciones para modificar datos KPI en el backend
     insertarfechahoraUsuarioCliente,
@@ -516,5 +783,6 @@ module.exports = {
     sumarClienteKPI,
     restarClienteKPI,
     sumarPrendaKPI,
-    restarPrendaKPI
+    restarPrendaKPI,
+    sumarUsoPrenda,
 }
