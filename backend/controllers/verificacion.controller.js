@@ -101,13 +101,13 @@ const reenviarToken = async(req, res = response) => {
         token.token = verificationToken;
 
         const oauth2Client = new OAuth2(
-            "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com", //Client ID
-            "FoXUeWIK-Gm5yGqUtmKx-BVZ", // Client Secret
+            process.env.GOOGLE_CLIENT_ID, //Client ID
+            process.env.SECRET_CLIENT, // Client Secret
             "https://developers.google.com/oauthplayground" // Redirect URL
         );
 
         oauth2Client.setCredentials({
-            refresh_token: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc"
+            refresh_token: process.env.REFRESH_TOKEN,
         });
         const accessToken = oauth2Client.getAccessToken();
 
@@ -122,9 +122,9 @@ const reenviarToken = async(req, res = response) => {
                 type: 'OAuth2',
                 user: 'insight.abp@gmail.com',
                 password: 'MiroirInsightABP',
-                clientId: "149404174892-4nt0dds6tcv01v77gilcj7lk50o34vo0.apps.googleusercontent.com",
-                clientSecret: "FoXUeWIK-Gm5yGqUtmKx-BVZ",
-                refreshToken: "1//04A6qi0g8LCGtCgYIARAAGAQSNwF-L9Ir_oLNBI7WEPmKfGJ2NdjqZEDszYMk5zChKdblkMlfKFLQsb0szAKwrF0TGbzs6iEAcoc",
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.SECRET_CLIENT,
+                refreshToken: process.env.REFRESH_TOKEN,
                 accessToken: accessToken
             },
             tls: {
