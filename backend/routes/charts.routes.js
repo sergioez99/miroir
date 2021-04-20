@@ -18,6 +18,8 @@ const {
     obtenerUsosPrendas,
     obtenerUsosPrendasCliente,
     obtenerTallasPrendasCliente,
+    agregarDatoMapa,
+    obtenerDatosRegiones
 
 } = require('../controllers/charts.controller');
 
@@ -50,11 +52,15 @@ router.get('/usos', [
 
 ], obtenerUsosPrendas);
 
-router.get('/usosCliente', [
-], obtenerUsosPrendasCliente);
+router.get('/usosCliente', [], obtenerUsosPrendasCliente);
 
-router.get('/tallasCliente', [
-], obtenerTallasPrendasCliente);
+router.get('/tallasCliente', [], obtenerTallasPrendasCliente);
 
+router.get('/mapa', [
+    validarJWT,
+], obtenerDatosRegiones);
+router.post('/mapa', [
+    validarJWT,
+], agregarDatoMapa);
 
 module.exports = router;
