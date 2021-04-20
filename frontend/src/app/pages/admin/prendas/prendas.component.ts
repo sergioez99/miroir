@@ -30,16 +30,14 @@ export class PrendasComponent implements OnInit {
   public ruta = "['/perfil/cliente/prendas/prenda', prenda.uid]";
 
   constructor(private prendaService: PrendaService,
-    private usuarioService: UsuarioService,  private route: ActivatedRoute,) { }
+    private usuarioService: UsuarioService, private route: ActivatedRoute,) { }
 
   ngOnInit(): void {
 
     this.admin = this.usuarioService.isAdmin();
 
     this.cargarPrendas(this.ultimaBusqueda);
-  this.cargarPrendas(this.ultimaBusqueda);
     this.uid = this.usuarioService.getID();
-    console.log(this.uid);
   }
 
   cargarPrendas(textoBuscar: string) {
@@ -53,7 +51,7 @@ export class PrendasComponent implements OnInit {
     this.prendaService.cargarPrendas(this.posicionactual, textoBuscar)
       .then(res => {
 
-        //console.log(res['prendas']);
+        console.log(res['prendas']);
 
         // Lo que nos llega lo asignamos a lista de prendas para renderizar la tabla
         // Comprobamos si estamos en un apágina vacia, si es así entonces retrocedemos una página si se puede
@@ -71,15 +69,15 @@ export class PrendasComponent implements OnInit {
           }
         } else {
 
-          if(this.usuarioService.isCliente()) {
-            for(let i = 0; i < res['prendas'].length; i++) {
-              if(res['prendas'][i].idCliente == this.uid) {
+          if (this.usuarioService.isCliente()) {
+            for (let i = 0; i < res['prendas'].length; i++) {
+              if (res['prendas'][i].idCliente == this.uid) {
                 this.prendasFlitradas.push(res['prendas'][i]);
               }
             }
             this.listaPrendas = this.prendasFlitradas;
             this.totalprendas = this.listaPrendas.length;
-          } else{
+          } else {
             this.listaPrendas = res['prendas'];
             this.totalprendas = res['page'].total;
           }
@@ -127,7 +125,7 @@ export class PrendasComponent implements OnInit {
       if (result.value) {
         this.prendaService.borrarPrenda(uid)
           .then(resp => {
-            Swal.fire({icon: 'success', title: 'Prenda eliminada'});
+            Swal.fire({ icon: 'success', title: 'Prenda eliminada' });
             this.cargarPrendas(this.ultimaBusqueda);
           }).catch((err) => {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'No se pudo completar la acción, vuelva a intentarlo', });

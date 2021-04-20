@@ -208,7 +208,12 @@ export class PrendaComponent implements OnInit {
             });
           }
           else {
-            this.router.navigateByUrl('/admin/prendas');
+            if (this.usuarioService.isAdmin()){
+              this.router.navigateByUrl('/admin/prendas');
+            }
+            else{
+            this.router.navigateByUrl('/perfil/cliente/prendas');
+            }
           }
 
         });
