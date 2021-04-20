@@ -395,7 +395,7 @@ export class TMotorTAG {
             90 * Math.PI / 180)
         
             
-        matrix.mat4.rotateY(this.modelViewMatrix,
+        matrix.mat4.rotateZ(this.modelViewMatrix,
             this.modelViewMatrix,
             this.rotY);
         matrix.mat4.scale(this.modelViewMatrix,
