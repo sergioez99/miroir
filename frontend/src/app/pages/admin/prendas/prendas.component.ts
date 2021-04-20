@@ -5,6 +5,8 @@ import { Prenda } from '../../../models/prenda.model';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../../../services/usuario.service';
 
+import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
   selector: 'app-prendas',
   templateUrl: './prendas.component.html',
@@ -20,22 +22,29 @@ export class PrendasComponent implements OnInit {
 
   private ultimaBusqueda = '';
   public listaPrendas: Prenda[] = [];
+  public prendasFlitradas: Prenda[] = []; //para filtrar por cliente
+
+  private uid: string = '';
 
   public admin = false;
   public ruta = "['/perfil/cliente/prendas/prenda', prenda.uid]";
 
   constructor(private prendaService: PrendaService,
-    private usuarioService: UsuarioService) { }
+    private usuarioService: UsuarioService,  private route: ActivatedRoute,) { }
 
   ngOnInit(): void {
 
     this.admin = this.usuarioService.isAdmin();
 
     this.cargarPrendas(this.ultimaBusqueda);
+  this.cargarPrendas(this.ultimaBusqueda);
+    this.uid = this.usuarioService.getID();
+    console.log(this.uid);
   }
 
   cargarPrendas(textoBuscar: string) {
     //debugger
+
 
 
 
@@ -52,7 +61,6 @@ export class PrendasComponent implements OnInit {
 
 
 
-
           if (this.posicionactual > 0) {
             this.posicionactual = this.posicionactual - this.registrosporpagina;
             if (this.posicionactual < 0) { this.posicionactual = 0 };
@@ -62,8 +70,21 @@ export class PrendasComponent implements OnInit {
             this.totalprendas = 0;
           }
         } else {
-          this.listaPrendas = res['prendas'];
-          this.totalprendas = res['page'].total;
+
+          if(this.usuarioService.isCliente()) {
+            for(let i = 0; i < res['prendas'].length; i++) {
+              if(res['prendas'][i].idCliente == this.uid) {
+                this.prendasFlitradas.push(res['prendas'][i]);
+              }
+            }
+            this.listaPrendas = this.prendasFlitradas;
+            this.totalprendas = this.listaPrendas.length;
+          } else{
+            this.listaPrendas = res['prendas'];
+            this.totalprendas = res['page'].total;
+          }
+
+
         }
         this.loading = false;
       }).catch((err) => {
@@ -89,7 +110,7 @@ export class PrendasComponent implements OnInit {
     }
     */
     // Solo los admin pueden borrar prendas
-    if (!this.usuarioService.isAdmin()) {
+    if (this.usuarioService.isUsuario()) {
       Swal.fire({ icon: 'warning', title: 'Oops...', text: 'No tienes permisos para realizar esta acción', });
       return;
     }
@@ -101,7 +122,7 @@ export class PrendasComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, borrar'
+      confirmButtonText: 'Sí, borrar'
     }).then((result) => {
       if (result.value) {
         this.prendaService.borrarPrenda(uid)
