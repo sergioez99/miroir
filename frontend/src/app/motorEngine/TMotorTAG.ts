@@ -112,9 +112,9 @@ export class TMotorTAG {
         padre.addChild(nuevo);
 
         
-        let malla = await this.gestorRecursos.getRecurso(ticket, tipo, prenda);
+        let malla = await this.gestorRecursos.getRecurso(prenda, ticket, tipo);
 
-        let text = await this.gestorRecursos.getRecurso(ticket, tipo, malla.getTexturas()[0]);
+        let text = await this.gestorRecursos.getRecurso(malla.getTexturas()[0],ticket, "textura");
         
         if(this.modelos == 0){
             let tex = await this.loadTexture(2);

@@ -67,9 +67,6 @@ export class gestorRecursos {
 
                 archivo = await this.leerArchivoRed(environment.base_url + '/ticket/modelo/' + tipo + '/' + ticket);
 
-                console.log(archivo);
-                debugger;
-
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
 
