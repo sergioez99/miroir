@@ -36,16 +36,16 @@ vec3 Phong() {
     
     //componente ambiental
     //vec3 Ambient = Light.Ambient * vec3(texture2D(Material.Diffuse, vTextureCoord));
-
-    vec3 Ambient = vec3(0.7, 0.7, 0.7);
+    vec3 Ambient = Light.Ambient;
+    //vec3 Ambient = vec3(0.7, 0.7, 0.7);
 
     //componente difusa
-    //vec3 Diffuse = Light.Diffuse * max(dot(s,n), 0.0) * vec3(texture2D(Material.Diffuse, vTextureCoord));
-    vec3 Diffuse = vec3(0.7, 0.7, 0.7);
+    vec3 Diffuse = Light.Diffuse * max(dot(s,n), 0.0) * vec3(texture2D(Material.Diffuse, vTextureCoord));
+    //vec3 Diffuse = vec3(0.7, 0.7, 0.7);
 
     //componente especular
-    //vec3 Specular = Light.Specular * pow(max(dot(r,v), 0.0), Material.Shininess) * vec3(texture2D(Material.Specular, vTextureCoord));
-    vec3 Specular = vec3(0.3, 1.0, 0.4);
+    vec3 Specular = Light.Specular * pow(max(dot(r,v), 0.0), Material.Shininess) * vec3(texture2D(Material.Specular, vTextureCoord));
+    //vec3 Specular = vec3(0.3, 1.0, 0.4);
 
     return Ambient + Diffuse + Specular;
 }

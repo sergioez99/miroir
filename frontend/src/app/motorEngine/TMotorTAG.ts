@@ -448,9 +448,11 @@ export class TMotorTAG {
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
+        let ambiental = matrix.vec3.create();
+        ambiental = [1.0,1.0,1.0];
         //Uniforms de luces
         this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50,-10,-10]);
-        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [1.0, 1.0, 1.0]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, ambiental);
         this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [1.0, 1.0, 1.0]);
         this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [1.0, 0.5, 0.31]);
 
