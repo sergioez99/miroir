@@ -21,10 +21,16 @@ export class PrendasComponent implements OnInit {
   private ultimaBusqueda = '';
   public listaPrendas: Prenda[] = [];
 
+  public admin = false;
+  public ruta = "['/perfil/cliente/prendas/prenda', prenda.uid]";
+
   constructor(private prendaService: PrendaService,
     private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
+
+    this.admin = this.usuarioService.isAdmin();
+
     this.cargarPrendas(this.ultimaBusqueda);
   }
 

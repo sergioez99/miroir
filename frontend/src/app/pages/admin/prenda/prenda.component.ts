@@ -55,6 +55,19 @@ export class PrendaComponent implements OnInit {
     let identificador = '';
     let idCliente = this.usuarioService.getID();
 
+    this.formPrenda = this.fb.group({
+      talla: [talla, Validators.required],
+      nombre: [nombre, Validators.required],
+      descripcion: [descripcion, Validators.required],
+      visible: [visible, Validators.required],
+      identificador: [identificador, Validators.required],
+      idCliente: [idCliente],
+      archivoXS: [archivo],
+      archivoS: [archivo],
+      archivoM: [archivo],
+      archivoL: [archivo],
+      archivoXL: [archivo],
+    });
 
     if (this.uid != 'nuevo') {
 
@@ -63,6 +76,7 @@ export class PrendaComponent implements OnInit {
       this.prendaService.cargarPrendas(null, null, this.uid).then((res) => {
 
         console.log('respuesta al buscar la prenda por id:', res['prendas']);
+
 
         const prenda = res['prendas'];
 
@@ -74,7 +88,7 @@ export class PrendaComponent implements OnInit {
         identificador = prenda['identificador'];
         idCliente = prenda['idCliente'];
 
-        console.log('no muestra los datos de la prenda: ', talla);
+        console.log('no muestra los datos de la prenda: ', identificador);
 
       }).catch(error => {
         Swal.fire({
@@ -85,6 +99,8 @@ export class PrendaComponent implements OnInit {
         });
 
       }).finally(() => {
+
+        console.log('como que no se que de formbuilder');
         this.formPrenda = this.fb.group({
           talla: [talla, Validators.required],
           nombre: [nombre, Validators.required],
@@ -99,21 +115,6 @@ export class PrendaComponent implements OnInit {
           archivoXL: [archivo],
 
         });
-      });
-    }
-    else {
-      this.formPrenda = this.fb.group({
-        talla: [talla, Validators.required],
-        nombre: [nombre, Validators.required],
-        descripcion: [descripcion, Validators.required],
-        visible: [visible, Validators.required],
-        identificador: [identificador, Validators.required],
-        idCliente: [idCliente],
-        archivoXS: [archivo],
-        archivoS: [archivo],
-        archivoM: [archivo],
-        archivoL: [archivo],
-        archivoXL: [archivo],
       });
     }
 
@@ -179,6 +180,11 @@ export class PrendaComponent implements OnInit {
             let descripcion = '';
             let visible = true;
             let archivo = null;
+            let archivoXS = null;
+            let archivoS = null;
+            let archivoM = null;
+            let archivoL = null;
+            let archivoXL = null;
             let identificador = '';
             let idCliente = this.usuarioService.getID();
 
@@ -194,6 +200,11 @@ export class PrendaComponent implements OnInit {
               archivo: [archivo],
               identificador: [identificador, Validators.required],
               idCliente: [idCliente],
+              archivoXS: [archivo],
+              archivoS: [archivo],
+              archivoM: [archivo],
+              archivoL: [archivo],
+              archivoXL: [archivo],
             });
           }
           else {
@@ -262,25 +273,6 @@ export class PrendaComponent implements OnInit {
         });
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

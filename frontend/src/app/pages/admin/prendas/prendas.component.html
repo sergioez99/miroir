@@ -6,7 +6,8 @@
                 <div class="col">
                     <div class="row justify-content-end">
                         <div class="float-right">
-                            <button class="btn btn-primary nuevo-pre" routerLink="/admin/prendas/prenda/nuevo"><span class="material-icons">checkroom</span></button>
+                            <button class="btn btn-primary nuevo-pre" *ngIf="!admin" routerLink="/perfil/cliente/prendas/prenda/nuevo"><span class="material-icons">checkroom</span></button>
+                            <button class="btn btn-primary nuevo-pre" *ngIf="admin" routerLink="/admin/prendas/prenda/nuevo"><span class="material-icons">checkroom</span></button>
                         </div>
                     </div>
                 </div>
@@ -58,7 +59,8 @@
                                   <i class="fa fa-check text-success" *ngIf="prenda.activo"></i>
                                   <i class="fa fa-times text-danger" *ngIf="!prenda.activo"></i></td>-->
                                 <td class="text-center">
-                                    <span class="material-icons edit" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span>
+                                    <span class="material-icons edit" id="boton-editar" *ngIf="admin" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span>
+                                    <span class="material-icons edit" id="boton-editar" *ngIf="!admin" [routerLink]="['/perfil/cliente/prendas/prenda', prenda.uid]">edit</span>
                                     <!-- <span class="material-icons edit" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span> -->
                                     <span class="material-icons delete" (click)="eliminarPrenda(prenda.uid)">delete</span></td>
                             </tr>
