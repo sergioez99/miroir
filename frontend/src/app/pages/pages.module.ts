@@ -34,6 +34,7 @@ import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component'
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.co
     WavesModule,
     ReactiveFormsModule,
     ElementosComunesModule,
+    Ng2GoogleChartsModule,
 
     SidebarModule.forRoot()
   ],

@@ -6,8 +6,10 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { DatePipe } from '@angular/common';
 import { ChartService } from '../../../services/charts.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
 import { GeoService } from '../../../services/geo.service';
+import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
+import { fromEventPattern } from 'rxjs';
+import { GoogleChartsDataTable } from 'ng2-google-charts/lib/google-charts-datatable';
 
 @Component({
   selector: 'app-cuadro-usuario',
@@ -30,6 +32,22 @@ export class CuadroUsuarioComponent implements OnInit {
   public totalUsuarios;
   public totalClientes;
   public totalPrendas;
+
+  public geoChart: GoogleChartInterface = {
+    chartType: 'GeoChart',
+    dataTable: [
+      [ 'Comunidad', 'Prenda', 'Núm. de pruebas' ],
+      [ 'ES-AR', 'zapatacas', 75 ],
+      [ 'ES-CL', 'gameboy', 12 ],
+      [ 'ES-VC', 'cacota', 600 ]
+    ],
+    //firstRowIsData: true,
+    options: {region: 'ES',
+              resolution:'provinces',
+              colorAxis:{'colors:': ['#00853f', 'orange', '#e31b23']},
+              backgroundColor:'#81d4fa',
+            }
+    };
 
   constructor( private chartServices :ChartService,
                private fb: FormBuilder,
@@ -272,33 +290,22 @@ export class CuadroUsuarioComponent implements OnInit {
 
   }
 
-  cargarMapaRegiones(){
+  async cargarMapaRegiones(){
 
-    this.GeoService.getRegiones().then(res => {
+    let datos = await this.GeoService.getRegiones();
 
-      console.log(res);
+    console.log(datos);
 
-      //EMPEZAMOS A CARGAR EL MAPA
-
-      //OPCIONES DE REGIÓN Y COLORES
-
-      const opciones = {
-        region: 'ES',
-        resolution: 'provinces',
-        colorAxis: {colors: ['#00853f', 'orange', '#e31b23']},
-        backgroundColor: '#81d4fa',
-        datalessRegionColor: 'white',
-        defaultColor: 'purple',
-      }
-
-      //EXTRAEMOS LOS DATOS DE LA PETICIÓN
-
-
-    }).catch(error => {
-
-      console.log("Error cargando el mapa: " + error);
-
-    });
+    this.geoChart = {
+      chartType: 'GeoChart',
+      dataTable: datos,
+      //firstRowIsData: true,
+      options: {region: 'ES',
+                resolution:'provinces',
+                colorAxis:{'colors:': ['#00853f', 'orange', '#e31b23']},
+                backgroundColor:'#81d4fa',
+              }
+      };
 
   }
 

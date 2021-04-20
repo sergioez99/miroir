@@ -16,6 +16,12 @@ import { DatePipe } from '@angular/common';
 
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
+// const MyGoogleChartsSettings: GoogleChartsSettings = {
+//   mapsApiKey: 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY',
+//   googleChartsVersion: '46',
+//   language: 'es',
+// };
+
 @NgModule({
   declarations: [
     AppComponent
