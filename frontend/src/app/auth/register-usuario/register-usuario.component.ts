@@ -50,6 +50,7 @@ export class RegisterUsuarioComponent implements OnInit {
 
         this.authService.registro(this.formRegister.value).then( res => {
 
+
           Swal.fire({
             title:'Usuario creado correctamente',
             text: 'Le hemos enviado un email de confirmación. <br> Por favor, revise su bendeja de entrada.',

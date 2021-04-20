@@ -1,11 +1,12 @@
 const Usuario = require('../models/usuarios.model');
 const Prenda = require('../models/prendas.model');
+const ModelosPrenda = require('../models/modelosPrendas.model');
 
 //Para acceder al sistema de archivos
 const fs = require('fs');
 
 
-const actualizarBD = async(tipo, path, nombreArchivo, id) => {
+const actualizarBD = async(tipo, path, nombreArchivo, id, talla) => {
 
     switch (tipo) {
         case 'fotoperfil':
@@ -39,15 +40,39 @@ const actualizarBD = async(tipo, path, nombreArchivo, id) => {
                 return false;
             }
 
-            let fotoviejaDos = prenda.imagen;
-            const pathFotoViejaDos = `${path}/${fotoviejaDos}`;
+            const modelos = await ModelosPrenda.find({ idPrenda: id, talla: talla });
 
-            if (fotoviejaDos && fs.existsSync(pathFotoViejaDos)) {
-                fs.unlinkSync(pathFotoViejaDos);
+            console.log('modelos de la prenda: ', prenda.modelo);
+            console.log('resultado de la busqueda: ', modelos);
 
+            let modelo;
+
+            if (modelos.length > 0) {
+
+                console.log('la prenda tiene un modelo de esa talla');
+                modelo = modelos[0];
+                let fotoviejaDos = modelo.modelo;
+                const pathFotoViejaDos = `${path}/modelo/prenda/${fotoviejaDos}`;
+
+                if (fotoviejaDos && fs.existsSync(pathFotoViejaDos)) {
+                    fs.unlinkSync(pathFotoViejaDos);
+
+                }
+            } else {
+                console.log('la prenda no tiene modelo de esa talla');
+                modelo = new ModelosPrenda();
+                modelo.idPrenda = id;
+                modelo.talla = talla;
             }
 
-            prenda.imagen = nombreArchivo;
+            modelo.modelo = nombreArchivo;
+
+            let modelosPrenda = prenda.modelo;
+            modelosPrenda.push(modelo);
+            prenda.modelo = modelosPrenda;
+
+            await modelo.save();
+
             await prenda.save();
             console.log(prenda);
 

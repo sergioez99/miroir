@@ -68,7 +68,7 @@
 
                 <!--INPUT: PRENDA -->
                 <div *ngFor="let item of seleccionados">
-                    Archivo {{item}}: <input (change)="cambioArchivo($event)" type="file" id="archivo" formControlName="archivo{{item}}">
+                    Archivo {{item}}: <input (change)="cambioArchivo($event)" type="file" id="archivo{{item}}" formControlName="archivo{{item}}">
 
                 </div>
 
@@ -78,14 +78,14 @@
                     <div *ngFor="let item of texturas; let i = index">
                         <mat-form-field appearance="fill">
                             <mat-label>Seleccione la talla</mat-label>
-                            <mat-select formControlName="{{texturas[i]}}" [(ngModel)]="texturasSeleccionadas">
+                            <mat-select formControlName="{{texturas[i]}}" id="{{texturas[i]" multiple [(ngModel)]="texturasSeleccionadas[i]" (ngModelChange)="seleccionarTexturas($event, i)">
                                 <mat-option *ngFor="let topping of texturasList" [value]="topping">{{topping}}</mat-option>
                             </mat-select>
                         </mat-form-field>
 
                         <!--INPUT: textura -->
-                        <div *ngFor="let items of texturasSeleccionadas">
-                            Archivo {{items}}:
+                        <div *ngFor="let items of texturasSeleccionadas[i]">
+                            Archivo {{items}}: <input (change)="cambioArchivo($event)" type="file" id="{{item}}{{items}}" formControlName="{{item}}{{items}}">
 
                         </div>
 

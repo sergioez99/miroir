@@ -102,6 +102,7 @@ export class gestorRecursos {
                 return malla;
 
             default:
+                console.log('fichero de textura: ', fichero);
                 archivo = await this.leerArchivoRed(environment.base_url + '/ticket/textura/' + fichero + '/' + ticket);
 
                 // sera una imagen jpg, png...

@@ -266,15 +266,14 @@ crearDatosPrendasCall( formData, token) {
     return this.http.get(this.url+'/chart/prendas/total', { headers: headers });
   }
 
-  subirArchivosCall(id, tipo, archivo: File, token){
+  subirArchivosCall(id, tipo, archivo: File, token, talla='XX'){
 
     const headers = new HttpHeaders({
       'x-token': token,
+      'talla': talla
     });
     const datos: FormData = new FormData();
     datos.append('archivo', archivo, archivo.name);
-
-    console.log(headers);
 
     return this.http.post(this.url+'/upload/'+tipo+'/'+id, datos, { headers: headers });
   }

@@ -59,6 +59,7 @@
                                   <i class="fa fa-times text-danger" *ngIf="!prenda.activo"></i></td>-->
                                 <td class="text-center">
                                     <span class="material-icons edit" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span>
+                                    <!-- <span class="material-icons edit" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span> -->
                                     <span class="material-icons delete" (click)="eliminarPrenda(prenda.uid)">delete</span></td>
                             </tr>
                         </tbody>

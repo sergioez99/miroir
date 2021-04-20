@@ -11,7 +11,20 @@ const { generarClaveSecreta, generarTicket, validarTicket } = require('../helper
 const { infoToken } = require('../helpers/infotoken');
 //para el acceso al sistema de archivos
 const fs = require('fs');
+// const FileReader = require('filereader');
 
+/* // Devuelve la promesa de leer datos de una url
+const contenidoBase64 = async(file) => {
+    return new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onerror = reject;
+        fr.onload = function() {
+            resolve(fr.result);
+        }
+        fr.readAsDataURL(file);
+    });
+}
+ */
 /*
 función para devolver la clave de un cliente
     /api/ticket/clave/obtener/:id
@@ -472,6 +485,7 @@ const validacionTicket = async(req, res = response) => {
                 // conseguir modelo de avatar y modelo de prenda
 
                 // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
+                const sexo = usuario.sexo;
                 const altura = usuario.altura;
                 const peso = usuario.peso;
                 const pecho = usuario.pecho;
@@ -491,6 +505,9 @@ const validacionTicket = async(req, res = response) => {
                     if (cintura > 80) {
                         modelo += 1;
                     }
+                }
+                if (sexo == 'M') {
+                    modelo += 10;
                 }
 
                 // aqui ya tenemos el modelo del avatar
@@ -593,6 +610,7 @@ const modeloTicket = async(req, res = response) => {
                         }
 
                         // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
+                        const sexo = usuario.sexo;
                         const altura = usuario.altura;
                         const peso = usuario.peso;
                         const pecho = usuario.pecho;
@@ -618,15 +636,18 @@ const modeloTicket = async(req, res = response) => {
                                 modelo += 1;
                             }
                         }
+                        if (sexo && sexo == 'M') {
+                            modelo += 10;
+                        }
 
 
-                        path = `${process.env.PATHUPLOAD}/modelo/${modelo}.json`;
-                        console.log(path);
+                        path = `${process.env.PATHUPLOAD}/modelo/avatar/${modelo}.json`;
+                        // console.log(path);
 
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/default.json`;
+                            path = `${process.env.PATHUPLOAD}/modelo/avatar/default.json`;
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);
@@ -672,7 +693,7 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/${aux.modelo}`;
+                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${aux.modelo}`;
                                     break;
                                 }
                             }
@@ -688,65 +709,67 @@ const modeloTicket = async(req, res = response) => {
 
                         break;
 
-                    case 'textura':
+                        /*
+                        case 'textura':
 
-                        console.log('devolver una textura');
-                        // devolver prenda
-                        let prendaBD = await Prenda.findById(prendaID);
+                            console.log('devolver una textura');
+                            // devolver prenda
+                            let prendaBD = await Prenda.findById(prendaID);
 
-                        // comprobar que la prenda existe
+                            // comprobar que la prenda existe
 
-                        if (!prendaBD) {
-                            return res.status(400).json({
-                                ok: false,
-                                msg: 'No es una prenda válida',
-                                error: 'prenda',
-                            });
-                        }
-
-
-                        // habrá que buscar el tipo de textura que necesita esta prenda (de momento nanai)
-
-                        // const texturaPrenda = '1.jpg';
-                        const texturaPrenda = prendaBD.textura;
+                            if (!prendaBD) {
+                                return res.status(400).json({
+                                    ok: false,
+                                    msg: 'No es una prenda válida',
+                                    error: 'prenda',
+                                });
+                            }
 
 
-                        let texturaFinal = null;
+                            // habrá que buscar el tipo de textura que necesita esta prenda (de momento nanai)
 
-                        switch (textura) {
-                            case 'albedo':
-                                texturaFinal = texturaPrenda.texturaAlbedo;
-                                break;
-                            case 'normal':
-                                texturaFinal = texturaPrenda.texturaNormal;
-                                break;
-                            case 'height':
-                                texturaFinal = texturaPrenda.texturaHeight;
-                                break;
-                            case 'roughness':
-                                texturaFinal = texturaPrenda.texturaRoughness;
-                                break;
-                            case 'ao':
-                                texturaFinal = texturaPrenda.texturaAmbientOcclusion;
-                                break;
-                            default:
-                                texturaFinal = texturaPrenda.texturaAlbedo;
-                                break;
-                        }
+                            // const texturaPrenda = '1.jpg';
+                            const texturaPrenda = prendaBD.textura;
 
-                        path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/texturas/${texturaFinal}`;
 
-                        // console.log('path de prenda: ', path);
+                            let texturaFinal = null;
 
-                        //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
-                            res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/default.jpg`;
-                        }
-                        //si todo bien lo enviamos
-                        return res.sendFile(path);
+                            switch (textura) {
+                                case 'albedo':
+                                    texturaFinal = texturaPrenda.texturaAlbedo;
+                                    break;
+                                case 'normal':
+                                    texturaFinal = texturaPrenda.texturaNormal;
+                                    break;
+                                case 'height':
+                                    texturaFinal = texturaPrenda.texturaHeight;
+                                    break;
+                                case 'roughness':
+                                    texturaFinal = texturaPrenda.texturaRoughness;
+                                    break;
+                                case 'ao':
+                                    texturaFinal = texturaPrenda.texturaAmbientOcclusion;
+                                    break;
+                                default:
+                                    texturaFinal = texturaPrenda.texturaAlbedo;
+                                    break;
+                            }
 
-                        break;
+                            path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/texturas/${texturaFinal}`;
+
+                            // console.log('path de prenda: ', path);
+
+                            //comprobar si existe el archivo
+                            if (!fs.existsSync(path)) {
+                                res.status(404);
+                                path = `${process.env.PATHUPLOAD}/modelo/default.jpg`;
+                            }
+                            //si todo bien lo enviamos
+                            return res.sendFile(path);
+
+                            break; 
+                            */
 
                     case 'vertexShader':
 
@@ -1030,8 +1053,48 @@ const texturaTicket = async(req, res = response) => {
 
 }
 */
+
+
 const texturaTicket = async(req, res = response) => {
-    console.log('hola');
+    try {
+        const ticket = req.params.ticket;
+        const nombre = req.params.nombre;
+        const validar = validarTicket(ticket);
+
+        if (validar) {
+
+            // ticket valido, buscar el archivo de textura y devolverlo
+
+            path = `${process.env.PATHUPLOAD}/modelo/textura/${nombre}`;
+
+            // console.log('devolver textura: ', path);
+
+            //comprobar si existe el archivo
+            if (!fs.existsSync(path)) {
+                path = `${process.env.PATHUPLOAD}/modelo/textura/default.jpg`;
+            }
+            // console.log('devolver textura: ', path);
+
+            //si todo bien lo enviamos
+            return res.sendFile(path);
+
+        }
+
+        return res.status(400).json({
+            ok: false,
+            msg: 'El ticket no es válido',
+            error: 'ticket',
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(400).json({
+            ok: false,
+            msg: 'Ha habido algun error',
+            error: error
+        });
+    }
 }
 
 
