@@ -51,7 +51,7 @@ export class TMotorTAG {
     private vertexCount;
     private vertexCount2;
     private malla;
-    private modelos 
+    private modelos
 
 
     constructor() {
@@ -111,18 +111,18 @@ export class TMotorTAG {
         nuevo.changeActuMatriz();
         padre.addChild(nuevo);
 
-        
+
         let malla = await this.gestorRecursos.getRecurso(prenda);
 
         let text = await this.gestorRecursos.getRecurso(malla.getTexturas()[0]);
-        
+
         if(this.modelos == 0){
             let tex = await this.loadTexture(2);
             this.gl.activeTexture(this.gl.TEXTURE0);
         }else{
             let texture = await this.loadTexture(text);
             this.gl.activeTexture(this.gl.TEXTURE1);
-        }     
+        }
         this.modelos++;
 
 
@@ -194,7 +194,7 @@ export class TMotorTAG {
         this.gl.canvas.width = window.outerWidth;
         this.gl.canvas.height = window.outerHeight
 
-        //Fondo en blanco y propiedades 
+        //Fondo en blanco y propiedades
         this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.depthFunc(this.gl.LEQUAL);
@@ -216,13 +216,17 @@ export class TMotorTAG {
                 modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
                 normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
                 uSampler: this.gl.getUniformLocation(shaderProgram, 'uSampler'),
-                matDiffuse: this.gl.getUniformLocation(shaderProgram, 'Material.Difusse'),
+                matDiffuse: this.gl.getUniformLocation(shaderProgram, 'Material.Diffuse'),
                 matSpecular: this.gl.getUniformLocation(shaderProgram, 'Material.Specular'),
                 matShininess: this.gl.getUniformLocation(shaderProgram, 'Material.Shininess'),
                 lightPosition: this.gl.getUniformLocation(shaderProgram, 'Light.Position'),
                 lightAmbiental: this.gl.getUniformLocation(shaderProgram, 'Light.Ambient'),
-                lightDiffuse: this.gl.getUniformLocation(shaderProgram, 'Light.Difusse'),
+                lightDiffuse: this.gl.getUniformLocation(shaderProgram, 'Light.Diffuse'),
                 lightSpecular: this.gl.getUniformLocation(shaderProgram, 'Light.Specular'),
+                lightPosition2: this.gl.getUniformLocation(shaderProgram, 'Light2.Position'),
+                lightAmbiental2: this.gl.getUniformLocation(shaderProgram, 'Light2.Ambient'),
+                lightDiffuse2: this.gl.getUniformLocation(shaderProgram, 'Light2.Diffuse'),
+                lightSpecular2: this.gl.getUniformLocation(shaderProgram, 'Light2.Specular'),
             },
         };
 
@@ -393,15 +397,15 @@ export class TMotorTAG {
         matrix.mat4.rotateX(this.modelViewMatrix,
             this.modelViewMatrix,
             90 * Math.PI / 180)
-        
-            
+
+
         matrix.mat4.rotateZ(this.modelViewMatrix,
             this.modelViewMatrix,
             this.rotY);
         matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
             [this.zoom, this.zoom, this.zoom]);
-        
+
 
         // Compute a matrix for the camera
         let cameraMatrix = matrix.mat4.create();
@@ -443,12 +447,20 @@ export class TMotorTAG {
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
-      
+
         //Uniforms de luces
-        this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50,-10,-10]);
-        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [1.0, 1.0, 1.0]);
-        this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [1.0, 1.0, 1.0]);
-        this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [1.0, 0.5, 0.31]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50,-10,-50]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3,0.3,0.3]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.8,0.8,0.8]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.2,0.2,0.2]);
+        /* this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.0,0.0,0.0]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.0,0.0,0.0]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.0,0.0,0.0]); */
+
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50,-10,-50]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2,0.2,0.2]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2,  [0.5,0.5,0.5]);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2,  [0.2,0.2,0.2]);
 
         // set the shader uniforms
         this.gl.uniformMatrix4fv(
@@ -487,19 +499,19 @@ export class TMotorTAG {
             this.modelViewMatrix,
             [0.0328,0.0328,0.0328])
 
-        
-     
-       
+
+
+
         this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
         this.bindVertexPosition(this.programInfo, this.buffers2);
-    
+
         this.bindVertexTextures(this.programInfo, this.buffers2);
-    
+
         this.bindVertexNormal(this.programInfo, this.buffers2);
-    
+
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-        
+
         // Dibujar pantalon
 
 
@@ -524,9 +536,9 @@ export class TMotorTAG {
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, [1.0,1.0,1.0]);
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, this.raiz.getChildren()[3].getEntidad().getMalla().getSpecular());
         this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, this.raiz.getChildren()[3].getEntidad().getMalla().getGlossiness());
-        
+
         this.gl.drawElements(this.gl.TRIANGLES, this.vertexCount, type, offset);
-        
+
 
     }
 
@@ -550,11 +562,11 @@ export class TMotorTAG {
             1, 1, 0, srcFormat, srcType,
             pixel);
 
-        
-        }*/
-            
 
-       
+        }*/
+
+
+
         if(image == 2){
             let pixel = new Uint8Array([45, 50, 37, 255]);
             this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
@@ -566,7 +578,7 @@ export class TMotorTAG {
                 srcFormat, srcType, image);
         }
 
-        
+
         if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
             this.gl.generateMipmap(this.gl.TEXTURE_2D);
         } else {
@@ -626,7 +638,7 @@ export class TMotorTAG {
                 */
                 0,
                 0,
-                this.gl.drawingBufferWidth, 
+                this.gl.drawingBufferWidth,
                 this.gl.drawingBufferHeight
             );
             this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
