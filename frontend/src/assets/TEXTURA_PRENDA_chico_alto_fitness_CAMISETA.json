@@ -8,8 +8,8 @@
         {
             "name": "FABRIC_1_FRONT_3504_004",
             "ambient": [1,1,1],
-            "diffuse": "algodon.jpg",
-            "specular": "algodon.jpg",
+            "diffuse": [1,1,1],
+            "specular": [0.0185754,0.0185754,0.0185754],
             "glossiness": 16.7623,
             "opacity": 1,
             "maps": [
