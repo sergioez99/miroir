@@ -151,7 +151,7 @@ const crearUsuario = async(req, res) => {
         );
 
         oauth2Client.setCredentials({
-            refresh_token: "1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q"
+            refresh_token: process.env.REFRESH_TOKEN
         });
 
         const accessToken = await oauth2Client.getAccessToken();
@@ -169,7 +169,7 @@ const crearUsuario = async(req, res) => {
                 password: 'MiroirInsightABP',
                 clientId: process.env.GOOGLE_CLIENT_ID, //Client ID,
                 clientSecret: process.env.SECRET_CLIENT, // Client Secret
-                refreshToken: '1//04XiLca24SynBCgYIARAAGAQSNwF-L9IrYT8VpgtsPcdPJeWUoHH9paHcWs44bP8-LRrMGFcGOgbBbpHB19MwMjA6Y2OxmMMza0Q',
+                refreshToken: process.env.REFRESH_TOKEN,
                 accessToken: accessToken
             },
             tls: {
