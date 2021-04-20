@@ -65,7 +65,6 @@ import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.co
     CuadroClienteComponent,
 
 
-
   ],
   exports: [
     BaseLayoutComponent,
@@ -82,7 +81,6 @@ import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.co
     CarouselModule,
     WavesModule,
     ReactiveFormsModule,
-
     ElementosComunesModule,
 
     SidebarModule.forRoot()

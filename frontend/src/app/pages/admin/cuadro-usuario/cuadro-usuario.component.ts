@@ -7,6 +7,8 @@ import { DatePipe } from '@angular/common';
 import { ChartService } from '../../../services/charts.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { GeoService } from '../../../services/geo.service';
+
 @Component({
   selector: 'app-cuadro-usuario',
   templateUrl: './cuadro-usuario.component.html',
@@ -31,7 +33,8 @@ export class CuadroUsuarioComponent implements OnInit {
 
   constructor( private chartServices :ChartService,
                private fb: FormBuilder,
-               private datepipe: DatePipe) { }
+               private datepipe: DatePipe,
+               private GeoService: GeoService) { }
 
   ngOnInit():void {
     this.canvas01 = <HTMLCanvasElement> document.querySelector('#chartFechaAltaUsuario');
@@ -53,6 +56,8 @@ export class CuadroUsuarioComponent implements OnInit {
     this.cargarChartFechasAlta();
     this.cargarChartHorasAlta();
     this.cargarChartUsos();
+
+    this.cargarMapaRegiones();
 
   }
   cargarChartHorasAlta(){
@@ -204,7 +209,7 @@ export class CuadroUsuarioComponent implements OnInit {
       this.chart03.destroy();
     }
     this.chartServices.getUsosPrendas().then( (res)=>{
-  
+
       let prendas = res['prenda'];
       let usos = res['usos'];
       let nombres = res['nombres'];
@@ -219,9 +224,9 @@ export class CuadroUsuarioComponent implements OnInit {
             usos[i] = usos[j];
             prendas[i] = prendas[j];
             nombres[i] = nombres [j];
-            usos[j] = aux; 
-            prendas[j] = aux1; 
-            nombres[j] = aux2; 
+            usos[j] = aux;
+            prendas[j] = aux1;
+            nombres[j] = aux2;
           }
         }
       }
@@ -247,7 +252,7 @@ export class CuadroUsuarioComponent implements OnInit {
             backgroundColor: "rgba(251, 155, 2, 0.3)",
             borderColor:"rgb(251, 155, 2)",
             borderWidth:2
-  
+
           }]
         },
         options: {
@@ -264,7 +269,38 @@ export class CuadroUsuarioComponent implements OnInit {
     }).catch(error=>{
       console.log(error);
     });
-  
+
   }
+
+  cargarMapaRegiones(){
+
+    this.GeoService.getRegiones().then(res => {
+
+      console.log(res);
+
+      //EMPEZAMOS A CARGAR EL MAPA
+
+      //OPCIONES DE REGIÓN Y COLORES
+
+      const opciones = {
+        region: 'ES',
+        resolution: 'provinces',
+        colorAxis: {colors: ['#00853f', 'orange', '#e31b23']},
+        backgroundColor: '#81d4fa',
+        datalessRegionColor: 'white',
+        defaultColor: 'purple',
+      }
+
+      //EXTRAEMOS LOS DATOS DE LA PETICIÓN
+
+
+    }).catch(error => {
+
+      console.log("Error cargando el mapa: " + error);
+
+    });
+
+  }
+
 }
 

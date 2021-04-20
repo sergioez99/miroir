@@ -14,6 +14,8 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 
 import { DatePipe } from '@angular/common';
 
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -30,6 +32,8 @@ import { DatePipe } from '@angular/common';
 
     CarouselModule,
     WavesModule,
+
+    Ng2GoogleChartsModule
 
   ],
   providers: [DatePipe],
