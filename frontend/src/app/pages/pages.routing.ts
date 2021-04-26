@@ -29,6 +29,7 @@ import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.co
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { TicketComponent } from '../ticket/ticket.component';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
+import { AyudaClienteComponent } from './admin/ayuda-cliente/ayuda-cliente.component';
 
 
 const routes: Routes = [
@@ -68,6 +69,7 @@ const routes: Routes = [
           { path:'prendas', component: PrendasComponent },
           { path:'prendas/prenda/:uid', component: PrendaComponent },
           { path:'clave', component: ClaveClienteComponent },
+          { path:'ayuda', component: AyudaClienteComponent },
           { path: '**', component: NotAuthComponent }
         ]
       },

@@ -35,6 +35,8 @@ import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.co
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
+import { AyudaClienteComponent } from './admin/ayuda-cliente/ayuda-cliente.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,7 @@ import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.comp
     CambioContraComponent,
     CuadroClienteComponent,
     ClaveClienteComponent,
+    AyudaClienteComponent,
 
 
 
@@ -87,7 +90,9 @@ import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.comp
 
     ElementosComunesModule,
 
-    SidebarModule.forRoot()
+    SidebarModule.forRoot(),
+
+    MatExpansionModule
   ],
 })
 export class PagesModule { }

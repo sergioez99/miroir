@@ -15,6 +15,8 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 import { DatePipe } from '@angular/common';
 import { TicketComponent } from './ticket/ticket.component';
 
+import { MatExpansionModule } from '@angular/material/expansion';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +34,8 @@ import { TicketComponent } from './ticket/ticket.component';
 
     CarouselModule,
     WavesModule,
+
+    MatExpansionModule,
 
   ],
   providers: [DatePipe],

@@ -20,6 +20,7 @@ export class SidebarService {
     { titulo: 'Cambiar contraseña', icono: 'history_edu', sub: false, url: '/perfil/contracli'},
     { titulo: 'Cuadro', icono: 'history_edu', sub: false, url: '/perfil/'},
     { titulo: 'Clave', icono: 'vpn_key', sub: false, url: '/perfil/cliente/clave'},
+    { titulo: 'Ayuda', icono: 'help', sub: false, url: '/perfil/cliente/ayuda'},
   ];
   menuUsuario: sidebarItem[]=[
     { titulo: 'Perfil', icono: 'person', sub: false, url: '/perfil/usuario/'},
