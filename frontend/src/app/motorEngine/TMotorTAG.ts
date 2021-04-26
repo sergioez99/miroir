@@ -446,170 +446,6 @@ export class TMotorTAG {
     this.zoom = zoom;
   }
 
-  async dibujadoTemporal() {
-    this.resizeWebGLCanvas();
-    this.updateWebGLCanvas();
-
-    //Preparamos la animación de rotación
-    //transformaciones
-
-    matrix.mat4.translate(this.modelViewMatrix,
-      this.modelViewMatrix,
-      [0, -3, 0])
-    matrix.mat4.rotateY(this.modelViewMatrix,
-      this.modelViewMatrix,
-      180 * Math.PI / 180)
-    matrix.mat4.rotateX(this.modelViewMatrix,
-      this.modelViewMatrix,
-      90 * Math.PI / 180)
-
-
-    matrix.mat4.rotateZ(this.modelViewMatrix,
-      this.modelViewMatrix,
-      this.rotY);
-    matrix.mat4.scale(this.modelViewMatrix,
-      this.modelViewMatrix,
-      [this.zoom, this.zoom, this.zoom]);
-
-
-    // Compute a matrix for the camera
-    let cameraMatrix = matrix.mat4.create();
-
-    let cameraTarget = matrix.vec3.create();
-    //Mira a las transformaciones de traslación del modelo, enfocando asi al avatar bien (o eso creo)
-    //cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
-    cameraTarget = [0, 0, 0];
-    let cameraPosition = matrix.vec3.create();
-    //De momento la cámara está en el centro, pero se tendrá que mover para una mejor vista
-    cameraPosition = [0, 0, -10];
-    let up = matrix.vec3.create();
-    up = [0, 1, 0];
-
-    // Compute the camera's matrix using look at.
-    matrix.mat4.lookAt(cameraMatrix, cameraPosition, cameraTarget, up);
-
-    let viewMatrix = matrix.mat4.create();
-    matrix.mat4.invert(viewMatrix, cameraMatrix);
-    let viewProjectionMatrix = matrix.mat4.create();
-    matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix)
-
-
-
-
-    let normalMatrix = matrix.mat4.create();
-    matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
-    matrix.mat4.transpose(normalMatrix, normalMatrix);
-
-    // Tell the shader we bound the texture to texture unit 0
-    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
-
-    this.bindVertexPosition(this.programInfo, this.buffers);
-
-    this.bindVertexTextures(this.programInfo, this.buffers);
-
-    this.bindVertexNormal(this.programInfo, this.buffers);
-
-
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
-
-
-    //Uniforms de luces
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50, -10, -50]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3, 0.3, 0.3]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse, [0.8, 0.8, 0.8]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular, [0.2, 0.2, 0.2]);
-    /* this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.0,0.0,0.0]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.0,0.0,0.0]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.0,0.0,0.0]); */
-
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50, -10, -50]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2, 0.2, 0.2]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
-
-    // set the shader uniforms
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.projectionMatrix,
-      false,
-      //this.projectionMatrix
-      viewProjectionMatrix
-    );
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.modelViewMatrix,
-      false,
-      this.modelViewMatrix
-    );
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.normalMatrix,
-      false,
-      normalMatrix);
-
-
-    //AVATAR
-    this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, this.raiz.getChildren()[2].getEntidad().getMalla().getDiffuse());
-    this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, this.raiz.getChildren()[2].getEntidad().getMalla().getSpecular());
-    this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, this.raiz.getChildren()[2].getEntidad().getMalla().getGlossiness());
-
-
-    // Dibujar camiseta
-    const type = this.gl.UNSIGNED_SHORT;
-    const offset = 0;
-    this.gl.drawElements(this.gl.TRIANGLES, 388704, type, offset);
-    //
-    //
-    //
-    //
-
-    matrix.mat4.scale(this.modelViewMatrix,
-      this.modelViewMatrix,
-      [0.0328, 0.0328, 0.0328])
-
-
-
-
-    this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
-
-    this.bindVertexPosition(this.programInfo, this.buffers2);
-
-    this.bindVertexTextures(this.programInfo, this.buffers2);
-
-    this.bindVertexNormal(this.programInfo, this.buffers2);
-
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-
-    // Dibujar pantalon
-
-
-    // set the shader uniforms
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.projectionMatrix,
-      false,
-      //this.projectionMatrix
-      viewProjectionMatrix
-    );
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.modelViewMatrix,
-      false,
-      this.modelViewMatrix
-    );
-    this.gl.uniformMatrix4fv(
-      this.programInfo.uniformLocations.normalMatrix,
-      false,
-      normalMatrix);
-
-    //PRENDA
-
-    // this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, this.raiz.getChildren()[3].getEntidad().getMalla().getDiffuse());
-    // this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, this.raiz.getChildren()[3].getEntidad().getMalla().getSpecular());
-    this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, this.raiz.getChildren()[3].getEntidad().getMalla().getGlossiness());
-
-    this.gl.drawElements(this.gl.TRIANGLES, this.vertexCount, type, offset);
-
-
-
-
-  }
-
   // ---------------- Texturas y cosas ------------------------------------
   private isPowerOf2(value) {
     return (value & (value - 1)) == 0;
@@ -617,42 +453,33 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        if(this.modelos == 0)
+            this.gl.activeTexture(this.gl.TEXTURE0);
+        else
+            this.gl.activeTexture(this.gl.TEXTURE1);
+        this.modelos++;
+        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        
+        const level = 0;
+        const internalFormat = this.gl.RGBA;
+        const srcFormat = this.gl.RGBA;
+        const srcType = this.gl.UNSIGNED_BYTE;
 
-    const level = 0;
-    const internalFormat = this.gl.RGBA;
-    const srcFormat = this.gl.RGBA;
-    const srcType = this.gl.UNSIGNED_BYTE;
-
-    //Textura de color azul
-    /*let pixel = new Uint8Array([0, 126, 126, 255]);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-        1, 1, 0, srcFormat, srcType,
-        pixel);
-                }*/
-
-
-    if (image == 2) {
-      let pixel = new Uint8Array([45, 50, 37, 255]);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-        1, 1, 0, srcFormat, srcType,
-        pixel);
-    }
-    else {
-      this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-        srcFormat, srcType, image);
-    }
+      
+        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+            srcFormat, srcType, image);
+        
 
 
-    if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
-      this.gl.generateMipmap(this.gl.TEXTURE_2D);
-    } else {
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-    }
-    return texture;
+        if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+            this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        } else {
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR);
+        }
+        return texture;
   };
 
 
