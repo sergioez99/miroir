@@ -1,16 +1,36 @@
+
+section {
+    display: grid;
+    
+}
 .sectionn {
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    display: flex;
 
     /*background: linear-gradient(to right, rgba(179, 136, 255, 0.8), rgba(251,155,2,0.8));*/
    background-image: linear-gradient(rgba(179, 136, 255, 0.5), rgba(251,155,2,0.5)), url('../../../../assets/girl2.jpg');
     padding: 10px 25px;
+
+
+}
+
+.sectionn2 {
+        
+    align-items: center;
+    justify-content: center;
+
+
+    display:grid;
+    grid-template-columns: 800px 600px;
+    grid-column: auto auto;
+    grid-column-gap: 20px;
+    background-color: white;
+    border-radius: 10px;
+    
+    vertical-align: middle;
 }
 
 .centro {
-    background-color:white ;
     font-size: 14px;
     line-height: 1.8;
     color: #222;
@@ -19,7 +39,6 @@
     padding: 35px 0; 
     height: 720px;
     width: 600px;
-    border-radius: 10px;
     text-align: center;
     align-items: center;
 }
@@ -36,6 +55,7 @@ h2 {
     text-align: center;
     display: inline-block;
     width: 100%;
+    margin-top: 35px;
 }
 
 p{
