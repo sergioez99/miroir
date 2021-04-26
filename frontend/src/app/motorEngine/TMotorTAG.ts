@@ -46,7 +46,7 @@ export class TMotorTAG {
   private buffers2: any
   private programInfo: any
 
-  private rotY;
+  private rotY = 0;
   private zoom = 1;
   private vertexCount;
   private vertexCount2;
@@ -110,7 +110,6 @@ export class TMotorTAG {
     let nuevo = new TNode(matrix.mat4.create(), padre, null, null, trasl, rot, esc);
     nuevo.changeActuMatriz();
     padre.addChild(nuevo);
-
 
     let malla = await this.gestorRecursos.getRecurso(prenda, ticket, tipo);
 
@@ -225,9 +224,17 @@ export class TMotorTAG {
             break;
 
             case '1': //Prenda 1
-            matrix.mat4.scale(this.modelViewMatrix,
+            //para la camiseta
+            /*matrix.mat4.scale(this.modelViewMatrix,
                 this.modelViewMatrix,
-                [0.0328,0.0328,0.0328])
+                [0.0328,0.0328,0.0328])*/
+
+
+            //para la falda
+            matrix.mat4.translate(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0,-0.033,-1.37])
+                  
 
             this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
@@ -241,7 +248,6 @@ export class TMotorTAG {
 
             break;
         }
-
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
         this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
@@ -264,8 +270,8 @@ export class TMotorTAG {
     }
 
     //Dimensiones del canvas
-    this.gl.canvas.width = window.outerWidth;
-    this.gl.canvas.height = window.outerHeight
+    this.gl.canvas.width = 650;
+    this.gl.canvas.height = 650;
 
     //Fondo en blanco y propiedades
     this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
@@ -346,7 +352,7 @@ export class TMotorTAG {
   }
 
   // --------------------- Iniciar el probador -----------------------
-  async iniciarProbador(ticket, avatar, texturaAvatar, prenda, textura) {
+  async iniciarProbador(ticket, avatar,  prenda) {
     //Creamos la cámara, la luz y el viewport del probador
     let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
     this.registrarLuz(luz);
@@ -382,18 +388,18 @@ export class TMotorTAG {
 
 
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
-      new Uint16Array(this.malla.getIndices()), this.gl.STATIC_DRAW);
+      new Uint16Array(malla.getIndices()), this.gl.STATIC_DRAW);
 
     const textureCoordBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.malla.getCoordtex()),
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getCoordtex()),
       this.gl.STATIC_DRAW);
 
     const normalBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.malla.getNormales()), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(malla.getNormales()), this.gl.STATIC_DRAW);
 
     return {
       position: positionBuffer,
@@ -445,8 +451,6 @@ export class TMotorTAG {
   updateZoom(zoom) {
     this.zoom = zoom;
   }
-
-  
 
   // ---------------- Texturas y cosas ------------------------------------
   private isPowerOf2(value) {

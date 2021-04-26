@@ -17,7 +17,7 @@ export class WebGLService {
 
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    await this.miMotor.iniciarProbador("chico_alto_fitness_CAMISETA.json", "TEXTURA_PRENDA_chico_alto_fitness_CAMISETA.json"); 
+    await this.miMotor.iniciarProbador(ticket, modelos[0], modelos[1]); 
     return gl;
   }
 
