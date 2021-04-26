@@ -91,7 +91,6 @@ export class gestorRecursos {
 
                 malla.setIndices(file.model.meshes[0].face.vertElementIndices);
                 malla.setVertices(indices);
-                console.log(file.model.meshes[0].face.vertElementIndices);
 
                 malla.setTexturas(file.materials[0].maps[0].file)
 
@@ -110,8 +109,13 @@ export class gestorRecursos {
 
                 let miblob = await archivo.blob();
                 let contenidoBase64 = await this.contenidoBase64(miblob);
-                var imagen = new Image();
-                imagen.src = String(contenidoBase64);
+                let imagen = await new Promise((resolve, reject) => {
+                    let imagen = new Image();
+                    imagen.onload = ()=> {
+                        resolve(imagen);
+                    }
+                    imagen.src = String(contenidoBase64);
+                })
                 return imagen;
 
 
@@ -122,7 +126,7 @@ export class gestorRecursos {
     };
 
     dibujarMallas(){
-        this.recursoMalla.draw();
+        return this.recursoMalla;
     }
 }
 
