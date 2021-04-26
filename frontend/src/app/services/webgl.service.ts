@@ -17,12 +17,16 @@ export class WebGLService {
 
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    await this.miMotor.iniciarProbador("chico_alto_fitness_CAMISETA.json", "cuadritos.jpg", "TEXTURA_PRENDA_chico_alto_fitness_CAMISETA.json", "algodon.jpg"); //El segundo modelo no lo pinta
+    await this.miMotor.iniciarProbador("chico_alto_fitness_CAMISETA.json", "TEXTURA_PRENDA_chico_alto_fitness_CAMISETA.json"); 
     return gl;
   }
 
   dibujadoTemporal() {
     this.miMotor.dibujadoTemporal();
+  }
+
+  dibujar(){
+    this.miMotor.dibujarEscena();
   }
 
   updateMouseevent(rotZ) {
@@ -35,6 +39,10 @@ export class WebGLService {
 
   updateViewport(){
     this.miMotor.updateViewport();
+  }
+
+  zoomCamara([clipX, clipY]){
+    this.miMotor.camaraZoom([clipX, clipY]);
   }
 
 }
