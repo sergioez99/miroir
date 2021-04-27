@@ -702,110 +702,18 @@ const modeloTicket = async(req, res = response) => {
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/pantalon.json`;
+                            path = `${process.env.PATHUPLOAD}/modelo/prenda/default.json`;
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);
 
-                        break;
 
-                        /*
-                        case 'textura':
-
-                            console.log('devolver una textura');
-                            // devolver prenda
-                            let prendaBD = await Prenda.findById(prendaID);
-
-                            // comprobar que la prenda existe
-
-                            if (!prendaBD) {
-                                return res.status(400).json({
-                                    ok: false,
-                                    msg: 'No es una prenda válida',
-                                    error: 'prenda',
-                                });
-                            }
-
-
-                            // habrá que buscar el tipo de textura que necesita esta prenda (de momento nanai)
-
-                            // const texturaPrenda = '1.jpg';
-                            const texturaPrenda = prendaBD.textura;
-
-
-                            let texturaFinal = null;
-
-                            switch (textura) {
-                                case 'albedo':
-                                    texturaFinal = texturaPrenda.texturaAlbedo;
-                                    break;
-                                case 'normal':
-                                    texturaFinal = texturaPrenda.texturaNormal;
-                                    break;
-                                case 'height':
-                                    texturaFinal = texturaPrenda.texturaHeight;
-                                    break;
-                                case 'roughness':
-                                    texturaFinal = texturaPrenda.texturaRoughness;
-                                    break;
-                                case 'ao':
-                                    texturaFinal = texturaPrenda.texturaAmbientOcclusion;
-                                    break;
-                                default:
-                                    texturaFinal = texturaPrenda.texturaAlbedo;
-                                    break;
-                            }
-
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/texturas/${texturaFinal}`;
-
-                            // console.log('path de prenda: ', path);
-
-                            //comprobar si existe el archivo
-                            if (!fs.existsSync(path)) {
-                                res.status(404);
-                                path = `${process.env.PATHUPLOAD}/modelo/default.jpg`;
-                            }
-                            //si todo bien lo enviamos
+                        /*--------------------------------------*/
+                        case 'suelo':
+                            path = `${process.env.PATHUPLOAD}/modelo/prenda/suelo.json`
                             return res.sendFile(path);
+                        /*-------------------------------------*/
 
-                            break; 
-                            */
-
-                    case 'vertexShader':
-
-                        console.log('devolver un shader');
-
-                        path = `${process.env.PATHUPLOAD}/shader/toucan-vertex-shader.glsl`;
-
-                        //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
-                            return res.status(404).json({
-                                ok: false,
-                                msg: 'No se encuentra el archivo'
-                            });
-                        }
-                        //si todo bien lo enviamos
-                        return res.sendFile(path);
-
-                        break;
-
-                    case 'fragmentShader':
-
-                        console.log('devolver un shader');
-
-                        path = `${process.env.PATHUPLOAD}/shader/toucan-fragment-shader.glsl`;
-
-                        //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
-                            return res.status(404).json({
-                                ok: false,
-                                msg: 'No se encuentra el archivo'
-                            });
-                        }
-                        //si todo bien lo enviamos
-                        return res.sendFile(path);
-
-                        break;
 
                     default:
                         return res.status(400).json({
@@ -814,12 +722,7 @@ const modeloTicket = async(req, res = response) => {
                             error: 'tipo',
                         });
 
-                        break;
                 }
-                return res.json({
-                    ok: true,
-                    msg: 'se ha canjeado el ticket'
-                });
 
             }
         }

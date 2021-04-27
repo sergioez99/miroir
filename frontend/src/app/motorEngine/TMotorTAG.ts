@@ -44,6 +44,7 @@ export class TMotorTAG {
   //Buffers y shaders
   private buffers: any
   private buffers2: any
+  private buffers3: any
   private programInfo: any
 
   private rotY = 0;
@@ -248,6 +249,30 @@ export class TMotorTAG {
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
 
             break;
+
+            case '2': //suelo
+
+            
+            matrix.mat4.rotateX(this.modelViewMatrix,
+              this.modelViewMatrix,
+              90 * Math.PI / 180)
+
+            matrix.mat4.scale(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [1.958,1.958,1.958])
+                  
+
+            this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+            this.bindVertexPosition(this.programInfo, this.buffers3);
+    
+            this.bindVertexTextures(this.programInfo, this.buffers3);
+    
+            this.bindVertexNormal(this.programInfo, this.buffers3);
+    
+            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+
+            break;
         }
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
@@ -371,6 +396,8 @@ export class TMotorTAG {
     this.buffers=await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() );
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
     this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
+    let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
+    this.buffers3=await this.initialiseBuffers( sueloNodo.getEntidad().getMalla() );
     }
 
     async initialiseBuffers(malla) {
@@ -465,8 +492,10 @@ export class TMotorTAG {
     const texture = this.gl.createTexture();
         if(this.modelos == 0)
             this.gl.activeTexture(this.gl.TEXTURE0);
-        else
+        else if(this.modelos == 1)
             this.gl.activeTexture(this.gl.TEXTURE1);
+        else
+          this.gl.activeTexture(this.gl.TEXTURE2);
         this.modelos++;
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
         
