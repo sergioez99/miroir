@@ -702,7 +702,7 @@ const modeloTicket = async(req, res = response) => {
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/default.json`;
+                            path = `${process.env.PATHUPLOAD}/modelo/prenda/pantalon.json`;
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);

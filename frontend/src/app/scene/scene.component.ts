@@ -2,11 +2,6 @@ import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from "@angula
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../services/webgl.service';
-import { min } from 'rxjs/operators';
-import { TEntity } from 'src/app/motorEngine/commons';
-import { ECamera, ELight } from 'src/app/motorEngine/TEntity';
-import { TNode } from 'src/app/motorEngine/TNode';
-import { mat4, vec3, vec4 } from 'gl-matrix';
 import { TicketService } from '../services/ticket.service';
 
 @Component({
@@ -42,6 +37,7 @@ export class SceneComponent implements OnInit {
 
       await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
       const drawSceneInterval = interval(this._60fpsInterval);
+      this.iniciarEvents()
       drawSceneInterval.subscribe(() => {
         this.drawScene();
       });
@@ -106,71 +102,85 @@ export class SceneComponent implements OnInit {
 
 
    drawScene() {
-    // Eventos de ratón aquí por el elemento canvas html
+      //this.webglService.updateViewport();
+      //this.webglService.dibujadoTemporal();
 
-    this.canvas.nativeElement.addEventListener('mousedown', e => {
-      var x = e.clientX;
-      var y = e.clientY;
+      this.webglService.dibujar();
+    }
 
-      var rect = this.canvas.nativeElement.getBoundingClientRect();
+    iniciarEvents(){
+      // Eventos de ratón aquí por el elemento canvas html
+    
+      this.canvas.nativeElement.addEventListener('mousedown', e => {
+        var x = e.clientX;
+        var y = e.clientY;
+          
+        var rect = this.canvas.nativeElement.getBoundingClientRect();
+        
+        if (rect.left <= x && rect.right > x &&
+            rect.top <= y && rect.bottom > y) {
+            this.lastX = x; 
+            this.lastY = y;
+            this.trackingMouseMotion = true; 
+        }
+        
+      })    
 
-      if (rect.left <= x && rect.right > x &&
-          rect.top <= y && rect.bottom > y) {
-          this.lastX = x;
-          this.lastY = y;
-          this.trackingMouseMotion = true;
-      }
+      
+      this.canvas.nativeElement.addEventListener('mouseup', e => {
+        this.trackingMouseMotion = false; 
+      })
+      
+      
+      this.canvas.nativeElement.addEventListener('mousemove', e =>{
+        var x = e.clientX;
+        var y = e.clientY;
+                    
+        if (this.trackingMouseMotion) {
+          //Rotacion z
+            this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
+            this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;            
+            this.rotZ += 30 * this.dMouseX;
+            this.rotZ %= 360;
+            
+        }
+        this.lastX = x;
+        this.lastY = y;
+        
+        //Rotación solo de Z, X e Y no son necesarias, pq la cámara deja de ver el modelo, traslación por ver
+        this.webglService.updateMouseevent(this.rotZ);
+        
+      })
 
-    })
+      this.canvas.nativeElement.addEventListener('wheel', e => {
+        e.preventDefault();
+        //const [clipX, clipY] = this.getClipSpaceMousePosition(e);
+
+        let hacerzoom = e.deltaY;
+        
+        if(hacerzoom < 0){
+          this.scale = this.scale + 0.05;
+          hacerzoom = 0;
+        }
+        if(hacerzoom > 0){
+          this.scale = this.scale - 0.05;
+          hacerzoom = 0;
+        }
+        
 
 
-    this.canvas.nativeElement.addEventListener('mouseup', e => {
-      this.trackingMouseMotion = false;
-    })
+        if(this.scale < 1){
+          this.scale = 1;
+        }
+
+        //this.scale = Math.min(Math.max(.125, this.scale), 4);
+        
+        this.webglService.updateZoom(this.scale);
 
 
-    this.canvas.nativeElement.addEventListener('mousemove', e =>{
-      var x = e.clientX;
-      var y = e.clientY;
-
-      if (this.trackingMouseMotion) {
-        //Rotacion z
-          this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
-          this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;
-          this.rotZ += 30 * this.dMouseX;
-          this.rotZ %= 360;
-
-      }
-      this.lastX = x;
-      this.lastY = y;
-
-      //Rotación solo de Z, X e Y no son necesarias, pq la cámara deja de ver el modelo, traslación por ver
-      this.webglService.updateMouseevent(this.rotZ);
-
-    })
-
-    this.canvas.nativeElement.addEventListener('wheel', e => {
-      e.preventDefault();
-
-      if(e.deltaY < 0){
-        this.scale = this.scale + 0.001;
-      }
-      else{
-        this.scale = this.scale - 0.001;
-      }
-
-      if(this.scale < 1){
-        this.scale = 1;
-      }
-
-      //this.scale = Math.min(Math.max(.125, this.scale), 4);
-
-      this.webglService.updateZoom(this.scale);
-    }, {
-      passive: false
-    })
-
-      this.webglService.updateViewport();
-      this.webglService.dibujadoTemporal();
+        
+      }, {
+        passive: false
+      })
     }
 }
