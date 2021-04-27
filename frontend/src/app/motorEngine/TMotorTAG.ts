@@ -224,16 +224,16 @@ export class TMotorTAG {
             break;
 
             case '1': //Prenda 1
-            //para la camiseta
-            /*matrix.mat4.scale(this.modelViewMatrix,
+            //para la camiseta y el pantalon
+            matrix.mat4.scale(this.modelViewMatrix,
                 this.modelViewMatrix,
-                [0.0328,0.0328,0.0328])*/
+                [0.0328,0.0328,0.0328])
 
 
             //para la falda
-            matrix.mat4.translate(this.modelViewMatrix,
+            /*matrix.mat4.translate(this.modelViewMatrix,
               this.modelViewMatrix,
-              [0,-0.033,-1.37])
+              [0,-0.033,-1.37])*/
                   
 
             this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
