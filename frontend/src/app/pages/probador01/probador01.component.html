@@ -1,7 +1,10 @@
 <div> 
-    <button>Camiseta</button>
-    <button>Falda</button>
-    <button>Pantalón</button>
+    <button (click)="canjearTicket('default.json')">Camiseta</button>
+    <button (click)="canjearTicket('falda.json')">Falda</button>
+    <button (click)="canjearTicket('pantalon.json')">Pantalón</button>
+    <button>Algodón</button>
+    <button>Vaquero</button>
+    <button>Cuadros</button>
 </div>
 
 <canvas #sceneCanvas id="probador" width="650" height="650">

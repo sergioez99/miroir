@@ -170,6 +170,7 @@ export class TMotorTAG {
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix);
 
     matrix.mat4.scale(viewProjectionMatrix, viewProjectionMatrix, [this.zoom, this.zoom, this.zoom])
+    matrix.mat4.rotateY(viewProjectionMatrix, viewProjectionMatrix, this.rotY)
 
     this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.projectionMatrix, false, viewProjectionMatrix);
 
@@ -205,9 +206,9 @@ export class TMotorTAG {
                 90 * Math.PI / 180)
     
     
-            matrix.mat4.rotateZ(this.modelViewMatrix,
+            /*matrix.mat4.rotateZ(this.modelViewMatrix,
                 this.modelViewMatrix,
-                this.rotY)
+                this.rotY)*/
                 
             //Puedo cambiar los buffers a array también    
 
@@ -365,13 +366,15 @@ export class TMotorTAG {
     this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
     this.setViewportActivo(0);
 
+
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
-    await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() ).then(buffers => { this.buffers = buffers; });
+    this.buffers=await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() );
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-    await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() ).then(buffers => {this.buffers2 = buffers; });
+    this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
     }
 
     async initialiseBuffers(malla) {
+      
         const positionBuffer = this.gl.createBuffer();
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
@@ -437,6 +440,7 @@ export class TMotorTAG {
     const normalize = false;
     const stride = 0;
     const offset = 0;
+    
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
     this.gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, bufferSize, type, normalize, stride, offset);
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
