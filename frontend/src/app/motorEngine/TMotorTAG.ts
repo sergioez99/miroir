@@ -124,24 +124,72 @@ export class TMotorTAG {
     return nuevo;
   }
 
+  generarSombras() {
+    
+  let frame_buffer, color_buffer, depth_buffer, status;
+
+  // Step 1: Create a frame buffer object
+  frame_buffer = this.gl.createFramebuffer();
+
+  // Step 2: Create and initialize a texture buffer to hold the colors.
+  color_buffer = this.gl.createTexture();
+  this.gl.bindTexture(this.gl.TEXTURE_2D, color_buffer);
+  this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1024, 1024, 0,
+                                  this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+
+  // Step 3: Create and initialize a texture buffer to hold the depth values.
+  // Note: the WEBGL_depth_texture extension is required for this to work
+  //       and for the gl.DEPTH_COMPONENT texture format to be supported.
+  depth_buffer = this.gl.createTexture();
+  this.gl.bindTexture(this.gl.TEXTURE_2D, depth_buffer);
+  this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT, 1024, 1024, 0,
+                                  this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+
+  // Step 4: Attach the specific buffers to the frame buffer.
+  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);
+  this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, color_buffer, 0);
+  this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT,  this.gl.TEXTURE_2D, depth_buffer, 0);
+
+  // Step 5: Verify that the frame buffer is valid.
+  status = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
+  if (status !== this.gl.FRAMEBUFFER_COMPLETE) {
+    console.log("The created frame buffer is invalid: " + status.toString());
+  }
+
+  // Unbind these new objects, which makes the default frame buffer the
+  // target for rendering.
+  this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+
+  return frame_buffer;
+  }
+
   dibujarEscena() {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
     // LUCES
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50,-10,-50]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3,0.3,0.3]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.8,0.8,0.8]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.2,0.2,0.2]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50, -10, -50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3, 0.3, 0.3]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse, [0.8, 0.8, 0.8]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular, [0.2, 0.2, 0.2]);
     /* this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.0,0.0,0.0]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.0,0.0,0.0]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.0,0.0,0.0]); */
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50,-10,-50]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2,0.2,0.2]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2,  [0.5,0.5,0.5]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2,  [0.2,0.2,0.2]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50, -10, -50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2, 0.2, 0.2]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
 
     /*for (let i = 0; i < this.registroLuces.length; i++) {
         if (this.lucesActivas[i] == true) {
@@ -191,73 +239,73 @@ export class TMotorTAG {
 
     let mallas = RMalla.getMallas();
 
-    for(let i in mallas){
-        let vertexCount = mallas[i].getIndices().length;
-        switch(i){
-            case '0': //Avatar
-            matrix.mat4.translate(this.modelViewMatrix,
-                this.modelViewMatrix,
-                [0,-3,0])
-            matrix.mat4.rotateY(this.modelViewMatrix,
-                this.modelViewMatrix,
-                180 * Math.PI / 180)
-            matrix.mat4.rotateX(this.modelViewMatrix,
-                this.modelViewMatrix,
-                90 * Math.PI / 180)
-    
-    
-            /*matrix.mat4.rotateZ(this.modelViewMatrix,
-                this.modelViewMatrix,
-                this.rotY)*/
-                
-            //Puedo cambiar los buffers a array también    
-
-            this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
-
-            this.bindVertexPosition(this.programInfo, this.buffers);
-    
-            this.bindVertexTextures(this.programInfo, this.buffers);
-    
-            this.bindVertexNormal(this.programInfo, this.buffers);
-    
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
-
-            break;
-
-            case '1': //Prenda 1
-            //para la camiseta y el pantalon
-            matrix.mat4.scale(this.modelViewMatrix,
-                this.modelViewMatrix,
-                [0.0328,0.0328,0.0328])
+    for (let i in mallas) {
+      let vertexCount = mallas[i].getIndices().length;
+      switch (i) {
+        case '0': //Avatar
+          matrix.mat4.translate(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0, -3, 0])
+          matrix.mat4.rotateY(this.modelViewMatrix,
+            this.modelViewMatrix,
+            180 * Math.PI / 180)
+          matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix,
+            90 * Math.PI / 180)
 
 
-            //para la falda
-            /*matrix.mat4.translate(this.modelViewMatrix,
+          /*matrix.mat4.rotateZ(this.modelViewMatrix,
               this.modelViewMatrix,
-              [0,-0.033,-1.37])*/
-                  
+              this.rotY)*/
 
-            this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+          //Puedo cambiar los buffers a array también    
 
-            this.bindVertexPosition(this.programInfo, this.buffers2);
-    
-            this.bindVertexTextures(this.programInfo, this.buffers2);
-    
-            this.bindVertexNormal(this.programInfo, this.buffers2);
-    
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
-            break;
-        }
-        this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
-        this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
-        this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+          this.bindVertexPosition(this.programInfo, this.buffers);
 
-        this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
-        
-        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+          this.bindVertexTextures(this.programInfo, this.buffers);
+
+          this.bindVertexNormal(this.programInfo, this.buffers);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
+
+          break;
+
+        case '1': //Prenda 1
+          //para la camiseta y el pantalon
+          matrix.mat4.scale(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0.0328, 0.0328, 0.0328])
+
+
+          //para la falda
+          /*matrix.mat4.translate(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0,-0.033,-1.37])*/
+
+
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+
+          this.bindVertexPosition(this.programInfo, this.buffers2);
+
+          this.bindVertexTextures(this.programInfo, this.buffers2);
+
+          this.bindVertexNormal(this.programInfo, this.buffers2);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+
+          break;
+      }
+      this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
+      this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
+      this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+
+      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
+
+      this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
     }
-}
+  }
 
   // ---------------- Inicializar el contexto de GL y los shaders ----------------
   iniciarGL(canvas: HTMLCanvasElement) {
@@ -353,7 +401,13 @@ export class TMotorTAG {
   }
 
   // --------------------- Iniciar el probador -----------------------
-  async iniciarProbador(ticket, avatar,  prenda) {
+  async iniciarProbador(ticket, avatar, prenda) {
+
+    let depth_texture_extension = this.gl.getExtension('WEBGL_depth_texture');
+    if (!depth_texture_extension) {
+    console.log('This WebGL program requires the use of the ' +
+      'WEBGL_depth_texture extension. This extension is not supported ' +
+      'by your browser, so this WEBGL program is terminating.');
     //Creamos la cámara, la luz y el viewport del probador
     let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
     this.registrarLuz(luz);
@@ -368,22 +422,22 @@ export class TMotorTAG {
 
 
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
-    this.buffers=await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() );
+    this.buffers = await this.initialiseBuffers(avatarNodo.getEntidad().getMalla());
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-    this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
-    }
+    this.buffers2 = await this.initialiseBuffers(modeloNodo.getEntidad().getMalla());
+  }
 
-    async initialiseBuffers(malla) {
-      
-        const positionBuffer = this.gl.createBuffer();
+  async initialiseBuffers(malla) {
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+    const positionBuffer = this.gl.createBuffer();
 
-        this.gl.bufferData(
-            this.gl.ARRAY_BUFFER,
-            new Float32Array(malla.getVertices()),
-            this.gl.STATIC_DRAW
-        );
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(malla.getVertices()),
+      this.gl.STATIC_DRAW
+    );
 
 
     const indexBuffer = this.gl.createBuffer();
@@ -440,7 +494,7 @@ export class TMotorTAG {
     const normalize = false;
     const stride = 0;
     const offset = 0;
-    
+
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
     this.gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, bufferSize, type, normalize, stride, offset);
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
@@ -463,33 +517,33 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
-        if(this.modelos == 0)
-            this.gl.activeTexture(this.gl.TEXTURE0);
-        else
-            this.gl.activeTexture(this.gl.TEXTURE1);
-        this.modelos++;
-        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-        
-        const level = 0;
-        const internalFormat = this.gl.RGBA;
-        const srcFormat = this.gl.RGBA;
-        const srcType = this.gl.UNSIGNED_BYTE;
+    if (this.modelos == 0)
+      this.gl.activeTexture(this.gl.TEXTURE0);
+    else
+      this.gl.activeTexture(this.gl.TEXTURE1);
+    this.modelos++;
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
-      
-        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-            srcFormat, srcType, image);
-        
+    const level = 0;
+    const internalFormat = this.gl.RGBA;
+    const srcFormat = this.gl.RGBA;
+    const srcType = this.gl.UNSIGNED_BYTE;
 
 
-        if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
-            this.gl.generateMipmap(this.gl.TEXTURE_2D);
-        } else {
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR);
-        }
-        return texture;
+    this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+      srcFormat, srcType, image);
+
+
+
+    if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+      this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    } else {
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+    }
+    return texture;
   };
 
 
