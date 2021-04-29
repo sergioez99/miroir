@@ -44,6 +44,7 @@ export class TMotorTAG {
   //Buffers y shaders
   private buffers: any
   private buffers2: any
+  private buffers3: any
   private programInfo: any
 
   private rotY = 0;
@@ -278,8 +279,7 @@ export class TMotorTAG {
             this.modelViewMatrix,
             [0.0328, 0.0328, 0.0328])
 
-
-          //para la falda
+           //para la falda
           /*matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
             [0,-0.033,-1.37])*/
@@ -294,6 +294,30 @@ export class TMotorTAG {
           this.bindVertexNormal(this.programInfo, this.buffers2);
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+
+          break;
+
+          case '2': //suelo
+
+          
+          matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix,
+            90 * Math.PI / 180)
+
+          matrix.mat4.scale(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [1.958,1.958,1.958])
+                
+
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+          this.bindVertexPosition(this.programInfo, this.buffers3);
+  
+          this.bindVertexTextures(this.programInfo, this.buffers3);
+  
+          this.bindVertexNormal(this.programInfo, this.buffers3);
+  
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
 
           break;
       }
@@ -408,6 +432,7 @@ export class TMotorTAG {
     console.log('This WebGL program requires the use of the ' +
       'WEBGL_depth_texture extension. This extension is not supported ' +
       'by your browser, so this WEBGL program is terminating.');
+    }
     //Creamos la cámara, la luz y el viewport del probador
     let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
     this.registrarLuz(luz);
@@ -424,10 +449,12 @@ export class TMotorTAG {
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
     this.buffers = await this.initialiseBuffers(avatarNodo.getEntidad().getMalla());
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-    this.buffers2 = await this.initialiseBuffers(modeloNodo.getEntidad().getMalla());
-  }
+    this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
+    let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
+    this.buffers3=await this.initialiseBuffers( sueloNodo.getEntidad().getMalla() );
+    }
 
-  async initialiseBuffers(malla) {
+    async initialiseBuffers(malla){
 
     const positionBuffer = this.gl.createBuffer();
 
@@ -517,33 +544,35 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
-    if (this.modelos == 0)
-      this.gl.activeTexture(this.gl.TEXTURE0);
-    else
-      this.gl.activeTexture(this.gl.TEXTURE1);
-    this.modelos++;
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        if(this.modelos == 0)
+            this.gl.activeTexture(this.gl.TEXTURE0);
+        else if(this.modelos == 1)
+            this.gl.activeTexture(this.gl.TEXTURE1);
+        else
+          this.gl.activeTexture(this.gl.TEXTURE2);
+        this.modelos++;
+        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+        
+        const level = 0;
+        const internalFormat = this.gl.RGBA;
+        const srcFormat = this.gl.RGBA;
+        const srcType = this.gl.UNSIGNED_BYTE;
 
-    const level = 0;
-    const internalFormat = this.gl.RGBA;
-    const srcFormat = this.gl.RGBA;
-    const srcType = this.gl.UNSIGNED_BYTE;
+      
+        this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+            srcFormat, srcType, image);
+        
 
 
-    this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
-      srcFormat, srcType, image);
-
-
-
-    if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
-      this.gl.generateMipmap(this.gl.TEXTURE_2D);
-    } else {
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-    }
-    return texture;
+        if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+            this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        } else {
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR);
+        }
+        return texture;
   };
 
 
