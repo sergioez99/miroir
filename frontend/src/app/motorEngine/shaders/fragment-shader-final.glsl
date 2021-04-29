@@ -27,9 +27,9 @@ varying highp vec3 vPosition;
 
 uniform sampler2D uSampler;
 
-uniform sampler2D u_ShadowMap
+uniform sampler2D u_ShadowMap;
 
-varying vec4 v_PositionFromLight
+varying vec4 v_PositionFromLight;
 
 //funcion que calcula el modelo de reflexion de Phong
 vec3 Phong() {
@@ -77,7 +77,7 @@ void main(void) {
 
     vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);
 
-    float depth = rgbaDepth.r;\n' + // Retrieve the z-value from R
+    float depth = rgbaDepth.r;// Retrieve the z-value from R
 
     float visibility = (shadowCoord.z > depth + 0.005) ? 0.7 : 1.0;
 

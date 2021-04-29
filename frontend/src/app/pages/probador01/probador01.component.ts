@@ -55,13 +55,15 @@ export class Probador01Component implements OnInit {
 
       this.prendaID = "1234"; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
-      this.usuario = this.usuarioService.getEmail();
+      //this.usuario = this.usuarioService.getEmail();
+      this.usuario = "sergi@gmail.com";
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
       this.ticket = this.route.snapshot.params['ticket'];
 
+      if(this.ticket == null)
       this.crearTicket();
-   
+      else
       this.canjearTicket();
       
 

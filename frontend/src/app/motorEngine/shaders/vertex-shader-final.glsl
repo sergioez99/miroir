@@ -12,29 +12,8 @@ varying vec2 vTextureCoord;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
-//estructura para guardar las luces (posicion, propiedades ambientas, difusa y especular de la luz)
-struct TLight {
-    vec3 Position;
-
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
-};
-//estructura para guardar el material. ahora utilizamos texturas para guardar las propiedades difusas y especulares del material
-struct TMaterial {
-    vec3 Diffuse;
-    vec3 Specular;
-    float Shininess;
-};
-
-//estado de opengl: material y luz (del tipo de las estructuras anteriores)
-uniform TMaterial Material;
-uniform TLight Light;
-uniform TLight Light2;
-
-
-uniform mat4 u_MvpMatrixFromLight
-varying vec4 v_PositionFromLight
+uniform mat4 u_MvpMatrixFromLight;
+varying vec4 v_PositionFromLight;
 
 void main(void) {
     //tranformar el vertice y la normal a coordenadas de vista
