@@ -124,8 +124,6 @@ export class PrendaComponent implements OnInit {
 
   enviar() {
 
-    console.log('de donde saca el idCliente? ', this.formPrenda);
-    console.log('sera el mismo?, ', this.usuarioService.getID());
     if (this.uid == 'nuevo') {
       this.crearPrenda();
     }
@@ -140,7 +138,6 @@ export class PrendaComponent implements OnInit {
 
       this.prendaService.crearPrenda(this.formPrenda.value).then((res) => {
 
-        console.log('buscando id de la prenda: ', res['prenda'].uid);
 
 
         // guardar los modelos de las diferentes tallas de la prenda
@@ -151,12 +148,12 @@ export class PrendaComponent implements OnInit {
 
           let archivo = this.archivoASubir.get('archivo'+elemento);
 
-          console.log('archivo: ', archivo);
+          
 
           // guardar archivo de la prenda
           this.uploadService.crearArchivoPrenda(res['prenda'].uid, archivo, elemento).then((res) => {
 
-            console.log('hola holita: ', res);
+           
           });
 
         });
@@ -217,70 +214,6 @@ export class PrendaComponent implements OnInit {
           }
 
         });
-
-
-
-
-
-/*
-
-        // guardar archivo de la prenda
-        this.uploadService.crearArchivoPrenda(res['prenda'].uid, this.archivoASubir).then((res) => {
-
-          console.log('hola holita: ', res);
-
-          Swal.fire({
-            title: 'Prenda creada correctamente',
-            icon: 'success',
-            showCloseButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Crear una nueva',
-            cancelButtonText: 'Volver'
-          }).then(res => {
-
-            if (res.isConfirmed) {
-              console.log('aceptar, vaciar el formulario y volver a crear');
-
-              let talla = '';
-              let nombre = '';
-              let descripcion = '';
-              let visible = true;
-              let archivo = null;
-              let identificador = '';
-              let idCliente = this.usuarioService.getID();
-
-              this.formPrenda = this.fb.group({
-                talla: [talla, Validators.required],
-                nombre: [nombre, Validators.required],
-                descripcion: [descripcion, Validators.required],
-                visible: [visible, Validators.required],
-                archivo: [archivo],
-                identificador: [identificador, Validators.required],
-                idCliente: [idCliente],
-              });
-            }
-            else {
-              this.router.navigateByUrl('/admin/prendas');
-            }
-
-          });
-
-        }).catch((error) => {
-          console.log(error);
-          Swal.fire({
-            title: 'Error cargando el archivo',
-            text: error.error.msg,
-            icon: 'error',
-            showCloseButton: true,
-            confirmButtonText: 'Volver a intentar',
-            footer: 'Parece que ha habido un error, intentelo de nuevo'
-          });
-        });
-
-*/
-
-
-
 
       }).catch((error) => {
 

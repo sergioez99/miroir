@@ -50,12 +50,10 @@ export class SceneComponent implements OnInit {
 
       this.ticket = this.route.snapshot.params['ticket'];
 
-      if (this.ticket == null){
-        this.crearTicket();
-      }
-      else {
+      
+       
         this.canjearTicket();
-      }
+      
 
 
     }
@@ -82,22 +80,7 @@ export class SceneComponent implements OnInit {
       });
     }
 
-    crearTicket(){
-
-      this.ticketService.obtenerTicket().then((res) => {
-
-        console.log('ticket creado: ',res);
-
-        this.ticket = res;
-        this.canjearTicket();
-
-      }).catch((error) => {
-
-        console.warn(error);
-
-      });
-
-    }
+  
 
 
 

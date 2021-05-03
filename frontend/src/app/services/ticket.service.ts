@@ -64,15 +64,10 @@ export class TicketService {
 
   }
 
-  obtenerTicket(): Promise<any> {
+  obtenerTicket(clave, usuario, prendaID, talla): Promise<any> {
     return new Promise((resolve, reject) => {
 
-      const cliente = 'uYKDtsiR6~hGCTc4uptN';
-      const usuario = 'email@email.com';
-      const prenda = 'VEF15ORE3SC1';
-      const talla = 'XS';
-
-      this.apiService.getTicketCall(cliente, usuario, prenda, talla).subscribe((res) => {
+      this.apiService.getTicketCall(clave, usuario, prendaID, talla).subscribe((res) => {
 
         this.ticket = res['ticket'];
         resolve(this.ticket);
@@ -96,48 +91,6 @@ export class TicketService {
 
         resolve(res);
 
-/*
-        Promise.all([
-          this.obtenerArchivoTicket('avatar', ticket),
-          this.obtenerArchivoTicket('prenda', ticket),
-          this.obtenerArchivoTicket('vertexShader', ticket),
-          this.obtenerArchivoTicket('fragmentShader', ticket),
-        ]).then( values =>{
-          console.log('hola amigos', values);
-          this.avatar = values[0];
-          this.prenda = values[1];
-          this.vertex = values[2];
-          this.fragment = values[3];
-          resolve({'vertex': this.vertex, 'fragment': this.fragment, 'avatar': this.avatar, 'prenda': this.prenda,});
-
-        }).finally( ()=>{
-          resolve({'avatar': this.avatar, 'prenda': this.prenda, 'vertex': this.vertex, 'fragment': this.fragment});
-        });
-        */
-
-         /*   this.obtenerModeloTicket('avatar', ticket).then(resp => {
-
-            avatar = resp;
-
-          }).catch(error =>{
-            console.warn('error en avatar: ', error);
-          }).finally( ()=>{
-
-            this.obtenerModeloTicket('prenda', ticket).then(resp => {
-
-              debugger;
-              prenda = resp;
-
-              resolve({'avatar': avatar, 'prenda': prenda});
-
-
-            }).catch( error =>{
-              console.warn('error en prenda: ', error);
-              resolve({'avatar': avatar, 'prenda': prenda});
-            });
-          }); */
-
-
       }, (err) => {
 
         reject(err);
@@ -146,16 +99,6 @@ export class TicketService {
 
     });
   }
-/*
-  obtenerTexturasPrenda (ticket) :Promise<any> {
-
-    return new Promise((resolve, reject) => {
-
-
-    });
-
-  }
-*/
 
   obtenerArchivoTicket(tipo, ticket): Promise<any> {
 

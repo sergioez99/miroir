@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../../services/webgl.service';
 import { TicketService } from '../../services/ticket.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-probador01',
@@ -23,10 +24,14 @@ export class Probador01Component implements OnInit {
   private ticket = null;
   private modelosTicket: string[];
 
+  //cosas pal ticket
+  private clave; usuario; prendaID; talla;
+
   constructor(private router :Router,
     private route: ActivatedRoute,
     private webglService :WebGLService,
-    private ticketService: TicketService,) { }
+    private ticketService: TicketService,
+    private usuarioService: UsuarioService) { }
 
 
     async funcionCanvas() {
@@ -48,14 +53,17 @@ export class Probador01Component implements OnInit {
     ngOnInit(): void {
       this.modelosTicket = [];
 
+      this.prendaID = "1234"; //Camiseta como default
+      this.talla = "XS"; //Alguna talla como default
+      this.usuario = this.usuarioService.getEmail();
+      this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
+
       this.ticket = this.route.snapshot.params['ticket'];
 
-      if (this.ticket == null){
-        this.crearTicket();
-      }
-      else {
-        this.canjearTicket();
-      }
+      this.crearTicket();
+   
+      this.canjearTicket();
+      
 
 
     }
@@ -74,8 +82,6 @@ export class Probador01Component implements OnInit {
           this.modelosTicket = []
           this.modelosTicket.push(res['avatar'])
           this.modelosTicket.push(prenda)
-          
-          
         }
 
         console.log("ticket hola: " + this.modelosTicket)
@@ -92,7 +98,7 @@ export class Probador01Component implements OnInit {
 
     crearTicket(){
 
-      this.ticketService.obtenerTicket().then((res) => {
+      this.ticketService.obtenerTicket(this.clave, this.usuario, this.prendaID, this.talla).then((res) => {
 
         console.log('ticket creado: ',res);
 
