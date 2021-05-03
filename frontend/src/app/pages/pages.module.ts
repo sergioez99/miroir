@@ -34,6 +34,7 @@ import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component'
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
 
 @NgModule({
@@ -67,7 +68,6 @@ import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.comp
     ClaveClienteComponent,
 
 
-
   ],
   exports: [
     BaseLayoutComponent,
@@ -84,8 +84,8 @@ import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.comp
     CarouselModule,
     WavesModule,
     ReactiveFormsModule,
-
     ElementosComunesModule,
+    Ng2GoogleChartsModule,
 
     SidebarModule.forRoot()
   ],

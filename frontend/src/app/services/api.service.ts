@@ -328,5 +328,23 @@ crearDatosPrendasCall( formData, token) {
     }
   }
 
+  getListaRegionesChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/chart/mapa', { headers: headers });
+  }
+
+  registrarGeoCall(token, ciudad, prenda){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    const datos: FormData = new FormData();
+    datos.append('ciudad', ciudad);
+    datos.append('prenda', prenda);
+
+    return this.http.post(this.url+'/chart/mapa', datos, { headers: headers });
+  }
 
 }

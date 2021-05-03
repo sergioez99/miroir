@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { GeoService } from '../../services/geo.service';
 
 
 @Component({
@@ -10,10 +11,16 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 export class HomeComponent implements OnInit {
 
   constructor(
-    config: NgbCarouselConfig
+    config: NgbCarouselConfig,
+    private GeoService: GeoService
   ) { }
 
   ngOnInit(): void {
+
+    console.log("HOLITA");
+    this.GeoService.guardarDatoGeo("cacasota");
+    this.GeoService.getRegiones();
+
   }
 
 }
