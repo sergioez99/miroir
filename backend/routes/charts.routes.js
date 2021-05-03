@@ -19,7 +19,7 @@ const {
     obtenerUsosPrendasCliente,
     obtenerTallasPrendasCliente,
     agregarDatoMapa,
-    obtenerDatosRegiones
+    obtenerDatosRegiones,
 
 } = require('../controllers/charts.controller');
 

@@ -821,8 +821,6 @@ const obtenerDatosRegiones = async(req, res = response) => {
 
     try {
 
-
-
         //Buscamos el dato de cada región
 
         let datos = [];
@@ -911,5 +909,5 @@ module.exports = {
     sumarPrendaKPI,
     restarPrendaKPI,
     sumarUsoPrenda,
-    agregarDatoMapa
+    agregarDatoMapa,
 }

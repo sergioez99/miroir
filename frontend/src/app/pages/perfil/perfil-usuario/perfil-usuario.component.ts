@@ -48,7 +48,6 @@ export class PerfilUsuarioComponent implements OnInit {
   actualizar(){
     if (this.formMedidas.valid) {
 
-
       this.usuarioService.actualizarMedidas(this.formMedidas.value).then((response) => {
 
         // medidas introducidas correctamente

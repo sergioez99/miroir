@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuarios.model');
 const Cliente = require('../models/clientes.model');
 const Token = require('../models/validaciontoken.model');
+const Medidas = require('../models/medidas.model');
 
 //KPI
 const { sumarUsuarioKPI, restarUsuarioKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
@@ -238,6 +239,20 @@ const actualizarUsuario = async(req, res = response) => {
 
         // new: true -> nos devuelve el usuario actualizado
         const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
+
+        // REGISTRAMOS LAS MEDIDAS EN LA COLECCION (NM)
+
+        let nuevaMedida = new Medidas();
+        nuevaMedida.id = object.id;
+        nuevaMedida.peso = object.peso;
+        nuevaMedida.altura = object.altura;
+        nuevaMedida.pecho = object.pecho;
+        nuevaMedida.cadera = object.cadera;
+        nuevaMedida.cintura = object.cintura;
+
+        await nuevaMedida.save();
+
+        console.log('Medidas registradas en los KPI');
 
         res.json({
             ok: true,
