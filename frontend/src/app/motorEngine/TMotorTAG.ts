@@ -131,50 +131,42 @@ export class TMotorTAG {
 
   generarSombras() {
     
-  let frame_buffer, color_buffer, depth_buffer, status;
+    let frame_buffer, color_buffer, depth_buffer, status, texture;
 
-  // Step 1: Create a frame buffer object
-  frame_buffer = this.gl.createFramebuffer();
+    frame_buffer = this.gl.createFramebuffer();
+    texture = this.gl.createTexture();
 
-  // Step 2: Create and initialize a texture buffer to hold the colors.
-  color_buffer = this.gl.createTexture();
-  this.gl.bindTexture(this.gl.TEXTURE_2D, color_buffer);
-  this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1024, 1024, 0,
-                                  this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 2048, 2048, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
 
-  // Step 3: Create and initialize a texture buffer to hold the depth values.
-  // Note: the WEBGL_depth_texture extension is required for this to work
-  //       and for the gl.DEPTH_COMPONENT texture format to be supported.
-  depth_buffer = this.gl.createTexture();
-  this.gl.bindTexture(this.gl.TEXTURE_2D, depth_buffer);
-  this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT, 1024, 1024, 0,
-                                  this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-  this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+    depth_buffer = this.gl.createRenderbuffer();
 
-  // Step 4: Attach the specific buffers to the frame buffer.
-  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);
-  this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, color_buffer, 0);
-  this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT,  this.gl.TEXTURE_2D, depth_buffer, 0);
+    this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, depth_buffer);
+    this.gl.renderbufferStorage(this.gl.RENDERBUFFER, this.gl.DEPTH_COMPONENT16, 2048, 2048);
 
-  // Step 5: Verify that the frame buffer is valid.
-  status = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
-  if (status !== this.gl.FRAMEBUFFER_COMPLETE) {
-    console.log("The created frame buffer is invalid: " + status.toString());
-  }
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);
+    this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, texture, 0);
 
-  // Unbind these new objects, which makes the default frame buffer the
-  // target for rendering.
-  this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-  this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+    this.gl.framebufferRenderbuffer(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT, this.gl.RENDERBUFFER, depth_buffer);
 
-  return frame_buffer;
+    var e = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
+
+    if (this.gl.FRAMEBUFFER_COMPLETE !== e) {
+      console.log('Frame buffer object is incomplete: ' + e.toString());
+    }
+
+    frame_buffer.texture = texture; // keep the required object
+
+    // Unbind the buffer object
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+
+    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+
+    this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, null);
+
+
+    return frame_buffer;
   }
 
   dibujarEscena() {
@@ -192,8 +184,7 @@ export class TMotorTAG {
 
     let mvpmatrix = matrix.mat4.create();
 
-    // DIBUJAR MODELOS
-    //devuelvo las mallas que me he guardado en el gestor de recursos
+    //dibujamos las sombras
     let RMalla = this.gestorRecursos.dibujarMallas();
 
     let mallas = RMalla.getMallas();
@@ -217,7 +208,8 @@ export class TMotorTAG {
               this.modelViewMatrix,
               this.rotY)*/
 
-          this.bindVertexPosition2(this.programShadow, this.buffers);
+          this.bindVertexPosition(this.programShadow, this.buffers);
+          matrix.mat4.multiply(this.mvpMatrixFromLight_t, this.viewProjMatrixFromLight, this.modelViewMatrix);
 
           break;
 
@@ -232,7 +224,7 @@ export class TMotorTAG {
             this.modelViewMatrix,
             [0,-0.033,-1.37])*/
 
-          this.bindVertexPosition2(this.programShadow, this.buffers2);
+          this.bindVertexPosition(this.programShadow, this.buffers2);
 
           //Sombras de los modelos
           matrix.mat4.multiply(this.mvpMatrixFromLight_t, this.viewProjMatrixFromLight, this.modelViewMatrix);
@@ -249,13 +241,13 @@ export class TMotorTAG {
             this.modelViewMatrix,
             [1.958,1.958,1.958])
 
-          this.bindVertexPosition2(this.programShadow, this.buffers3);
+          this.bindVertexPosition(this.programShadow, this.buffers3);
 
           //Sombras del plano
           matrix.mat4.multiply(this.mvpMatrixFromLight_p, this.viewProjMatrixFromLight, this.modelViewMatrix);
           break;
       }
-      this.gl.uniformMatrix4fv(this.programShadow.uniformLocations.uMVP_Matrix, false, matrix.mat4.multiply(mvpmatrix, this.modelViewMatrix, this.projectionMatrix));
+      this.gl.uniformMatrix4fv(this.programShadow.uniformLocations.modelViewMatrix, false, matrix.mat4.multiply(mvpmatrix, this.modelViewMatrix, this.projectionMatrix));
       this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
     }
     
@@ -268,18 +260,19 @@ export class TMotorTAG {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);    // Clear color and depth buffer
 
     this.gl.useProgram(this.programInfo.program); // Set the shader for regular drawing
-    this.gl.uniform1i(this.programInfo.program.u_ShadowMap, 5);  // Pass 5 because gl.TEXTURE5 is enabled
+    this.gl.uniform1i(this.programInfo.program.shadowMap, 5);  // Pass 5 because gl.TEXTURE5 is enabled
 
     // Draw the triangle and plane ( for regular drawing)
-    this.gl.uniformMatrix4fv(this.programInfo.program.u_MvpMatrixFromLight, false, this.mvpMatrixFromLight_t);
+    
 
-    this.gl.uniformMatrix4fv(this.programInfo.program.u_MvpMatrixFromLight, false, this.mvpMatrixFromLight_p);
+    this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_p);
 
 
     //Reset de esto
     this.modelViewMatrix = matrix.mat4.create();
-
+    
     // LUCES
+
 
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50, -10, -50]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3, 0.3, 0.3]);
@@ -369,6 +362,7 @@ export class TMotorTAG {
           this.bindVertexNormal(this.programInfo, this.buffers);
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
 
           break;
 
@@ -394,6 +388,7 @@ export class TMotorTAG {
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
 
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
           break;
 
           case '2': //suelo
@@ -417,6 +412,7 @@ export class TMotorTAG {
           this.bindVertexNormal(this.programInfo, this.buffers3);
   
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_p);
 
           break;
       }
@@ -490,7 +486,7 @@ export class TMotorTAG {
         vertexPosition: this.gl.getAttribLocation(shadowProgram, 'a_Position'),
       },
       uniformLocations: {
-        modelViewMatrix: this.gl.getUniformLocation(shadowProgram, 'uMVP_Matrix'),
+        modelViewMatrix: this.gl.getUniformLocation(shadowProgram, 'uMvp_Matrix'),
       }
     }
 
@@ -649,18 +645,6 @@ export class TMotorTAG {
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
   }
 
-  private bindVertexPosition2(programInfo: any, buffers: any) {
-    const bufferSize = 3;
-    const type = this.gl.FLOAT;
-    const normalize = false;
-    const stride = 0;
-    const offset = 0;
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
-    this.gl.vertexAttribPointer(programInfo.attribLocations.a_Position, bufferSize, type, normalize, stride, offset);
-    this.gl.enableVertexAttribArray(programInfo.attribLocations.a_Position);
-  }
-
 
   // ----------------- Dibujado TEMPORAL ----------------
   updateMouseevent(rotZ) {
@@ -683,7 +667,8 @@ export class TMotorTAG {
         else if(this.modelos == 1)
             this.gl.activeTexture(this.gl.TEXTURE1);
         else
-          this.gl.activeTexture(this.gl.TEXTURE2);
+            this.gl.activeTexture(this.gl.TEXTURE2);
+
         this.modelos++;
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
         
