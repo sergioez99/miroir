@@ -266,17 +266,66 @@ crearDatosPrendasCall( formData, token) {
     return this.http.get(this.url+'/chart/prendas/total', { headers: headers });
   }
 
-  subirArchivosCall(id, tipo, archivo: File, token){
+  subirArchivosCall(id, tipo, archivo: File, token, talla='XX'){
 
     const headers = new HttpHeaders({
       'x-token': token,
+      'talla': talla
     });
     const datos: FormData = new FormData();
     datos.append('archivo', archivo, archivo.name);
 
-    console.log(headers);
-
     return this.http.post(this.url+'/upload/'+tipo+'/'+id, datos, { headers: headers });
+  }
+
+  // SISTEMA DE TICKETS
+  getClienteClaveCall(token :string, id: string){
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    return this.http.get(this.url+'/ticket/clave/obtener/'+id, { headers: headers });
+  }
+
+  setClienteClaveCall(token :string, id: string){
+
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    return this.http.get(this.url+'/ticket/clave/cambiar/'+id, { headers: headers });
+  }
+
+  getTicketCall(cliente: string, usuario: string, prenda: string, talla: string){
+
+    return this.http.get(this.url + '/ticket/obtener/' + '?email=' + usuario + '&identificador=' + prenda + '&clave=' + cliente + '&talla='+talla);
+  }
+
+  validarTicketCall(ticket: string){
+
+    return this.http.get(this.url + '/ticket/validar/' + ticket);
+  }
+
+  archivoTicketCall(tipo: string, ticket: string){
+    switch(tipo){
+      case 'avatar':
+      case 'prenda':
+        return this.http.get(this.url + '/ticket/modelo/' + tipo + '/' + ticket);
+        break;
+      case 'vertexShader':
+        return this.http.get(this.url + '/ticket/modelo/' + tipo + '/' + ticket, { responseType: 'text' });
+        break;
+      case 'fragmentShader':
+        return this.http.get(this.url + '/ticket/modelo/' + tipo + '/' + ticket, { responseType: 'text' });
+        break;
+      case 'textura':
+        return this.http.get(this.url + '/ticket/modelo/' + tipo + '/' + ticket, { responseType: 'blob' });
+        break;
+      default:
+        return null;
+        break;
+    }
   }
 
   getListaRegionesChartCall(token){

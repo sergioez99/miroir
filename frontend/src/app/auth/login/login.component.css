@@ -64,7 +64,7 @@ div.signup-content {
     -webkit-border-radius: 10px;
     -o-border-radius: 10px;
     -ms-border-radius: 10px;
-    padding: 50px 85px; 
+    padding: 50px 69px; 
     width: 608px;
 }
 
@@ -123,4 +123,11 @@ div.signup-content {
     -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
     -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
     box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.33);
+}
+
+.botones {
+    display: grid;
+    grid-column: auto;
+    width: 300px;
+
 }

@@ -35,6 +35,7 @@ import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.co
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
     CuadroUsuarioComponent,
     CambioContraComponent,
     CuadroClienteComponent,
+    ClaveClienteComponent,
 
 
   ],

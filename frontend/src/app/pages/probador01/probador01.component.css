@@ -1,0 +1,35 @@
+canvas { 
+    border: 1px solid black; 
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 10px;
+    
+}
+
+div {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-column: auto auto auto;
+    grid-column-gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+button {
+    
+    background-color: #b388ff;
+    border-color: #b388ff;
+    color: white;
+    height: 40px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #fb9b02;
+    border-color: #fb9b02;
+}

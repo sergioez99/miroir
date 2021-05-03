@@ -13,6 +13,7 @@ import { MaterialModule } from './material/material.module';
 import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 
 import { DatePipe } from '@angular/common';
+import { TicketComponent } from './ticket/ticket.component';
 
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
@@ -24,7 +25,8 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TicketComponent
 
   ],
   imports: [

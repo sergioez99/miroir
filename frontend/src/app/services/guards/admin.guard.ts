@@ -18,7 +18,6 @@ export class AdminGuard implements CanActivate, CanActivateChild {
       console.log('admin guard: ', this.usuarioService.getRol());
       console.log('admin guard: ¿puedo entrar? ', this.usuarioService.isAdmin());
 
-
       if( this.usuarioService.isAdmin() ){
         return true;
       }
@@ -31,6 +30,8 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
+
+      return true;
 
       if( this.usuarioService.isAdmin() ){
         return true;

@@ -51,6 +51,9 @@ const ClienteSchema = Schema({
     imagen: {
         type: String,
     },
+    clave: {
+        type: String
+    }
 
 
 

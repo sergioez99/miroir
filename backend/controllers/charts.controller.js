@@ -497,19 +497,17 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
         const prendasClientes = await Prenda.find(); //aqui 
 
         let prendas = [],
-            veces = [];
-        let nPrenda = [],
+            veces = [],
             nomPrenda = [];
 
         for (let x = 0; x < prendasClientes.length; x++) {
             if (prendasClientes[x].idCliente == id) {
-                prendas[x] = busqueda[x].idPrenda
-                veces[x] = busqueda[x].usos;
+                prendas.push(busqueda[x].idPrenda);
+                veces.push(busqueda[x].usos);
+                //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(prendasClientes[x].nombre);
 
-                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
-                nomPrenda.push(nPrenda[x].nombre);
             }
-
         }
 
         return res.json({
@@ -535,12 +533,10 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 const obtenerTallasPrendasCliente = async(req, res = response) => {
 
     let id = req.header('id');
-    console.log("charts controller");
 
     try {
         const busqueda = await tallasUsadas.find(); //id, talla, usos
         const prendasClientes = await Prenda.find(); //aqui 
-        console.log(busqueda);
 
         let existe = false;
 
@@ -552,7 +548,7 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
 
         for (let x = 0; x < prendasClientes.length; x++) {
             if (prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
-                prendas[x] = busqueda[x].idPrenda //añado el id de la prenda a prendas
+                prendas.push(busqueda[x].idPrenda) //añado el id de la prenda a prendas
 
                 for (let i = 0; i < tallas.length && !existe; i++) {
                     if (tallas[i] == busqueda[x].talla) {
@@ -566,8 +562,8 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
                 } else
                     existe = false;
 
-                nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
-                nomPrenda.push(nPrenda[x].nombre);
+                //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
+                nomPrenda.push(prendasClientes[x].nombre);
             }
 
         }

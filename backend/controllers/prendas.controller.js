@@ -5,9 +5,17 @@ const bcrypt = require('bcryptjs');
 const Prenda = require('../models/prendas.model');
 //KPI
 const { sumarPrendaKPI, restarPrendaKPI } = require('./charts.controller');
+const { infoToken } = require('../helpers/infotoken');
 
 
 const obtenerPrendas = async(req, res = response) => {
+
+    const token = req.header('x-token');
+
+    const rol = infoToken(token).rol;
+    let uid = '';
+    if (rol == 'ROL_CLIENTE')
+        uid = infoToken(token).uid;
 
     //encontrar una unica prenda
     const id = req.query.id;
@@ -45,21 +53,51 @@ const obtenerPrendas = async(req, res = response) => {
             ]);
             // busqueda de varias prendas
         } else {
-            if (texto) {
+            if (uid) {
+                if (texto) {
 
-                [prendas, total] = await Promise.all([
+                    [prendas, total] = await Promise.all([
 
-                    Prenda.find({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] }).skip(desde).limit(registropp),
-                    Prenda.countDocuments({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] })
-                ]);
+                        Prenda.find({
+                            $and: [
+                                { $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] },
+                                { idCliente: uid }
+                            ]
+                        }).skip(desde).limit(registropp),
+                        Prenda.countDocuments({
+                            $and: [
+                                { $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] },
+                                { idCliente: uid }
+                            ]
+                        })
+                    ]);
 
+                } else {
+                    // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                    [prendas, total] = await Promise.all([
+                        Prenda.find({ idCliente: uid }).skip(desde).limit(registropp),
+                        Prenda.countDocuments()
+                    ]);
+                }
             } else {
-                // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
-                [prendas, total] = await Promise.all([
-                    Prenda.find({}).skip(desde).limit(registropp),
-                    Prenda.countDocuments()
-                ]);
+                if (texto) {
+
+                    [prendas, total] = await Promise.all([
+
+                        Prenda.find({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] }).skip(desde).limit(registropp),
+                        Prenda.countDocuments({ $or: [{ nombre: textoBusqueda }, { descripcion: textoBusqueda }] })
+                    ]);
+
+                } else {
+                    // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
+                    [prendas, total] = await Promise.all([
+                        Prenda.find({}).skip(desde).limit(registropp),
+                        Prenda.countDocuments()
+                    ]);
+                }
             }
+
+
 
         }
         res.json({
