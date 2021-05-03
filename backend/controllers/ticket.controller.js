@@ -11,6 +11,7 @@ const { generarClaveSecreta, generarTicket, validarTicket } = require('../helper
 const { infoToken } = require('../helpers/infotoken');
 //para el acceso al sistema de archivos
 const fs = require('fs');
+var path = require('path');
 
 /*
 función para devolver la clave de un cliente
@@ -441,7 +442,7 @@ const modeloTicket = async(req, res = response) => {
 
                 // averiguar el tipo y buscar el archivo que necesitamos
 
-                let path = null;
+                let ruta = null;
 
                 switch (tipo) {
                     case 'avatar':
@@ -497,17 +498,16 @@ const modeloTicket = async(req, res = response) => {
                             modelo += 10;
                         }
 
-
-                        path = `${process.env.PATHUPLOAD}/modelo/avatar/${modelo}.json`;
+                        ruta = path.join(__dirname, '../assets/modelo/avatar', `${modelo}.json`);
                         // console.log(path);
 
                         //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
+                        if (!fs.existsSync(ruta)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/avatar/default.json`;
+                            ruta = path.join(__dirname, '../assets/modelo/avatar', `default.json`)
                         }
                         //si todo bien lo enviamos
-                        return res.sendFile(path);
+                        return res.sendFile(ruta);
                         break;
 
                     case 'prenda':
@@ -550,25 +550,27 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${aux.modelo}`;
+                                    //Aqui no entra nunca me quiere sonar xd
+                                    ruta = path.join(__dirname, `../assets/modelo/prenda/${prendaID}`, `${aux.modelo}.json`);
+                                    //path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${aux.modelo}`;
                                     break;
                                 }
                             }
                         }
 
                         //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
+                        if (!fs.existsSync(ruta)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/default.json`;
+                            ruta = path.join(__dirname, `../assets/modelo/prenda/`, `default.json`);
                         }
                         //si todo bien lo enviamos
-                        return res.sendFile(path);
+                        return res.sendFile(ruta);
 
 
                         /*--------------------------------------*/
                         case 'suelo':
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/suelo.json`
-                            return res.sendFile(path);
+                            ruta = path.join(__dirname, `../assets/modelo/prenda/`, `suelo.json`);
+                            return res.sendFile(ruta);
                         /*-------------------------------------*/
 
 
@@ -610,22 +612,25 @@ const texturaTicket = async(req, res = response) => {
         const nombre = req.params.nombre;
         const validar = validarTicket(ticket);
 
+        let ruta;
+
         if (validar) {
 
             // ticket valido, buscar el archivo de textura y devolverlo
 
-            path = `${process.env.PATHUPLOAD}/modelo/textura/${nombre}`;
+            ruta = path.join(__dirname, '../assets/modelo/textura/', `${nombre}`);
+           
 
             // console.log('devolver textura: ', path);
 
             //comprobar si existe el archivo
-            if (!fs.existsSync(path)) {
-                path = `${process.env.PATHUPLOAD}/modelo/textura/default.jpg`;
+            if (!fs.existsSync(ruta)) {
+                ruta = path.join(__dirname, '../assets/modelo/textura/', `default.jpg`);
             }
             // console.log('devolver textura: ', path);
 
             //si todo bien lo enviamos
-            return res.sendFile(path);
+            return res.sendFile(ruta);
 
         }
 

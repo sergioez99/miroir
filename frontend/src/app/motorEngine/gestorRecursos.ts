@@ -1,6 +1,6 @@
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 export class gestorRecursos {
 
