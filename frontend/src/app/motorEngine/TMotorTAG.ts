@@ -57,6 +57,7 @@ export class TMotorTAG {
   private rotY = 0;
   private zoom = 1;
   private modelos
+  private num = 0;
 
 
   constructor() {
@@ -117,6 +118,7 @@ export class TMotorTAG {
     padre.addChild(nuevo);
 
     let malla = await this.gestorRecursos.getRecurso(prenda, ticket, tipo);
+    console.log(malla)
 
     let text = await this.gestorRecursos.getRecurso(malla.getTexturas()[0], ticket, "textura");
 
@@ -169,7 +171,7 @@ export class TMotorTAG {
     return frame_buffer;
   }
 
-  dibujarEscena() {
+  async dibujarEscena() {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
@@ -330,28 +332,23 @@ export class TMotorTAG {
 
     // VIEWPORT
     this.updateViewport();
-
-
-    for (let i in mallas) {
-      let vertexCount = mallas[i].getIndices().length;
-      switch (i) {
-        case '0': //Avatar
-          matrix.mat4.translate(this.modelViewMatrix,
-            this.modelViewMatrix,
-            [0, -3, 0])
-          matrix.mat4.rotateY(this.modelViewMatrix,
-            this.modelViewMatrix,
-            180 * Math.PI / 180)
-          matrix.mat4.rotateX(this.modelViewMatrix,
-            this.modelViewMatrix,
-            90 * Math.PI / 180)
-
-
-          /*matrix.mat4.rotateZ(this.modelViewMatrix,
-              this.modelViewMatrix,
-              this.rotY)*/
-
-          //Puedo cambiar los buffers a array también    
+    
+    for(let i in mallas){
+        let vertexCount = mallas[i].getIndices().length;
+        switch(i){
+            case '0': //Avatar
+            matrix.mat4.translate(this.modelViewMatrix,
+                this.modelViewMatrix,
+                [0,-3,0])
+            matrix.mat4.rotateY(this.modelViewMatrix,
+                this.modelViewMatrix,
+                180 * Math.PI / 180)
+            matrix.mat4.rotateX(this.modelViewMatrix,
+                this.modelViewMatrix,
+                90 * Math.PI / 180)
+                
+            //Puedo cambiar los buffers a array también    
+          this.buffers = await this.initialiseBuffers( mallas[i] );
 
           this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
@@ -366,55 +363,54 @@ export class TMotorTAG {
 
           break;
 
-        case '1': //Prenda 1
-          //para la camiseta y el pantalon
-          matrix.mat4.scale(this.modelViewMatrix,
-            this.modelViewMatrix,
-            [0.0328, 0.0328, 0.0328])
+            case '1': //Prenda 1
+            //para la camiseta y el pantalon
+            if(this.num == 1)
+              matrix.mat4.translate(this.modelViewMatrix,
+                this.modelViewMatrix,
+                [0,-0.033,-1.37])
+            else
+              matrix.mat4.scale(this.modelViewMatrix,
+                  this.modelViewMatrix,
+                  [0.0328,0.0328,0.0328])
 
-           //para la falda
-          /*matrix.mat4.translate(this.modelViewMatrix,
-            this.modelViewMatrix,
-            [0,-0.033,-1.37])*/
-
-
-          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+                  
+            this.buffers2=await this.initialiseBuffers( mallas[i] );
+    
+            this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
           this.bindVertexPosition(this.programInfo, this.buffers2);
 
           this.bindVertexTextures(this.programInfo, this.buffers2);
 
           this.bindVertexNormal(this.programInfo, this.buffers2);
-
-          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-
           this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-          break;
 
-          case '2': //suelo
+            case '2': //suelo
+            this.modelViewMatrix = matrix.mat4.create();
+            matrix.mat4.translate(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0,-3,0])
+            matrix.mat4.scale(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0.068,0.068,0.068])
+              
+            
+            this.buffers3=await this.initialiseBuffers( mallas[i] );
+            this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
 
-          
-          matrix.mat4.rotateX(this.modelViewMatrix,
-            this.modelViewMatrix,
-            90 * Math.PI / 180)
+          this.bindVertexNormal(this.programInfo, this.buffers2);
 
-          matrix.mat4.scale(this.modelViewMatrix,
-            this.modelViewMatrix,
-            [1.958,1.958,1.958])
-                
-
-          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
-
-          this.bindVertexPosition(this.programInfo, this.buffers3);
-  
           this.bindVertexTextures(this.programInfo, this.buffers3);
   
           this.bindVertexNormal(this.programInfo, this.buffers3);
-  
-          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
-          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_p);
 
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+
+          
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_p);
           break;
+
       }
       this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
       this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
@@ -563,14 +559,16 @@ export class TMotorTAG {
     this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
     this.setViewportActivo(0);
 
+    if(prenda == "2c405420-d9ec-4d3c-8f4d-1569b6fb9d4e.json")
+      this.num = 1;
 
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
-    this.buffers = await this.initialiseBuffers(avatarNodo.getEntidad().getMalla());
+    
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-    this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
+    
     let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
-    this.buffers3=await this.initialiseBuffers( sueloNodo.getEntidad().getMalla() );
-    }
+    
+  }
 
     async initialiseBuffers(malla){
 

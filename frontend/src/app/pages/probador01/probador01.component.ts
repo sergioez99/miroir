@@ -39,8 +39,9 @@ export class Probador01Component implements OnInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-
-      await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
+      console.log(this.modelosTicket, this.ticket)
+      this.gl = null;
+      this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket);
       const drawSceneInterval = interval(this._60fpsInterval);
       this.iniciarEvents()
       drawSceneInterval.subscribe(() => {
@@ -78,6 +79,7 @@ export class Probador01Component implements OnInit {
 
         console.log('canjear ticket ha ido bien (ticket component)');
         console.log(res);
+        this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
         if(prenda) {
@@ -86,10 +88,7 @@ export class Probador01Component implements OnInit {
           this.modelosTicket.push(prenda)
         }
 
-        console.log("ticket hola: " + this.modelosTicket)
         this.funcionCanvas();
-
-
 
       }).catch((error) => {
 
@@ -98,20 +97,40 @@ export class Probador01Component implements OnInit {
       });
     }
 
-    crearTicket(){
+    crearTicket(prenda?){
 
-      this.ticketService.obtenerTicket(this.clave, this.usuario, this.prendaID, this.talla).then((res) => {
+      if(prenda) {
+        console.log("tengo prenda")
+        this.ticketService.obtenerTicket(prenda).then((res) => {
 
-        console.log('ticket creado: ',res);
+          console.log('ticket creado: ',res);
+  
+          this.ticket = res;
+          this.canjearTicket();
+  
+        }).catch((error) => {
+  
+          console.warn(error);
+  
+        });
 
-        this.ticket = res;
-        this.canjearTicket();
+      } else{
+        this.ticketService.obtenerTicket().then((res) => {
 
-      }).catch((error) => {
+          console.log('ticket creado: ',res);
+  
+          this.ticket = res;
+          this.canjearTicket();
+  
+        }).catch((error) => {
+  
+          console.warn(error);
+  
+        });
 
-        console.warn(error);
+      }
 
-      });
+      
 
     }
 
