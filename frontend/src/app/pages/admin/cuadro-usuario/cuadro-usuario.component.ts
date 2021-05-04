@@ -302,7 +302,7 @@ export class CuadroUsuarioComponent implements OnInit {
       //firstRowIsData: true,
       options: {region: 'ES',
                 resolution:'provinces',
-                colorAxis:{'colors:': ['#00853f', 'orange', '#e31b23']},
+                colorAxis:{'colors:': ['#00853f', '#81d4fa', '#e31b23']},
                 backgroundColor:'#81d4fa',
               }
       };

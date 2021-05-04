@@ -47,8 +47,11 @@
         <canvas id="chartPrendasUsadas" width="800" height="400" style="border:1px solid #000000;"></canvas>
     </div>
 
-    <br>
+    <div class="div-canvas">
+        <h2>Prendas más populares de cada provincia</h2>
+        <google-chart [data]="geoChart"></google-chart>
+    </div>
 
-    <google-chart [data]="geoChart"></google-chart>
+    <br>
 
 </div>
