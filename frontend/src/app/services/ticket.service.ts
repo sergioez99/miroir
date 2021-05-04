@@ -64,12 +64,16 @@ export class TicketService {
 
   }
 
-  obtenerTicket(): Promise<any> {
+  obtenerTicket(idPrenda?): Promise<any> {
     return new Promise((resolve, reject) => {
 
       const cliente = 'uYKDtsiR6~hGCTc4uptN';
       const usuario = 'email@email.com';
-      const prenda = 'VEF15ORE3SC1';
+      let prenda;
+      if(idPrenda)
+        prenda = idPrenda;
+      else
+        prenda = '123456789';
       const talla = 'XS';
 
       this.apiService.getTicketCall(cliente, usuario, prenda, talla).subscribe((res) => {

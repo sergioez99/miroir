@@ -1,6 +1,7 @@
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
 import { environment } from '../../environments/environment.prod';
+import { tick } from "@angular/core/testing";
 
 export class gestorRecursos {
 

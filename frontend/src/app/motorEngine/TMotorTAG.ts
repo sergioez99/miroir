@@ -113,6 +113,7 @@ export class TMotorTAG {
     padre.addChild(nuevo);
 
     let malla = await this.gestorRecursos.getRecurso(prenda, ticket, tipo);
+    console.log(malla)
 
     let text = await this.gestorRecursos.getRecurso(malla.getTexturas()[0], ticket, "textura");
 
@@ -391,26 +392,25 @@ export class TMotorTAG {
     this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
     this.setViewportActivo(0);
 
-
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
     this.buffers=await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() );
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
     this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
     let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
     this.buffers3=await this.initialiseBuffers( sueloNodo.getEntidad().getMalla() );
-    }
+  }
 
-    async initialiseBuffers(malla) {
+  async initialiseBuffers(malla) {
       
-        const positionBuffer = this.gl.createBuffer();
+    const positionBuffer = this.gl.createBuffer();
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
 
-        this.gl.bufferData(
-            this.gl.ARRAY_BUFFER,
-            new Float32Array(malla.getVertices()),
-            this.gl.STATIC_DRAW
-        );
+      this.gl.bufferData(
+          this.gl.ARRAY_BUFFER,
+          new Float32Array(malla.getVertices()),
+          this.gl.STATIC_DRAW
+      );
 
 
     const indexBuffer = this.gl.createBuffer();

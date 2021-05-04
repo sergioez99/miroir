@@ -381,7 +381,7 @@ esta funcion valida el ticket
 llega un ticket y se comprueba TODO
 devuelve true en caso de que el ticket sea correcto
 */
-const validacionTicket = async(req, res = response) => {
+const validacionTicket = async(req, res = response) => { //ya no es siempre default :D
 
     try {
         const ticket = req.params.ticket;
@@ -519,7 +519,7 @@ const validacionTicket = async(req, res = response) => {
                 // habrá que buscar el modelo de esta prenda con esta talla
 
                 const modelosPrenda = prenda.modelo;
-
+                
                 if (modelosPrenda) {
                     for (let i = 0; i < modelosPrenda.length; i++) {
                         let aux = await ModeloPrenda.findById(modelosPrenda[i]);
@@ -658,6 +658,7 @@ const modeloTicket = async(req, res = response) => {
                         console.log('devolver una prenda');
                         // devolver prenda
                         const prenda = await Prenda.findById(prendaID);
+                        console.log("hola" + prenda)
 
                         // comprobar que la prenda existe
 
@@ -693,11 +694,12 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${aux.modelo}`;
+                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${aux.modelo}`;
                                     break;
                                 }
                             }
                         }
+                        console.log(path)
 
                         //comprobar si existe el archivo
                         if (!fs.existsSync(path)) {
