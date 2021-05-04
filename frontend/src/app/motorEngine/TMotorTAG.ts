@@ -53,6 +53,7 @@ export class TMotorTAG {
   private vertexCount2;
   private malla;
   private modelos
+  private num = 0;
 
 
   constructor() {
@@ -126,7 +127,7 @@ export class TMotorTAG {
     return nuevo;
   }
 
-  dibujarEscena() {
+  async dibujarEscena() {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
 
@@ -194,6 +195,7 @@ export class TMotorTAG {
     let mallas = RMalla.getMallas();
 
     for(let i in mallas){
+        
         let vertexCount = mallas[i].getIndices().length;
         switch(i){
             case '0': //Avatar
@@ -206,14 +208,10 @@ export class TMotorTAG {
             matrix.mat4.rotateX(this.modelViewMatrix,
                 this.modelViewMatrix,
                 90 * Math.PI / 180)
-    
-    
-            /*matrix.mat4.rotateZ(this.modelViewMatrix,
-                this.modelViewMatrix,
-                this.rotY)*/
                 
             //Puedo cambiar los buffers a array también    
-
+            this.buffers = await this.initialiseBuffers( mallas[i] );
+            
             this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
             this.bindVertexPosition(this.programInfo, this.buffers);
@@ -228,17 +226,18 @@ export class TMotorTAG {
 
             case '1': //Prenda 1
             //para la camiseta y el pantalon
-            matrix.mat4.scale(this.modelViewMatrix,
+            if(this.num == 1)
+              matrix.mat4.translate(this.modelViewMatrix,
                 this.modelViewMatrix,
-                [0.0328,0.0328,0.0328])
+                [0,-0.033,-1.37])
+            else
+              matrix.mat4.scale(this.modelViewMatrix,
+                  this.modelViewMatrix,
+                  [0.0328,0.0328,0.0328])
 
-
-            //para la falda
-            /*matrix.mat4.translate(this.modelViewMatrix,
-              this.modelViewMatrix,
-              [0,-0.033,-1.37])*/
                   
-
+            this.buffers2=await this.initialiseBuffers( mallas[i] );
+    
             this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
             this.bindVertexPosition(this.programInfo, this.buffers2);
@@ -252,17 +251,16 @@ export class TMotorTAG {
             break;
 
             case '2': //suelo
-
-            
-            matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix = matrix.mat4.create();
+            matrix.mat4.translate(this.modelViewMatrix,
               this.modelViewMatrix,
-              90 * Math.PI / 180)
-
+              [0,-3,0])
             matrix.mat4.scale(this.modelViewMatrix,
               this.modelViewMatrix,
-              [1.958,1.958,1.958])
-                  
-
+              [0.068,0.068,0.068])
+              
+            
+            this.buffers3=await this.initialiseBuffers( mallas[i] );
             this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
 
             this.bindVertexPosition(this.programInfo, this.buffers3);
@@ -392,12 +390,15 @@ export class TMotorTAG {
     this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
     this.setViewportActivo(0);
 
+    if(prenda == "2c405420-d9ec-4d3c-8f4d-1569b6fb9d4e.json")
+      this.num = 1;
+
     let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
-    this.buffers=await this.initialiseBuffers( avatarNodo.getEntidad().getMalla() );
+    
     let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-    this.buffers2=await this.initialiseBuffers( modeloNodo.getEntidad().getMalla() );
+    
     let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
-    this.buffers3=await this.initialiseBuffers( sueloNodo.getEntidad().getMalla() );
+    
   }
 
   async initialiseBuffers(malla) {
@@ -467,7 +468,7 @@ export class TMotorTAG {
     const normalize = false;
     const stride = 0;
     const offset = 0;
-    
+
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffers.position);
     this.gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, bufferSize, type, normalize, stride, offset);
     this.gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
