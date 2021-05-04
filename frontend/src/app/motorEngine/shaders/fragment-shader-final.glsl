@@ -82,4 +82,5 @@ void main(void) {
     float visibility = (shadowCoord.z > depth + 0.005) ? 0.7 : 1.0;
 
     gl_FragColor = vec4 (texelColor.rgb * Phong() * visibility, 1.0);
+    //gl_FragColor = vec4 (texelColor.rgb * Phong(), 1.0);
 }

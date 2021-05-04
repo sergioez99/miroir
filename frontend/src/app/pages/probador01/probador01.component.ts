@@ -71,7 +71,7 @@ export class Probador01Component implements OnInit {
 
     }
 
-    canjearTicket(prenda?) {
+    canjearTicket() {
 
       console.log('empezamos canjear ticket: ', this.ticket);
 
@@ -82,11 +82,7 @@ export class Probador01Component implements OnInit {
         this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
-        if(prenda) {
-          this.modelosTicket = []
-          this.modelosTicket.push(res['avatar'])
-          this.modelosTicket.push(prenda)
-        }
+      
 
         this.funcionCanvas();
 

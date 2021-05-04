@@ -551,12 +551,12 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${aux.modelo}`;
+                                    ruta = path.join(__dirname, `../assets/modelo/prenda/`, `${aux.modelo}`);
                                     break;
                                 }
                             }
                         }
-                        console.log(path)
+
 
                         //comprobar si existe el archivo
                         if (!fs.existsSync(ruta)) {
