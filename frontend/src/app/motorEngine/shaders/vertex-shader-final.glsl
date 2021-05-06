@@ -23,7 +23,7 @@ void main(void) {
     //las coordenadas de textura no sufren transformacion
     vTextureCoord = aTextureCoord;
 
-    v_PositionFromLight = u_MvpMatrixFromLight * aVertexPosition;
+    v_PositionFromLight = u_MvpMatrixFromLight * vec4(vPosition, 1.0);
     //transformar y proyectar el vertice (posicion del fragemtento)
     gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
 

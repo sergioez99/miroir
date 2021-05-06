@@ -39,8 +39,6 @@ export class Probador01Component implements OnInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-      console.log(this.modelosTicket, this.ticket)
-      this.gl = null;
       this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket);
       const drawSceneInterval = interval(this._60fpsInterval);
       this.iniciarEvents()
@@ -73,12 +71,8 @@ export class Probador01Component implements OnInit {
 
     canjearTicket() {
 
-      console.log('empezamos canjear ticket: ', this.ticket);
-
       this.ticketService.canjearTicket(this.ticket).then((res) => {
 
-        console.log('canjear ticket ha ido bien (ticket component)');
-        console.log(res);
         this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
@@ -96,10 +90,8 @@ export class Probador01Component implements OnInit {
     crearTicket(prenda?){
 
       if(prenda) {
-        console.log("tengo prenda")
         this.ticketService.obtenerTicket(prenda).then((res) => {
 
-          console.log('ticket creado: ',res);
   
           this.ticket = res;
           this.canjearTicket();
@@ -113,8 +105,6 @@ export class Probador01Component implements OnInit {
       } else{
         this.ticketService.obtenerTicket().then((res) => {
 
-          console.log('ticket creado: ',res);
-  
           this.ticket = res;
           this.canjearTicket();
   

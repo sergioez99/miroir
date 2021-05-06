@@ -27,9 +27,9 @@ varying highp vec3 vPosition;
 
 uniform sampler2D uSampler;
 
-uniform sampler2D u_ShadowMap;
+uniform sampler2D u_ShadowMap; //Textura proyectada que será la sombra
 
-varying vec4 v_PositionFromLight;
+varying vec4 v_PositionFromLight; //Coordenadas de donde estará proyectada la sombra
 
 //funcion que calcula el modelo de reflexion de Phong
 vec3 Phong() {
@@ -73,7 +73,13 @@ vec3 Phong() {
 void main(void) {
     highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
 
-    vec3 shadowCoord = (v_PositionFromLight.xyz/v_PositionFromLight.w)/2.0 + 0.5;
+    vec3 shadowCoord = (v_PositionFromLight.xyz/v_PositionFromLight.w);
+    ///2.0 + 0.5; (esto iba despues de la division)
+    shadowCoord = shadowCoord * 0.5 + 0.5;
+
+    float closestDepth = texture2D(u_ShadowMap, shadowCoord.xy).r;
+    float currentDepth = shadowCoord.z;
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
 
     vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);
 
@@ -83,4 +89,10 @@ void main(void) {
 
     gl_FragColor = vec4 (texelColor.rgb * Phong() * visibility, 1.0);
     //gl_FragColor = vec4 (texelColor.rgb * Phong(), 1.0);
+    vec3 lightning = Phong();
+    lightning = (lightning.x + (1.0 - shadow) * (lightning.y + lightning.z)) * texelColor.rgb;
+    //gl_FragColor = vec4(lightning, 1.0);
+
+    //float depthValue = texture2D(u_ShadowMap, vTextureCoord).r;
+    //gl_FragColor = vec4(vec3(depthValue), 1.0);
 }
