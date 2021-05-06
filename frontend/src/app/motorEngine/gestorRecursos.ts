@@ -1,6 +1,6 @@
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 export class gestorRecursos {
 
@@ -69,8 +69,6 @@ export class gestorRecursos {
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
-
-                console.log(file);
                 let malla = new Malla();
 
 
@@ -101,7 +99,6 @@ export class gestorRecursos {
                 return malla;
 
             default:
-                console.log('fichero de textura: ', fichero);
                 archivo = await this.leerArchivoRed(environment.base_url + '/ticket/textura/' + fichero + '/' + ticket);
 
                 // sera una imagen jpg, png...

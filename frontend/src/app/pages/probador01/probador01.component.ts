@@ -39,8 +39,7 @@ export class Probador01Component implements OnInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-
-      await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
+      this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket);
       const drawSceneInterval = interval(this._60fpsInterval);
       this.iniciarEvents()
       drawSceneInterval.subscribe(() => {
@@ -55,39 +54,31 @@ export class Probador01Component implements OnInit {
 
       this.prendaID = "1234"; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
-      this.usuario = this.usuarioService.getEmail();
+      //this.usuario = this.usuarioService.getEmail();
+      this.usuario = "sergi@gmail.com";
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
       this.ticket = this.route.snapshot.params['ticket'];
 
+      if(this.ticket == null)
       this.crearTicket();
-   
+      else
       this.canjearTicket();
       
 
 
     }
 
-    canjearTicket(prenda?) {
-
-      console.log('empezamos canjear ticket: ', this.ticket);
+    canjearTicket() {
 
       this.ticketService.canjearTicket(this.ticket).then((res) => {
 
-        console.log('canjear ticket ha ido bien (ticket component)');
-        console.log(res);
+        this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
-        if(prenda) {
-          this.modelosTicket = []
-          this.modelosTicket.push(res['avatar'])
-          this.modelosTicket.push(prenda)
-        }
+      
 
-        console.log("ticket hola: " + this.modelosTicket)
         this.funcionCanvas();
-
-
 
       }).catch((error) => {
 
@@ -96,20 +87,36 @@ export class Probador01Component implements OnInit {
       });
     }
 
-    crearTicket(){
+    crearTicket(prenda?){
 
-      this.ticketService.obtenerTicket(this.clave, this.usuario, this.prendaID, this.talla).then((res) => {
+      if(prenda) {
+        this.ticketService.obtenerTicket(prenda).then((res) => {
 
-        console.log('ticket creado: ',res);
+  
+          this.ticket = res;
+          this.canjearTicket();
+  
+        }).catch((error) => {
+  
+          console.warn(error);
+  
+        });
 
-        this.ticket = res;
-        this.canjearTicket();
+      } else{
+        this.ticketService.obtenerTicket().then((res) => {
 
-      }).catch((error) => {
+          this.ticket = res;
+          this.canjearTicket();
+  
+        }).catch((error) => {
+  
+          console.warn(error);
+  
+        });
 
-        console.warn(error);
+      }
 
-      });
+      
 
     }
 
