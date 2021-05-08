@@ -21,6 +21,9 @@ const fs = require('fs');
 
 //KPI
 const { sumarClienteKPI, restarClienteKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
+// generar la clave del ticket
+const { generarClaveSecreta } = require('../helpers/ticket');
+
 
 
 const obtenerClientes = async(req, res = response) => {
@@ -135,6 +138,17 @@ const crearCliente = async(req, res) => {
         const cliente = new Cliente(object);
         cliente.password = cpassword;
 
+        // crear la variable clave
+        // generar nueva clave
+        let nuevaClave = generarClaveSecreta(process.env.CLAVE_LONG);
+        // comprobar que dicha claves sea única de este cliente
+        while (await Cliente.findOne({ clave: nuevaClave })) {
+            console.log('esto es para prevenir que se repita la clave con otro usuario');
+            nuevaClave = generarClaveSecreta(process.env.CLAVE_LONG);
+        }
+        // guardar los datos en la BD
+        cliente.clave = nuevaClave;
+
         // almacenar en la BD
         await cliente.save();
 
@@ -219,7 +233,7 @@ const actualizarCliente = async(req, res = response) => {
     // si cambia el email, hay que comprobar que no exista en la BD
     const { password, alta, email, nif, ...object } = req.body;
     const uid = req.params.id;
-    console.log('hola estoy en el back',req.body);
+    console.log('hola estoy en el back', req.body);
     try {
         // comprobar si existe o no existe el Cliente
         const existeEmail = await Cliente.findOne({ email: email });

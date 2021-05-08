@@ -1,6 +1,6 @@
 import { TRecurso, Malla } from "./commons";
 import { RMalla, RTextura, RShader } from "./TRecurso";
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 export class gestorRecursos {
 
@@ -66,6 +66,8 @@ export class gestorRecursos {
             case 'json':
 
                 archivo = await this.leerArchivoRed(environment.base_url + '/ticket/modelo/' + tipo + '/' + ticket);
+
+                console.log('archivo devuelto: ', archivo);
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();

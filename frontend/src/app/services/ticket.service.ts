@@ -64,10 +64,10 @@ export class TicketService {
 
   }
 
-  obtenerTicket(clave, usuario, prendaID, talla): Promise<any> {
+  obtenerTicket(clave, usuario, prendaID, talla, id?): Promise<any> {
     return new Promise((resolve, reject) => {
 
-      this.apiService.getTicketCall(clave, usuario, prendaID, talla).subscribe((res) => {
+      this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
 
         this.ticket = res['ticket'];
         resolve(this.ticket);
@@ -124,6 +124,44 @@ export class TicketService {
 
       });
     });
+  }
+
+  obtenerTicketPrevisualizar(prendaID, tallaSeleccionada, usuarioSeleccionado): Promise<any> {
+
+    let cliente, usuario, prenda, talla;
+
+    prenda = prendaID;
+    talla = tallaSeleccionada;
+    usuario = usuarioSeleccionado;
+
+    return new Promise((resolve, reject) => {
+
+      // obtener la clave del cliente
+      this.obtenerClave().then( (res)=>{
+
+        console.log('ehmos obtenido la clave: ', res);
+
+        cliente = res;
+
+        this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
+
+          console.log('hemos obtenido el ticket: ', res);
+
+          resolve(res);
+
+        }).catch( (error)=>{
+          console.warn('error con el ticket: ', error);
+          reject(error);
+        });
+
+      }).catch( (error)=>{
+        console.warn('error con la clave: ', error);
+        reject(error);
+      });
+
+
+    });
+
   }
 
 

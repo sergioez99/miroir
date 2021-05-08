@@ -23,147 +23,143 @@ export class SceneComponent implements OnInit {
   private ticket = null;
   private modelosTicket: string[];
 
-  constructor(private router :Router,
+  constructor(private router: Router,
     private route: ActivatedRoute,
-    private webglService :WebGLService,
+    private webglService: WebGLService,
     private ticketService: TicketService,) { }
 
 
-    async funcionCanvas() {
-      if (!this.canvas) {
-        alert("canvas not supplied! cannot bind WebGL context!");
-        return;
-      }
-
-      await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
-      const drawSceneInterval = interval(this._60fpsInterval);
-      this.iniciarEvents()
-      drawSceneInterval.subscribe(() => {
-        this.drawScene();
-      });
-
-
+  async funcionCanvas() {
+    if (!this.canvas) {
+      alert("canvas not supplied! cannot bind WebGL context!");
+      return;
     }
 
-    ngOnInit(): void {
-      this.modelosTicket = [];
-
-      this.ticket = this.route.snapshot.params['ticket'];
-
-      
-       
-        this.canjearTicket();
-      
+    await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
+    const drawSceneInterval = interval(this._60fpsInterval);
+    this.iniciarEvents()
+    drawSceneInterval.subscribe(() => {
+      this.drawScene();
+    });
 
 
-    }
+  }
 
-    canjearTicket() {
+  ngOnInit(): void {
+    this.modelosTicket = [];
 
-      console.log('empezamos canjear ticket: ', this.ticket);
+    this.ticket = this.route.snapshot.params['ticket'];
 
-      this.ticketService.canjearTicket(this.ticket).then((res) => {
+    this.canjearTicket();
 
-        console.log('canjear ticket ha ido bien (ticket component)');
-        console.log(res);
-        this.modelosTicket.push(res['avatar']);
-        this.modelosTicket.push(res['prenda']);
+  }
 
+  canjearTicket() {
 
+    console.log('empezamos canjear ticket: ', this.ticket);
 
-        this.funcionCanvas();
+    this.ticketService.canjearTicket(this.ticket).then((res) => {
 
-      }).catch((error) => {
-
-        console.warn(error);
-
-      });
-    }
-
-  
+      console.log('canjear ticket ha ido bien (ticket component)');
+      console.log(res);
+      this.modelosTicket.push(res['avatar']);
+      this.modelosTicket.push(res['prenda']);
 
 
 
-   drawScene() {
-      //this.webglService.updateViewport();
-      //this.webglService.dibujadoTemporal();
+      this.funcionCanvas();
 
-      this.webglService.dibujar();
-    }
+    }).catch((error) => {
 
-    iniciarEvents(){
-      // Eventos de ratón aquí por el elemento canvas html
-    
-      this.canvas.nativeElement.addEventListener('mousedown', e => {
-        var x = e.clientX;
-        var y = e.clientY;
-          
-        var rect = this.canvas.nativeElement.getBoundingClientRect();
-        
-        if (rect.left <= x && rect.right > x &&
-            rect.top <= y && rect.bottom > y) {
-            this.lastX = x; 
-            this.lastY = y;
-            this.trackingMouseMotion = true; 
-        }
-        
-      })    
+      console.warn(error);
 
-      
-      this.canvas.nativeElement.addEventListener('mouseup', e => {
-        this.trackingMouseMotion = false; 
-      })
-      
-      
-      this.canvas.nativeElement.addEventListener('mousemove', e =>{
-        var x = e.clientX;
-        var y = e.clientY;
-                    
-        if (this.trackingMouseMotion) {
-          //Rotacion z
-            this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
-            this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;            
-            this.rotZ += 30 * this.dMouseX;
-            this.rotZ %= 360;
-            
-        }
+    });
+  }
+
+
+
+
+
+  drawScene() {
+    //this.webglService.updateViewport();
+    //this.webglService.dibujadoTemporal();
+
+    this.webglService.dibujar();
+  }
+
+  iniciarEvents() {
+    // Eventos de ratón aquí por el elemento canvas html
+
+    this.canvas.nativeElement.addEventListener('mousedown', e => {
+      var x = e.clientX;
+      var y = e.clientY;
+
+      var rect = this.canvas.nativeElement.getBoundingClientRect();
+
+      if (rect.left <= x && rect.right > x &&
+        rect.top <= y && rect.bottom > y) {
         this.lastX = x;
         this.lastY = y;
-        
-        //Rotación solo de Z, X e Y no son necesarias, pq la cámara deja de ver el modelo, traslación por ver
-        this.webglService.updateMouseevent(this.rotZ);
-        
-      })
+        this.trackingMouseMotion = true;
+      }
 
-      this.canvas.nativeElement.addEventListener('wheel', e => {
-        e.preventDefault();
-        //const [clipX, clipY] = this.getClipSpaceMousePosition(e);
-
-        let hacerzoom = e.deltaY;
-        
-        if(hacerzoom < 0){
-          this.scale = this.scale + 0.05;
-          hacerzoom = 0;
-        }
-        if(hacerzoom > 0){
-          this.scale = this.scale - 0.05;
-          hacerzoom = 0;
-        }
-        
+    })
 
 
-        if(this.scale < 1){
-          this.scale = 1;
-        }
-
-        //this.scale = Math.min(Math.max(.125, this.scale), 4);
-        
-        this.webglService.updateZoom(this.scale);
+    this.canvas.nativeElement.addEventListener('mouseup', e => {
+      this.trackingMouseMotion = false;
+    })
 
 
-        
-      }, {
-        passive: false
-      })
-    }
+    this.canvas.nativeElement.addEventListener('mousemove', e => {
+      var x = e.clientX;
+      var y = e.clientY;
+
+      if (this.trackingMouseMotion) {
+        //Rotacion z
+        this.dMouseX = (x - this.lastX) / this.canvas.nativeElement.width;
+        this.dMouseY = (y - this.lastY) / this.canvas.nativeElement.height;
+        this.rotZ += 30 * this.dMouseX;
+        this.rotZ %= 360;
+
+      }
+      this.lastX = x;
+      this.lastY = y;
+
+      //Rotación solo de Z, X e Y no son necesarias, pq la cámara deja de ver el modelo, traslación por ver
+      this.webglService.updateMouseevent(this.rotZ);
+
+    })
+
+    this.canvas.nativeElement.addEventListener('wheel', e => {
+      e.preventDefault();
+      //const [clipX, clipY] = this.getClipSpaceMousePosition(e);
+
+      let hacerzoom = e.deltaY;
+
+      if (hacerzoom < 0) {
+        this.scale = this.scale + 0.05;
+        hacerzoom = 0;
+      }
+      if (hacerzoom > 0) {
+        this.scale = this.scale - 0.05;
+        hacerzoom = 0;
+      }
+
+
+
+      if (this.scale < 1) {
+        this.scale = 1;
+      }
+
+      //this.scale = Math.min(Math.max(.125, this.scale), 4);
+
+      this.webglService.updateZoom(this.scale);
+
+
+
+    }, {
+      passive: false
+    })
+  }
 }

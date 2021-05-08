@@ -115,6 +115,7 @@ const routes: Routes = [
     path: 'scene',
     children: [
       { path: '', component: SceneComponent },
+      { path: ':ticket', component: SceneComponent },
       { path: '**', redirectTo: ''}
     ]
   },

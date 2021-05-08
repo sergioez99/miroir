@@ -24,11 +24,6 @@ const obtenerClave = async(req, res = response) => {
         const uid = req.params.id;
         const token = req.header('x-token');
 
-        console.log('hola?');
-        console.log('id cliente: ', uid);
-        console.log('id cliente: ', infoToken(token).uid);
-        console.log('comparación: ', infoToken(token).uid === uid);
-
         // restriccion de autorización
         if (!((infoToken(token).rol === 'ROL_ADMIN') || (infoToken(token).uid === uid))) {
             return res.status(400).json({
@@ -40,7 +35,24 @@ const obtenerClave = async(req, res = response) => {
         // buscar el cliente en la BD
         const clienteBD = await Cliente.findById(uid);
 
+        // en caso de que el admin sea el que busque una clave
         if (!clienteBD) {
+
+            const usuarioBD = await Usuario.findById(infoToken(token).uid);
+
+            if (usuarioBD && usuarioBD.id == uid) {
+
+                let clave = process.env.CLAVE_ADMIN;
+
+                return res.json({
+                    ok: true,
+                    msg: 'get clave de cliente',
+                    clave: clave,
+                });
+
+            }
+
+
             return res.status(400).json({
                 ok: false,
                 msg: 'error, recuperando el cliente'
@@ -97,11 +109,11 @@ const cambiarClave = async(req, res = response) => {
 
 
         // generar nueva clave
-        let nuevaClave = generarClaveSecreta(50);
+        let nuevaClave = generarClaveSecreta(process.env.CLAVE_LONG);
         // comprobar que dicha claves sea única de este cliente
-        while (await Cliente.findOne({ clave: nuevaClave })) {
+        while (nuevaClave == process.env.CLAVE_ADMIN || await Cliente.findOne({ clave: nuevaClave })) {
             console.log('esto es para prevenir que se repita la clave con otro usuario');
-            nuevaClave = generarClaveSecreta(50);
+            nuevaClave = generarClaveSecreta(process.env.CLAVE_LONG);
         }
 
         // guardar los datos en la BD
@@ -133,6 +145,7 @@ const obtenerTicket = async(req, res = response) => {
     const prendaID = req.query.identificador;
     const prendaTalla = req.query.talla;
     const clienteClave = req.query.clave;
+    const uid = req.query.id;
 
 
     try {
@@ -155,16 +168,22 @@ const obtenerTicket = async(req, res = response) => {
         // primero comprobar la clave del cliente
         // const cliente = await Cliente.findOne({ clave: clienteClave });
 
-        if (!cliente) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'No es una clave válida',
-            });
-        } else if (!cliente.activo) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'No es una clave válida',
-            });
+        console.log('clave recibida: ', clienteClave);
+        console.log('clave maestra: ', process.env.CLAVE_ADMIN);
+        console.log('igualdad: ', cliente != process.env.CLAVE_ADMIN);
+
+        if (clienteClave != process.env.CLAVE_ADMIN) {
+            if (!cliente) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'No es una clave válida',
+                });
+            } else if (!cliente.activo) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'No es una clave válida',
+                });
+            }
         }
 
         // comprobar que la prenda existe
@@ -209,11 +228,20 @@ const obtenerTicket = async(req, res = response) => {
 
 
         // comprobaciones hechas, generar el ticket, guardarlo en la base de datos y devolverlo
+        let ticket;
+        let ticketBD;
 
-        const ticket = await generarTicket(cliente.email, usuarioEmail, prendaID, prendaTalla);
+        if (cliente) {
+            ticket = await generarTicket(cliente.email, usuarioEmail, prendaID, prendaTalla);
+            // guardar ticket en la base de datos
+            ticketBD = new Ticket({ ticket: ticket, cliente: cliente.id, usuario: usuario.id, prenda: prenda.id, talla: prendaTalla });
+        } else {
+            ticket = await generarTicket('ADMIN', usuarioEmail, prendaID, prendaTalla);
+            // guardar ticket en la base de datos
+            ticketBD = new Ticket({ ticket: ticket, cliente: uid, usuario: usuario.id, prenda: prenda.id, talla: prendaTalla });
+        }
 
-        // guardar ticket en la base de datos
-        const ticketBD = new Ticket({ ticket: ticket, cliente: cliente.id, usuario: usuario.id, prenda: prenda.id, talla: prendaTalla });
+
         await ticketBD.save();
 
         return res.json({
@@ -261,7 +289,7 @@ const validacionTicket = async(req, res = response) => {
 
                 // con el tipo devolver el modelo de la prenda o del modelo (texturas, etc...)
                 // comprobar que todo existe en la BD
-                const [cliente, prenda, usuario] = await Promise.all([
+                let [cliente, prenda, usuario] = await Promise.all([
 
                     Cliente.findById(clienteID),
                     Prenda.findById(prendaID),
@@ -278,16 +306,21 @@ const validacionTicket = async(req, res = response) => {
                 // primero comprobar la clave del cliente
 
                 if (!cliente) {
+                    cliente = await Usuario.findById(clienteID);
+                }
+                console.log('el cliente: ', cliente);
+
+                if (!cliente) {
+                    console.log('no tenemos cliente');
                     return res.status(400).json({
                         ok: false,
                         msg: 'No es una clave válida',
-                        error: 'cliente',
                     });
                 } else if (!cliente.activo) {
+                    console.log('el cliente no está activo');
                     return res.status(400).json({
                         ok: false,
                         msg: 'No es una clave válida',
-                        error: 'cliente',
                     });
                 }
 
@@ -434,6 +467,7 @@ const modeloTicket = async(req, res = response) => {
 
             const ticketBD = await Ticket.findOne({ ticket: ticket });
 
+
             if (ticketBD) {
 
                 const prendaID = ticketBD.prenda;
@@ -564,7 +598,7 @@ const modeloTicket = async(req, res = response) => {
                         }
                         //si todo bien lo enviamos
                         return res.sendFile(path);
-                        
+
                     default:
                         return res.status(400).json({
                             ok: false,

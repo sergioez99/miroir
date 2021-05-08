@@ -59,10 +59,13 @@
                                   <i class="fa fa-check text-success" *ngIf="prenda.activo"></i>
                                   <i class="fa fa-times text-danger" *ngIf="!prenda.activo"></i></td>-->
                                 <td class="text-center">
+                                    <span class="material-icons ver" id="boton-ver" (click)="crearTicket(prenda.identificador, prenda.talla)">camera</span>
                                     <span class="material-icons edit" id="boton-editar" *ngIf="admin" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span>
                                     <span class="material-icons edit" id="boton-editar" *ngIf="!admin" [routerLink]="['/perfil/cliente/prendas/prenda', prenda.uid]">edit</span>
                                     <!-- <span class="material-icons edit" [routerLink]="['/admin/prendas/prenda', prenda.uid]">edit</span> -->
-                                    <span class="material-icons delete" (click)="eliminarPrenda(prenda.uid)">delete</span></td>
+                                    <span class="material-icons delete" (click)="eliminarPrenda(prenda.uid)">delete</span>
+                                </td>
+
                             </tr>
                         </tbody>
                     </table>
