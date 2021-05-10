@@ -15,7 +15,7 @@ export class PrendaGuard implements CanActivate, CanActivateChild {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if( this.prendaService.isPrenda())
+      //if( this.prendaService.isPrenda())
         return true;
 /*
       this.router.navigateByUrl('/login');
@@ -26,7 +26,7 @@ export class PrendaGuard implements CanActivate, CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if( this.prendaService.isPrenda())
+      //if( this.prendaService.isPrenda())
         return true;
 /*
       this.router.navigateByUrl('/login');

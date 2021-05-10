@@ -15,6 +15,14 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 import { DatePipe } from '@angular/common';
 import { TicketComponent } from './ticket/ticket.component';
 
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+
+// const MyGoogleChartsSettings: GoogleChartsSettings = {
+//   mapsApiKey: 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY',
+//   googleChartsVersion: '46',
+//   language: 'es',
+// };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +40,8 @@ import { TicketComponent } from './ticket/ticket.component';
 
     CarouselModule,
     WavesModule,
+
+    Ng2GoogleChartsModule
 
   ],
   providers: [DatePipe],

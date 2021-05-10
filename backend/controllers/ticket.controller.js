@@ -11,6 +11,7 @@ const { generarClaveSecreta, generarTicket, validarTicket } = require('../helper
 const { infoToken } = require('../helpers/infotoken');
 //para el acceso al sistema de archivos
 const fs = require('fs');
+var path = require('path');
 
 /*
 función para devolver la clave de un cliente
@@ -269,7 +270,7 @@ esta funcion valida el ticket
 llega un ticket y se comprueba TODO
 devuelve true en caso de que el ticket sea correcto
 */
-const validacionTicket = async(req, res = response) => {
+const validacionTicket = async(req, res = response) => { //ya no es siempre default :D
 
     try {
         const ticket = req.params.ticket;
@@ -432,7 +433,6 @@ const validacionTicket = async(req, res = response) => {
 
             }
         }
-
         return res.status(400).json({
             ok: false,
             msg: 'El ticket no es válido',
@@ -476,7 +476,7 @@ const modeloTicket = async(req, res = response) => {
 
                 // averiguar el tipo y buscar el archivo que necesitamos
 
-                let path = null;
+                let ruta = null;
 
                 switch (tipo) {
                     case 'avatar':
@@ -532,17 +532,16 @@ const modeloTicket = async(req, res = response) => {
                             modelo += 10;
                         }
 
-
-                        path = `${process.env.PATHUPLOAD}/modelo/avatar/${modelo}.json`;
+                        ruta = path.join(__dirname, '../assets/modelo/avatar', `${modelo}.json`);
                         // console.log(path);
 
                         //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
+                        if (!fs.existsSync(ruta)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/avatar/default.json`;
+                            ruta = path.join(__dirname, '../assets/modelo/avatar', `default.json`)
                         }
                         //si todo bien lo enviamos
-                        return res.sendFile(path);
+                        return res.sendFile(ruta);
                         break;
 
                     case 'prenda':
@@ -550,6 +549,7 @@ const modeloTicket = async(req, res = response) => {
                         console.log('devolver una prenda');
                         // devolver prenda
                         const prenda = await Prenda.findById(prendaID);
+                        console.log("hola" + prenda)
 
                         // comprobar que la prenda existe
 
@@ -585,19 +585,28 @@ const modeloTicket = async(req, res = response) => {
                             for (let i = 0; i < modelosPrenda.length; i++) {
                                 let aux = await ModeloPrenda.findById(modelosPrenda[i]);
                                 if (aux.talla == talla) {
-                                    path = `${process.env.PATHUPLOAD}/modelo/prenda/${prendaID}/${aux.modelo}`;
+                                    ruta = path.join(__dirname, `../assets/modelo/prenda/`, `${aux.modelo}`);
                                     break;
                                 }
                             }
                         }
 
+
                         //comprobar si existe el archivo
-                        if (!fs.existsSync(path)) {
+                        if (!fs.existsSync(ruta)) {
                             // res.status(404);
-                            path = `${process.env.PATHUPLOAD}/modelo/prenda/pantalon.json`;
+                            ruta = path.join(__dirname, `../assets/modelo/prenda/`, `default.json`);
                         }
                         //si todo bien lo enviamos
-                        return res.sendFile(path);
+                        return res.sendFile(ruta);
+
+
+                        /*--------------------------------------*/
+                    case 'suelo':
+                        ruta = path.join(__dirname, `../assets/modelo/prenda/`, `suelo.json`);
+                        return res.sendFile(ruta);
+                        /*-------------------------------------*/
+
 
                     default:
                         return res.status(400).json({
@@ -605,6 +614,7 @@ const modeloTicket = async(req, res = response) => {
                             msg: 'petición no es válida',
                             error: 'tipo',
                         });
+
                 }
 
             }
@@ -629,28 +639,32 @@ const modeloTicket = async(req, res = response) => {
 }
 
 
+
 const texturaTicket = async(req, res = response) => {
     try {
         const ticket = req.params.ticket;
         const nombre = req.params.nombre;
         const validar = validarTicket(ticket);
 
+        let ruta;
+
         if (validar) {
 
             // ticket valido, buscar el archivo de textura y devolverlo
 
-            path = `${process.env.PATHUPLOAD}/modelo/textura/${nombre}`;
+            ruta = path.join(__dirname, '../assets/modelo/textura/', `${nombre}`);
+
 
             // console.log('devolver textura: ', path);
 
             //comprobar si existe el archivo
-            if (!fs.existsSync(path)) {
-                path = `${process.env.PATHUPLOAD}/modelo/textura/default.jpg`;
+            if (!fs.existsSync(ruta)) {
+                ruta = path.join(__dirname, '../assets/modelo/textura/', `default.jpg`);
             }
             // console.log('devolver textura: ', path);
 
             //si todo bien lo enviamos
-            return res.sendFile(path);
+            return res.sendFile(ruta);
 
         }
 

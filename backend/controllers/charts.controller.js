@@ -4,6 +4,7 @@ const Usuario = require('../models/usuarios.model');
 const Cliente = require('../models/clientes.model');
 const Prenda = require('../models/prendas.model');
 const DatoKPI = require('../models/datosGenericos.model');
+const datoMapa = require('../models/datosMapa.model');
 const fechaAlta = require('../models/fechaAlta.model');
 const horaAlta = require('../models/horaAlta.model');
 const prendasUsadas = require('../models/prendasUsadas.model');
@@ -333,20 +334,19 @@ const restarPrendaKPI = async() => {
 const sumarUsoPrenda = async(id) => {
 
     try {
-                db = await prendasUsadas.findOne({ idPrenda: id });
-                if (!db) {
-                    db = new prendasUsadas();
-                    db.idPrenda = id;
-                    db.usos = 1;
-                } else{
-                    db.usos++;
-                }
-
-                await db.save();
-
-                return true;
+        db = await prendasUsadas.findOne({ idPrenda: id });
+        if (!db) {
+            db = new prendasUsadas();
+            db.idPrenda = id;
+            db.usos = 1;
+        } else {
+            db.usos++;
         }
-    catch (error) {
+
+        await db.save();
+
+        return true;
+    } catch (error) {
         return error;
     }
 }
@@ -450,18 +450,20 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 
 const obtenerUsosPrendas = async(req, res = response) => {
     console.log("hola????")
-    //salirSiUsuarioNoAdmin(req.header('x-token'));
+        //salirSiUsuarioNoAdmin(req.header('x-token'));
 
 
     try {
         const busqueda = await prendasUsadas.find();
 
-        let prendas = [], veces = [];
-        let nPrenda = [], nomPrenda = [];
+        let prendas = [],
+            veces = [];
+        let nPrenda = [],
+            nomPrenda = [];
         for (let i = 0; i < busqueda.length; i++) {
             prendas[i] = busqueda[i].idPrenda;
             veces[i] = busqueda[i].usos;
-            
+
             nPrenda.push(await Prenda.findById(busqueda[i].idPrenda));
             nomPrenda.push(nPrenda[i].nombre);
         }
@@ -472,7 +474,7 @@ const obtenerUsosPrendas = async(req, res = response) => {
             prenda: prendas,
             usos: veces,
             nombres: nomPrenda
-            
+
 
         });
 
@@ -487,17 +489,19 @@ const obtenerUsosPrendas = async(req, res = response) => {
 }
 
 const obtenerUsosPrendasCliente = async(req, res = response) => {
-    
+
     let id = req.header('id');
 
     try {
         const busqueda = await prendasUsadas.find();
         const prendasClientes = await Prenda.find(); //aqui 
-        
-        let prendas = [], veces = [], nomPrenda = [];
+
+        let prendas = [],
+            veces = [],
+            nomPrenda = [];
 
         for (let x = 0; x < prendasClientes.length; x++) {
-            if(prendasClientes[x].idCliente == id) {
+            if (prendasClientes[x].idCliente == id) {
                 prendas.push(busqueda[x].idPrenda);
                 veces.push(busqueda[x].usos);
                 //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
@@ -505,14 +509,14 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 
             }
         }
-        
+
         return res.json({
             ok: true,
             msg: 'prendas usadas',
             prenda: prendas,
             usos: veces,
             nombres: nomPrenda
-            
+
 
         });
 
@@ -527,7 +531,7 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 }
 
 const obtenerTallasPrendasCliente = async(req, res = response) => {
-    
+
     let id = req.header('id');
 
     try {
@@ -535,25 +539,27 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
         const prendasClientes = await Prenda.find(); //aqui 
 
         let existe = false;
-        
-        let prendas = [], veces = [], tallas = [];
-        let nPrenda = [], nomPrenda = [];
+
+        let prendas = [],
+            veces = [],
+            tallas = [];
+        let nPrenda = [],
+            nomPrenda = [];
 
         for (let x = 0; x < prendasClientes.length; x++) {
-            if(prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
+            if (prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
                 prendas.push(busqueda[x].idPrenda) //añado el id de la prenda a prendas
-                
+
                 for (let i = 0; i < tallas.length && !existe; i++) {
-                    if(tallas[i] == busqueda[x].talla) {
+                    if (tallas[i] == busqueda[x].talla) {
                         existe = true;
                         veces[i] = veces[i] + busqueda[x].usos;
-                    }  
+                    }
                 }
-                if(!existe) {
+                if (!existe) {
                     tallas.push(busqueda[x].talla);
                     veces.push(busqueda[x].usos);
-                }
-                else
+                } else
                     existe = false;
 
                 //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
@@ -568,7 +574,7 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
             talla: tallas,
             usos: veces,
             nombres: nomPrenda
-            
+
 
         });
 
@@ -759,7 +765,124 @@ const obtenerTodosClientes = async(req, res = response) => {
     }
 }
 
+const agregarDatoMapa = async(req, res) => {
 
+    try {
+
+        const suma = await datoMapa.findOne({ ciudad: req.body.ciudad, prenda: req.body.prenda });
+
+        if (suma != null) {
+
+            //LA PRENDA EXISTE, SUMAMOS UNO
+
+            suma.contador++;
+
+            await suma.save();
+
+            return true;
+
+        } else {
+
+            //LA PRENDA NO EXISTE, CREAMOS LA ENTRADA
+
+            let nuevodato = new datoMapa();
+            nuevodato.ciudad = req.body.ciudad;
+            nuevodato.prenda = req.body.prenda;
+            nuevodato.contador = 1;
+
+            await nuevodato.save();
+
+            return true;
+
+        }
+
+    } catch (err) {
+
+        console.log('Error registrando la entrada de la ciudad');
+
+        return res.status(400).json({
+
+            ok: false,
+            msg: 'esto no va bro',
+            error: err
+
+        });
+
+    }
+}
+
+const obtenerDatosRegiones = async(req, res = response) => {
+
+    salirSiUsuarioNoAdmin(req.header('x-token'));
+
+    try {
+
+        //Buscamos el dato de cada región
+
+        let datos = [];
+
+        datos.push(['Comunidad', 'Prenda', 'Núm. de pruebas']);
+
+        //Este filtro devuelve la coincidencia con mayor valor en el contador: la prenda más probada de la región, y la añade al array tridimensional que usa charts
+        //Si no hay entradas de esa región no se añade nada al array y el mapa se representará con la región en blanco
+
+        const AN = await datoMapa.find({ ciudad: 'AN' }).sort({ "contador": -1 }).limit(1);
+        if (AN.length != 0) { datos.push(['ES-AN', AN[0].prenda, AN[0].contador]) }
+        const AR = await datoMapa.find({ ciudad: 'AR' }).sort({ "contador": -1 }).limit(1);
+        if (AR.length != 0) { datos.push(['ES-AR', AR[0].prenda, AR[0].contador]) }
+        const AS = await datoMapa.find({ ciudad: 'AS' }).sort({ "contador": -1 }).limit(1);
+        if (AS.length != 0) { datos.push(['ES-AS', AS[0].prenda, AS[0].contador]) }
+        const CN = await datoMapa.find({ ciudad: 'CN' }).sort({ "contador": -1 }).limit(1);
+        if (CN.length != 0) { datos.push(['ES-CN', CN[0].prenda, CN[0].contador]) }
+        const CB = await datoMapa.find({ ciudad: 'CB' }).sort({ "contador": -1 }).limit(1);
+        if (CB.length != 0) { datos.push(['ES-CB', CB[0].prenda, CB[0].contador]) }
+        const CM = await datoMapa.find({ ciudad: 'CM' }).sort({ "contador": -1 }).limit(1);
+        if (CM.length != 0) { datos.push(['ES-CM', CM[0].prenda, CM[0].contador]) }
+        const CL = await datoMapa.find({ ciudad: 'CL' }).sort({ "contador": -1 }).limit(1);
+        if (CL.length != 0) { datos.push(['ES-CL', CL[0].prenda, CL[0].contador]) }
+        const CT = await datoMapa.find({ ciudad: 'CT' }).sort({ "contador": -1 }).limit(1);
+        if (CT.length != 0) { datos.push(['ES-CT', CT[0].prenda, CT[0].contador]) }
+        const EX = await datoMapa.find({ ciudad: 'EX' }).sort({ "contador": -1 }).limit(1);
+        if (EX.length != 0) { datos.push(['ES-EX', EX[0].prenda, EX[0].contador]) }
+        const GA = await datoMapa.find({ ciudad: 'GA' }).sort({ "contador": -1 }).limit(1);
+        if (GA.length != 0) { datos.push(['ES-GA', GA[0].prenda, GA[0].contador]) }
+        const IB = await datoMapa.find({ ciudad: 'IB' }).sort({ "contador": -1 }).limit(1);
+        if (IB.length != 0) { datos.push(['ES-IB', IB[0].prenda, IB[0].contador]) }
+        const RI = await datoMapa.find({ ciudad: 'RI' }).sort({ "contador": -1 }).limit(1);
+        if (RI.length != 0) { datos.push(['ES-RI', RI[0].prenda, RI[0].contador]) }
+        const MD = await datoMapa.find({ ciudad: 'MD' }).sort({ "contador": -1 }).limit(1);
+        if (MD.length != 0) { datos.push(['ES-MD', MD[0].prenda, MD[0].contador]) }
+        const MC = await datoMapa.find({ ciudad: 'MC' }).sort({ "contador": -1 }).limit(1);
+        if (MC.length != 0) { datos.push(['ES-MC', MC[0].prenda, MC[0].contador]) }
+        const NC = await datoMapa.find({ ciudad: 'NC' }).sort({ "contador": -1 }).limit(1);
+        if (NC.length != 0) { datos.push(['ES-NC', NC[0].prenda, NC[0].contador]) }
+        const PV = await datoMapa.find({ ciudad: 'PV' }).sort({ "contador": -1 }).limit(1);
+        if (PV.length != 0) { datos.push(['ES-PV', PV[0].prenda, PV[0].contador]) }
+        const VC = await datoMapa.find({ ciudad: 'VC' }).sort({ "contador": -1 }).limit(1);
+        if (VC.length != 0) { datos.push(['ES-VC', VC[0].prenda, VC[0].contador]) }
+
+        console.log("ESTAMOS AQUI");
+
+        //Devolvemos el array al componente con todos los datos de la BD ya formateados
+
+        console.log(datos);
+
+        return res.json(datos);
+
+    } catch (err) {
+
+        console.log('Error buscando los datos');
+
+        return res.status(400).json({
+
+            ok: false,
+            msg: 'todo mal bro',
+            error: err
+
+        });
+
+    }
+}
 
 module.exports = {
     // devolver datos al frontend perfectamente formateados 
@@ -771,6 +894,7 @@ module.exports = {
     obtenerUsosPrendas,
     obtenerUsosPrendasCliente,
     obtenerTallasPrendasCliente,
+    obtenerDatosRegiones,
 
     // funciones para modificar datos KPI en el backend
     insertarfechahoraUsuarioCliente,
@@ -781,4 +905,5 @@ module.exports = {
     sumarPrendaKPI,
     restarPrendaKPI,
     sumarUsoPrenda,
+    agregarDatoMapa,
 }
