@@ -29,7 +29,7 @@ export class WebGLService {
   }
 
   async animaciones(){
-    await this.miMotor.iniciarProbador();
+    await this.miMotor.dibujarAnimaciones();
   }
 
   dibujar(){

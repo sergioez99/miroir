@@ -37,6 +37,7 @@ class Malla {
     private specular;
     private glossiness;
     private dibujado;
+    private nombre;
 
     constructor(){
         this.dibujado = false;
@@ -104,6 +105,13 @@ class Malla {
 
     getDibujado(){
         return this.dibujado;
+    }
+
+    setNombre(n){
+        this.nombre = n;
+    }
+    getNombre(){
+        return this.nombre;
     }
     
 

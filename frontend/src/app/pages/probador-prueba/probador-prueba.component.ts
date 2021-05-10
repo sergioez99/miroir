@@ -42,9 +42,9 @@ export class ProbadorPruebaComponent implements OnInit {
       this.gl = await this.webglService.initialiseAnimacion(this.canvas.nativeElement, this.modelosTicket, this.ticket);
       const drawSceneInterval = interval(this._60fpsInterval);
       this.iniciarEvents()
-      //drawSceneInterval.subscribe(() => {
+      drawSceneInterval.subscribe(() => {
         this.drawScene();
-      //});
+      });
 
 
     }
