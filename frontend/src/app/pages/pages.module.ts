@@ -36,12 +36,14 @@ import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.comp
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
+import { ProbadorPruebaComponent } from './probador-prueba/probador-prueba.component';
 
 @NgModule({
   declarations: [
     BaseLayoutComponent,
     PerfilLayoutComponent,
 
+    ProbadorPruebaComponent,
     Probador01Component,
     HomeComponent,
     PlanesComponent,

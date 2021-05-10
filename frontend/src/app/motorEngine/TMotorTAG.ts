@@ -867,4 +867,196 @@ export class TMotorTAG {
     }
     return -1;
   }
+
+
+  //Probador con animaciones
+  async iniciarAnimacion(ticket, avatar, prenda) {
+    //Creamos la cámara, la luz y el viewport del probador
+    const ext = this.gl.getExtension('WEBGL_depth_texture');
+    let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
+    this.registrarLuz(luz);
+    this.setLuzActiva(0, true);
+
+    let camara = this.crearCamara(null, null, null, null, true, 0.1, 500, null, null, 1, null);
+    this.registrarCamara(camara);
+    this.setCamaraActiva(0);
+
+    this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
+    this.setViewportActivo(0);
+
+    if (prenda == "b0c090e4-5eb5-4ee5-a185-09afefd1e83f.json")
+      this.num = 1;
+
+    //Crear modelos aquí   
+
+    for(let i in avatar){
+      let avatarNodo = await this.crearModelo(null, null, null, null, avatar[i], ticket, "avatar");
+    }
+    for(let i in prenda){
+      let modeloNodo = await this.crearModelo(null, null, null, null, prenda[i], ticket, "prenda");
+    }
+    let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
+    this.buffers3 = await this.initialiseBuffers(sueloNodo.getEntidad().getMallas()); //Suelo se crea una vez
+  }
+
+  async dibujarAnimaciones(){
+    this.resizeWebGLCanvas();
+    this.updateWebGLCanvas();
+
+    // LUCES
+
+    this.gl.useProgram(this.programInfo.program);
+
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50, -10, -50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3, 0.3, 0.3]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse, [0.8, 0.8, 0.8]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular, [0.2, 0.2, 0.2]);
+    /* this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.0,0.0,0.0]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.0,0.0,0.0]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.0,0.0,0.0]); */
+
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50, -10, -50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2, 0.2, 0.2]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
+
+
+
+
+    /*for (let i = 0; i < this.registroLuces.length; i++) {
+        if (this.lucesActivas[i] == true) {
+            let matrizLuz = this.registroLuces[i].getTransformMatrix();
+            //Decirle a gl que use las luces (buscar)
+        }
+    }
+    */
+
+    //CÁMARA
+
+    let cameraMatrix = this.registroCamaras[this.camaraActiva].getTransformMatrix();
+    let cameraTarget = matrix.vec3.create();
+    //cameraTarget = [this.modelViewMatrix[12], this.modelViewMatrix[13], this.modelViewMatrix[14]];
+    cameraTarget = [0, 0, 0];
+    let cameraPosition = matrix.vec3.create();
+    cameraPosition = [0, 0, -12];
+    let up = matrix.vec3.create();
+    up = [0, 1, 0];
+
+    matrix.mat4.lookAt(cameraMatrix, cameraPosition, cameraTarget, up);
+
+    let viewMatrix = matrix.mat4.create();
+    matrix.mat4.invert(viewMatrix, cameraMatrix);
+    let viewProjectionMatrix = matrix.mat4.create();
+    matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix);
+
+    matrix.mat4.scale(viewProjectionMatrix, viewProjectionMatrix, [this.zoom, this.zoom, this.zoom])
+    matrix.mat4.rotateY(viewProjectionMatrix, viewProjectionMatrix, this.rotY)
+
+    this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.projectionMatrix, false, viewProjectionMatrix);
+
+    let normalMatrix = matrix.mat4.create();
+    matrix.mat4.invert(normalMatrix, this.modelViewMatrix);
+    matrix.mat4.transpose(normalMatrix, normalMatrix);
+
+    this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.normalMatrix, false, normalMatrix);
+
+
+    // VIEWPORT
+    this.updateViewport();
+
+    let RMalla = this.gestorRecursos.dibujarMallas();
+
+    //Tengo aquí todos los modelos
+    let mallas = RMalla.getMallas();
+
+    for (let i in mallas) {
+      let vertexCount = mallas[i].getIndices().length;
+      switch (i) {
+        case '0': //Avatar
+          matrix.mat4.translate(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0, -3, 0])
+          matrix.mat4.rotateY(this.modelViewMatrix,
+            this.modelViewMatrix,
+            180 * Math.PI / 180)
+          matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix,
+            90 * Math.PI / 180)
+
+          //Puedo cambiar los buffers a array también    
+          this.buffers = await this.initialiseBuffers(mallas[i]);
+
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+
+          this.bindVertexPosition(this.programInfo, this.buffers);
+
+          this.bindVertexTextures(this.programInfo, this.buffers);
+
+          this.bindVertexNormal(this.programInfo, this.buffers);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+
+          break;
+
+        case '1': //Prenda 1
+          //para la camiseta y el pantalon
+          if (this.num == 1)
+            matrix.mat4.translate(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0, -0.033, -1.37])
+          else
+            matrix.mat4.scale(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0.0328, 0.0328, 0.0328])
+
+
+          this.buffers2 = await this.initialiseBuffers(mallas[i]);
+
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+
+          this.bindVertexPosition(this.programInfo, this.buffers2);
+
+          this.bindVertexTextures(this.programInfo, this.buffers2);
+
+          this.bindVertexNormal(this.programInfo, this.buffers2);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+        break;
+
+        case '2': //suelo
+          this.modelViewMatrix = matrix.mat4.create();
+          matrix.mat4.translate(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0, -3, 0])
+          matrix.mat4.scale(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0.068, 0.068, 0.068])
+
+
+          //this.buffers3 = await this.initialiseBuffers(mallas[i]);
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+          this.bindVertexPosition(this.programInfo, this.buffers3);
+          
+          this.bindVertexTextures(this.programInfo, this.buffers3);
+
+          this.bindVertexNormal(this.programInfo, this.buffers3);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+          break;
+
+      }
+      this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
+      this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
+      this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+
+      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
+
+      this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+    }
+  }
 }

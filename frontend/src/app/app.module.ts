@@ -26,7 +26,7 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 @NgModule({
   declarations: [
     AppComponent,
-    TicketComponent
+    TicketComponent,
 
   ],
   imports: [

@@ -21,9 +21,15 @@ export class WebGLService {
     return gl;
   }
 
-  dibujadoTemporal() {
-    this.miMotor.dibujadoTemporal();
+  async initialiseAnimacion(canvas: HTMLCanvasElement, modelos:string[], ticket) {
+    this.miMotor = new TMotorTAG();
+    var gl = this.miMotor.iniciarGL(canvas);
+    await this.miMotor.iniciarAnimacion(ticket, modelos[0], modelos[1]); 
+    return gl;
+  }
 
+  async animaciones(){
+    await this.miMotor.iniciarProbador();
   }
 
   dibujar(){

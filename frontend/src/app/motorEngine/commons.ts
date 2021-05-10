@@ -36,9 +36,10 @@ class Malla {
     private diffuse;
     private specular;
     private glossiness;
+    private dibujado;
 
     constructor(){
-
+        this.dibujado = false;
     }
 
     setVertices(v) {
@@ -97,6 +98,13 @@ class Malla {
         return this.glossiness
     }
 
+    setDibujado(d){
+        this.dibujado = d;
+    }
+
+    getDibujado(){
+        return this.dibujado;
+    }
     
 
     draw(){
