@@ -20,6 +20,7 @@ export class Probador01Component implements OnInit {
   private lastX = 0; lastY = 0; trackingMouseMotion = false; dMouseX = 0; dMouseY = 0; rollCamera = true;
   private trasX = 0; trasY = 0; trasZ = 0;
   private scale = 1; // zoom
+  private cambioPrenda = false;
 
   private ticket = null;
   private modelosTicket: string[];
@@ -39,15 +40,18 @@ export class Probador01Component implements OnInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-      this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket);
-      const drawSceneInterval = interval(this._60fpsInterval);
-      this.iniciarEvents()
-      drawSceneInterval.subscribe(() => {
-        this.drawScene();
-      });
-
-
+      this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
+      this.iniciarEvents();
+      this.dibujar();
     }
+
+    dibujar(){
+      const drawSceneInterval = interval(this._60fpsInterval);
+      //drawSceneInterval.subscribe(() => {
+        this.drawScene();
+      //});
+    }
+
 
     ngOnInit(): void {
       this.modelosTicket = [];
@@ -64,8 +68,10 @@ export class Probador01Component implements OnInit {
       this.crearTicket();
       else
       this.canjearTicket();
-      
 
+    }
+
+    cambiarPrenda(){
 
     }
 
@@ -77,8 +83,13 @@ export class Probador01Component implements OnInit {
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
       
-
-        this.funcionCanvas();
+        if(this.cambioPrenda)
+          this.drawScene();
+        else{
+          this.cambioPrenda = true;
+          this.funcionCanvas();
+        }
+        
 
       }).catch((error) => {
 
@@ -91,10 +102,8 @@ export class Probador01Component implements OnInit {
 
       if(prenda) {
         this.ticketService.obtenerTicket(prenda).then((res) => {
-
-  
-          this.ticket = res;
-          this.canjearTicket();
+        this.ticket = res;
+        this.canjearTicket();
   
         }).catch((error) => {
   
@@ -126,7 +135,7 @@ export class Probador01Component implements OnInit {
       //this.webglService.updateViewport();
       //this.webglService.dibujadoTemporal();
 
-      this.webglService.dibujar();
+      this.webglService.dibujar(this.ticket, this.modelosTicket);
     }
 
     iniciarEvents(){

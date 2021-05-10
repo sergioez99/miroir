@@ -12,7 +12,7 @@ class TEntity {
 class TRecurso {
 
     private nombre: string;
-    
+    private nombres: String[] = [];
     
 
     constructor() {
@@ -25,6 +25,14 @@ class TRecurso {
     setNombre(nombre) {
         this.nombre = nombre;
     }
+
+    addNombres(n: string){
+        this.nombres.push(n);
+    }
+
+    getNombres(){
+        return this.nombres;
+    }
 }
 
 class Malla {
@@ -36,6 +44,7 @@ class Malla {
     private diffuse;
     private specular;
     private glossiness;
+    private nombre;
 
     constructor(){
 
@@ -97,6 +106,13 @@ class Malla {
         return this.glossiness
     }
 
+
+    getNombre(){
+        return this.nombre;
+    }
+    setNombre(n){
+        this.nombre = n;
+    }
     
 
     draw(){

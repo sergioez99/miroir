@@ -13,11 +13,11 @@ export class WebGLService {
 
   constructor() { }
 
-  async initialiseWebGLContext(canvas: HTMLCanvasElement, modelos:string[], ticket) {
+  async initialiseWebGLContext(canvas: HTMLCanvasElement) {
 
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    await this.miMotor.iniciarProbador(ticket, modelos[0], modelos[1]); 
+    await this.miMotor.iniciarProbador(); 
     return gl;
   }
 
@@ -26,8 +26,8 @@ export class WebGLService {
 
   }
 
-  dibujar(){
-    this.miMotor.dibujarEscena();
+  dibujar(ticket, modelos){
+    this.miMotor.dibujarEscena(ticket, modelos);
   }
 
   updateMouseevent(rotZ) {

@@ -8,37 +8,53 @@ export class gestorRecursos {
     private tipoRecurso;
     private recursoMalla: RMalla;
     private recursoTextura: RTextura;
+    private totalMallas: RMalla;
 
     constructor(){
         this.recursos = [];
-        this.recursoMalla = new RMalla();
-        this.recursoTextura = new RTextura();
+        this.totalMallas = new RMalla();
     }
 
     async getRecurso(nombre, ticket, tipo) {
+        this.recursoMalla = new RMalla();
+        this.recursoTextura = new RTextura();
         let miRecurso;
+        let mallas;
+        let imagen;
         let encontrado = false;
 
-        for(let i = 0; i < this.recursos.length && !encontrado; i++)
-            if(this.recursos[i].getNombre() === nombre){
-                miRecurso = this.recursos[i];
-                encontrado = true;
-            }
-
+        console.log(this.totalMallas)
+        for(let i = 0; i < this.recursos.length && !encontrado; i++){
+           if(this.recursos[i].getNombres()[0].localeCompare(nombre) == 0){
+               let tipo = nombre.split(".");
+               switch (tipo[1]) {
+                   case 'json':
+                       mallas = this.recursos[i];
+                       miRecurso = mallas.getMallas()[0];
+                       break;
+                   default:
+                       imagen = this.recursos[i];
+                       miRecurso = imagen.getImagen();
+                       break;
+               }
+               encontrado = true;
+           }
+        }
         if(!encontrado) {
+            console.log(nombre);
             miRecurso = await this.cargarFichero(nombre, ticket, tipo);
             if(this.tipoRecurso == 1){
                 this.recursoMalla.addMallas(miRecurso);
-                this.recursoMalla.setNombre(nombre);
+                this.recursoMalla.addNombres(nombre);
                 this.recursos.push(this.recursoMalla);
+                this.totalMallas.addMallas(miRecurso);
             }
             else{
                 this.recursoTextura.setImagen(miRecurso);
-                this.recursoTextura.setNombre(nombre);
+                this.recursoTextura.addNombres(nombre);
                 this.recursos.push(this.recursoTextura);
             }
         }
-
         return miRecurso;
     }
 
@@ -71,7 +87,7 @@ export class gestorRecursos {
                 let file = await archivo.json();
                 let malla = new Malla();
 
-
+                malla.setNombre(fichero);
 
 
                 malla.setCoordtex(file.model.meshes[0].uvs[0]);
@@ -123,7 +139,7 @@ export class gestorRecursos {
     };
 
     dibujarMallas(){
-        return this.recursoMalla;
+        return this.totalMallas;
     }
 }
 

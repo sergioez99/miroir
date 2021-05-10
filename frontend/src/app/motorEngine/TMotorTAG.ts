@@ -59,6 +59,8 @@ export class TMotorTAG {
   private modelos
   private num = 0;
 
+  private nombreAvatar: string; nombrePrenda: string; nombreSuelo: string;
+
 
   constructor() {
     this.raiz = new TNode(null, null, null, null, null, null, null);
@@ -68,6 +70,9 @@ export class TMotorTAG {
     this.lucesActivas = [];
     this.registroViewports = [[]]
     this.modelos = 0;
+    this.nombreAvatar = "avatar";
+    this.nombrePrenda = "prenda";
+    this.nombreSuelo = "suelo";
   }
 
   crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
@@ -186,9 +191,29 @@ export class TMotorTAG {
     return frame_buffer;
   }
 
-  async dibujarEscena() {
+  async dibujarEscena(ticket, modelos) {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
+
+    let cambioAvatar = false, cambioPrenda = false, cambioSuelo = false;
+
+    //Para las animaciones, como no, habrá que cambiarlo xd
+    if(this.nombreAvatar.localeCompare(modelos[0]) != 0){
+      this.nombreAvatar = modelos[0];
+      let avatarNodo = await this.crearModelo(null, null, null, null, modelos[0], ticket, "avatar");
+      cambioAvatar = true;
+    }    
+    if(this.nombrePrenda.localeCompare(modelos[1]) != 0){
+      this.nombrePrenda = modelos[1];
+      let modeloNodo = await this.crearModelo(null, null, null, null, modelos[1], ticket, "prenda");
+      cambioPrenda = true;
+    }
+    if(this.nombreSuelo.localeCompare("suelo.json") != 0){
+      this.nombreSuelo = "suelo.json";
+      let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
+      cambioSuelo = true;
+    }
+    
 
     // // SOMBRAS (se dibujan antes que los modelos)
     //this.gl.useProgram(this.programShadow.program); 
@@ -344,10 +369,9 @@ export class TMotorTAG {
     // VIEWPORT
     this.updateViewport();
 
-    for (let i in mallas) {
+    for (let i in mallas){
       let vertexCount = mallas[i].getIndices().length;
-      switch (i) {
-        case '0': //Avatar
+      if(mallas[i].getNombre().localeCompare(this.nombreAvatar) == 0){
           matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
             [0, -3, 0])
@@ -358,8 +382,8 @@ export class TMotorTAG {
             this.modelViewMatrix,
             90 * Math.PI / 180)
 
-          //Puedo cambiar los buffers a array también    
-          this.buffers = await this.initialiseBuffers(mallas[i]);
+          if(cambioAvatar)    
+            this.buffers = await this.initialiseBuffers(mallas[i]);
 
           this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
@@ -372,67 +396,165 @@ export class TMotorTAG {
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
           this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
 
-          break;
+          this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
+          this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
+          this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
 
-        case '1': //Prenda 1
-          //para la camiseta y el pantalon
-          if (this.num == 1)
-            matrix.mat4.translate(this.modelViewMatrix,
-              this.modelViewMatrix,
-              [0, -0.033, -1.37])
-          else
-            matrix.mat4.scale(this.modelViewMatrix,
-              this.modelViewMatrix,
-              [0.0328, 0.0328, 0.0328])
+          this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
 
-
-          this.buffers2 = await this.initialiseBuffers(mallas[i]);
-
-          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
-
-          this.bindVertexPosition(this.programInfo, this.buffers2);
-
-          this.bindVertexTextures(this.programInfo, this.buffers2);
-
-          this.bindVertexNormal(this.programInfo, this.buffers2);
-
-          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-        break;
-
-        case '2': //suelo
-          this.modelViewMatrix = matrix.mat4.create();
+          this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+      }
+      if(mallas[i].getNombre().localeCompare(this.nombrePrenda) == 0){
+        console.log(this.num);
+        if (this.num == 1)
           matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0, -3, 0])
+            [0, -0.033, -1.37])
+        else
           matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0.068, 0.068, 0.068])
+            [0.0328, 0.0328, 0.0328])
 
+        if(cambioPrenda)
+        this.buffers2 = await this.initialiseBuffers(mallas[i]);
 
-          this.buffers3 = await this.initialiseBuffers(mallas[i]);
-          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
-          this.bindVertexPosition(this.programInfo, this.buffers3);
-          
-          this.bindVertexTextures(this.programInfo, this.buffers3);
+        this.bindVertexPosition(this.programInfo, this.buffers2);
 
-          this.bindVertexNormal(this.programInfo, this.buffers3);
+        this.bindVertexTextures(this.programInfo, this.buffers2);
 
-          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+        this.bindVertexNormal(this.programInfo, this.buffers2);
 
-          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-          break;
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+        this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+        this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
+        this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
+        this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
 
+        this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
+
+        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
       }
-      this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
-      this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
-      this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+      if(mallas[i].getNombre().localeCompare(this.nombreSuelo) == 0){
+        this.modelViewMatrix = matrix.mat4.create();
+        matrix.mat4.translate(this.modelViewMatrix,
+          this.modelViewMatrix,
+          [0, -3, 0])
+        matrix.mat4.scale(this.modelViewMatrix,
+          this.modelViewMatrix,
+          [0.068, 0.068, 0.068])
 
-      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
 
-      this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+        if(cambioSuelo)
+        this.buffers3 = await this.initialiseBuffers(mallas[i]);
+
+        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+        this.bindVertexPosition(this.programInfo, this.buffers3);
+        
+        this.bindVertexTextures(this.programInfo, this.buffers3);
+
+        this.bindVertexNormal(this.programInfo, this.buffers3);
+
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+
+        this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+
+        this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
+        this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
+        this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+
+        this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
+
+        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+      }
     }
+
+
+    
+    // for (let i in mallas) {
+    //   
+    //   switch (i) {
+    //     case '0': //Avatar
+    //       matrix.mat4.translate(this.modelViewMatrix,
+    //         this.modelViewMatrix,
+    //         [0, -3, 0])
+    //       matrix.mat4.rotateY(this.modelViewMatrix,
+    //         this.modelViewMatrix,
+    //         180 * Math.PI / 180)
+    //       matrix.mat4.rotateX(this.modelViewMatrix,
+    //         this.modelViewMatrix,
+    //         90 * Math.PI / 180)
+
+    //       //Puedo cambiar los buffers a array también    
+    //       this.buffers = await this.initialiseBuffers(mallas[i]);
+
+    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+
+    //       this.bindVertexPosition(this.programInfo, this.buffers);
+
+    //       this.bindVertexTextures(this.programInfo, this.buffers);
+
+    //       this.bindVertexNormal(this.programInfo, this.buffers);
+
+    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
+    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+
+    //       break;
+
+    //     case '1': //Prenda 1
+    //       //para la camiseta y el pantalon
+    //       if (this.num == 1)
+    //         matrix.mat4.translate(this.modelViewMatrix,
+    //           this.modelViewMatrix,
+    //           [0, -0.033, -1.37])
+    //       else
+    //         matrix.mat4.scale(this.modelViewMatrix,
+    //           this.modelViewMatrix,
+    //           [0.0328, 0.0328, 0.0328])
+
+
+    //       this.buffers2 = await this.initialiseBuffers(mallas[i]);
+
+    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+
+    //       this.bindVertexPosition(this.programInfo, this.buffers2);
+
+    //       this.bindVertexTextures(this.programInfo, this.buffers2);
+
+    //       this.bindVertexNormal(this.programInfo, this.buffers2);
+
+    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+    //     break;
+
+    //     case '2': //suelo
+    //       this.modelViewMatrix = matrix.mat4.create();
+    //       matrix.mat4.translate(this.modelViewMatrix,
+    //         this.modelViewMatrix,
+    //         [0, -3, 0])
+    //       matrix.mat4.scale(this.modelViewMatrix,
+    //         this.modelViewMatrix,
+    //         [0.068, 0.068, 0.068])
+
+
+    //       this.buffers3 = await this.initialiseBuffers(mallas[i]);
+    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+    //       this.bindVertexPosition(this.programInfo, this.buffers3);
+          
+    //       this.bindVertexTextures(this.programInfo, this.buffers3);
+
+    //       this.bindVertexNormal(this.programInfo, this.buffers3);
+
+    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
+
+    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+    //       break;
+
+    //   }
+    // }
   }
 
   // ---------------- Inicializar el contexto de GL y los shaders ----------------
@@ -576,12 +698,6 @@ export class TMotorTAG {
 
     if (prenda == "b0c090e4-5eb5-4ee5-a185-09afefd1e83f.json")
       this.num = 1;
-
-    let avatarNodo = await this.crearModelo(null, null, null, null, avatar, ticket, "avatar");
-
-    let modeloNodo = await this.crearModelo(null, null, null, null, prenda, ticket, "prenda");
-
-    let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
 
   }
 

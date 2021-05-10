@@ -26,6 +26,8 @@ export class RMalla extends TRecurso {
     getMallas(){
         return this.mallas;
     }
+
+   
 }
 
 export class RTextura extends TRecurso {
