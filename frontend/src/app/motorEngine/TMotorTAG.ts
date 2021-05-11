@@ -61,6 +61,7 @@ export class TMotorTAG {
 
   private malla1; malla2; malla3;
   private RMalla;
+  private pos;
 
 
   constructor() {
@@ -71,6 +72,7 @@ export class TMotorTAG {
     this.lucesActivas = [];
     this.registroViewports = [[]]
     this.modelos = 0;
+    this.pos = 1;
   }
 
   crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
@@ -903,29 +905,59 @@ export class TMotorTAG {
 
     this.RMalla = this.gestorRecursos.dibujarMallas();
 
-    this.malla1 = await this.gestorRecursos.ficherosAssets('1.json');
-    this.malla2 = await this.gestorRecursos.ficherosAssets('10.json');
-    this.malla3 = await this.gestorRecursos.ficherosAssets('40.json');
+    this.malla1 = await this.gestorRecursos.ficherosAssets('1_2.json');
+    this.malla2 = await this.gestorRecursos.ficherosAssets('10_2.json');
+    this.malla3 = await this.gestorRecursos.ficherosAssets('40_2.json');
+    let avatar1 = await this.gestorRecursos.ficherosAssets('1_1.json');
+    let avatar2 = await this.gestorRecursos.ficherosAssets('10_1.json');
+    let avatar3 = await this.gestorRecursos.ficherosAssets('40_1.json');
 
+    this.RMalla.addMallas(avatar1);
     this.RMalla.addMallas(this.malla1);
+    this.RMalla.addMallas(avatar2);
     this.RMalla.addMallas(this.malla2);
+    this.RMalla.addMallas(avatar3);
     this.RMalla.addMallas(this.malla3);
 
     let mallas = this.RMalla.getMallas();
     //Sospechosos los tiempos (en teoria 60fps) y se desincroniza
-    let tiempoFalse = 1000, tiempoTrue = 1016.666666666666666667;
-    for(let i = 1; i < mallas.length; i++){
-      console.log(mallas[i])
-      setInterval(() => { 
-        mallas[i].setDibujado(false)
-      }, tiempoFalse)
-      setInterval(() =>{ 
-        mallas[i].setDibujado(true) 
-      }, tiempoTrue)
-      tiempoFalse += 16.666666666666666667;
-      tiempoTrue += 16.666666666666666667;
-    }
+
+    setInterval(() => {
+      if(this.pos == 1){
+        mallas[this.pos].setDibujado(true); //Avatar
+        mallas[this.pos+1].setDibujado(true); //Prenda
+        mallas[mallas.length-1].setDibujado(false); //Prenda del último 
+        mallas[mallas.length-2].setDibujado(false); //Avatar del último
+      }else{
+        mallas[this.pos].setDibujado(true)
+        mallas[this.pos+1].setDibujado(true)
+        mallas[this.pos-1].setDibujado(false)
+        mallas[this.pos-2].setDibujado(false)
+      }
+  
+      this.pos+=2;
+      if(this.pos >= mallas.length-1)
+        this.pos = 1;
+
+    }, 1000)
   }
+
+  // animando(){
+  //   let mallas = this.RMalla.getMallas();
+
+  //   if(this.pos == 1){
+  //     mallas[this.pos].setDibujado(true);
+  //     mallas[mallas.length-1].setDibujado(false);
+  //   }else{
+  //     mallas[this.pos].setDibujado(true)
+  //     mallas[this.pos-1].setDibujado(false)
+  //   }
+
+  //   this.pos++
+  //   if(this.pos == mallas.length-1)
+  //     this.pos = 1;
+    
+  // }
 
   async dibujarAnimaciones(){
     this.resizeWebGLCanvas();
@@ -1026,19 +1058,19 @@ export class TMotorTAG {
 
         default: //Avatar
       
-          //this.modelViewMatrix = matrix.mat4.create();
+          this.modelViewMatrix = matrix.mat4.create();
           matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0, -9, 0])
+            [0, -3, 0])
           matrix.mat4.rotateY(this.modelViewMatrix,
             this.modelViewMatrix,
             180 * Math.PI / 180)
-          matrix.mat4.rotateX(this.modelViewMatrix,
-            this.modelViewMatrix,
-            90 * Math.PI / 180)
-          // matrix.mat4.scale(this.modelViewMatrix,
+          // matrix.mat4.rotateX(this.modelViewMatrix,
           //   this.modelViewMatrix,
-          //   [0.068, 0.068, 0.068])
+          //   90 * Math.PI / 180)
+          matrix.mat4.scale(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0.0328, 0.0328, 0.0328])
 
           //Puedo cambiar los buffers a array también    
           this.buffers = await this.initialiseBuffers(mallas[i]);

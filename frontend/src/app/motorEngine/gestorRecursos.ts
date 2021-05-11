@@ -137,7 +137,7 @@ export class gestorRecursos {
                 let file = await archivo.json();
                 let malla = new Malla();
 
-                malla.setDibujado(true);
+                malla.setDibujado(false);
 
 
                 malla.setCoordtex(file.model.meshes[0].uvs[0]);
