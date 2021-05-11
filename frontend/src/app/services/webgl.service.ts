@@ -24,12 +24,12 @@ export class WebGLService {
   async initialiseAnimacion(canvas: HTMLCanvasElement, modelos:string[], ticket) {
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    await this.miMotor.iniciarAnimacion(ticket, modelos[0], modelos[1]); 
+    let espera = await this.miMotor.iniciarAnimacion(ticket, modelos[0], modelos[1]); 
     return gl;
   }
 
   async animaciones(){
-    await this.miMotor.dibujarAnimaciones();
+    let espera = await this.miMotor.dibujarAnimaciones();
   }
 
   dibujar(){

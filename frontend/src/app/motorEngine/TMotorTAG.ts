@@ -63,6 +63,8 @@ export class TMotorTAG {
   private RMalla;
   private pos;
 
+  private animacion;
+
 
   constructor() {
     this.raiz = new TNode(null, null, null, null, null, null, null);
@@ -680,6 +682,7 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
+    console.log(this.modelos)
     if (this.modelos == 0){
       this.gl.activeTexture(this.gl.TEXTURE0);
     }
@@ -877,7 +880,6 @@ export class TMotorTAG {
   //Probador con animaciones
   async iniciarAnimacion(ticket, avatar, prenda) {
     //Creamos la cámara, la luz y el viewport del probador
-    const ext = this.gl.getExtension('WEBGL_depth_texture');
     let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
     this.registrarLuz(luz);
     this.setLuzActiva(0, true);
@@ -892,36 +894,11 @@ export class TMotorTAG {
     if (prenda == "b0c090e4-5eb5-4ee5-a185-09afefd1e83f.json")
       this.num = 1;
 
-    //Crear modelos aquí   
-
-    // for(let i in avatar){
-    //   let avatarNodo = await this.crearModelo(null, null, null, null, avatar[i], ticket, "avatar");
-    // }
-    // for(let i in prenda){
-    //   let modeloNodo = await this.crearModelo(null, null, null, null, prenda[i], ticket, "prenda");
-    // }
-    let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
-    this.buffers3 = await this.initialiseBuffers(sueloNodo.getEntidad().getMalla()); //Suelo se crea una vez
-
-    this.RMalla = this.gestorRecursos.dibujarMallas();
-
-    this.malla1 = await this.gestorRecursos.ficherosAssets('1_2.json');
-    this.malla2 = await this.gestorRecursos.ficherosAssets('10_2.json');
-    this.malla3 = await this.gestorRecursos.ficherosAssets('40_2.json');
-    let avatar1 = await this.gestorRecursos.ficherosAssets('1_1.json');
-    let avatar2 = await this.gestorRecursos.ficherosAssets('10_1.json');
-    let avatar3 = await this.gestorRecursos.ficherosAssets('40_1.json');
-
-    this.RMalla.addMallas(avatar1);
-    this.RMalla.addMallas(this.malla1);
-    this.RMalla.addMallas(avatar2);
-    this.RMalla.addMallas(this.malla2);
-    this.RMalla.addMallas(avatar3);
-    this.RMalla.addMallas(this.malla3);
-
-    let mallas = this.RMalla.getMallas();
-    //Sospechosos los tiempos (en teoria 60fps) y se desincroniza
-
+    //Crear modelos aquí
+    let mallas = await this.cargarModelos();
+    //let mallas = this.RMalla.getMallas();
+    
+    //Animación en 30FPS 
     setInterval(() => {
       if(this.pos == 1){
         mallas[this.pos].setDibujado(true); //Avatar
@@ -939,25 +916,8 @@ export class TMotorTAG {
       if(this.pos >= mallas.length-1)
         this.pos = 1;
 
-    }, 1000)
+    }, 16.6666667) // 60 fps
   }
-
-  // animando(){
-  //   let mallas = this.RMalla.getMallas();
-
-  //   if(this.pos == 1){
-  //     mallas[this.pos].setDibujado(true);
-  //     mallas[mallas.length-1].setDibujado(false);
-  //   }else{
-  //     mallas[this.pos].setDibujado(true)
-  //     mallas[this.pos-1].setDibujado(false)
-  //   }
-
-  //   this.pos++
-  //   if(this.pos == mallas.length-1)
-  //     this.pos = 1;
-    
-  // }
 
   async dibujarAnimaciones(){
     this.resizeWebGLCanvas();
@@ -1041,8 +1001,8 @@ export class TMotorTAG {
           [0.068, 0.068, 0.068])
 
 
-        //this.buffers3 = await this.initialiseBuffers(mallas[i]);
-        //this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+        this.buffers3 = await this.initialiseBuffers(mallas[0]);
+        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
         this.bindVertexPosition(this.programInfo, this.buffers3);
         
@@ -1056,7 +1016,7 @@ export class TMotorTAG {
 
         break;
 
-        default: //Avatar
+        default: //Avatar y prenda que parece q se ven bien asi
       
           this.modelViewMatrix = matrix.mat4.create();
           matrix.mat4.translate(this.modelViewMatrix,
@@ -1074,6 +1034,12 @@ export class TMotorTAG {
 
           //Puedo cambiar los buffers a array también    
           this.buffers = await this.initialiseBuffers(mallas[i]);
+          let num: any = i;
+          if(num % 2 == 0)
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+          else
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+          //cambiar la textura si es avatar o prenda: (par o impar)
 
           this.bindVertexPosition(this.programInfo, this.buffers);
 
@@ -1089,7 +1055,7 @@ export class TMotorTAG {
       }
 
       if(mallas[i].getDibujado()){
-        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+        
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
         this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
@@ -1101,5 +1067,38 @@ export class TMotorTAG {
        
     }
    
+  }
+
+  async cargarModelos(){
+    this.RMalla = this.gestorRecursos.dibujarMallas();
+
+    //MODELOS
+    this.animacion = ['1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json','5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+    '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json','15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
+    '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json','25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
+    '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json', '34_1.json', '34_2.json','35_1.json', '35_2.json', '36_1.json', '36_2.json', '37_1.json', '37_2.json', '38_1.json', '38_2.json', '39_1.json', '39_2.json', '40_1.json', '40_2.json',
+    '41_1.json', '41_2.json', '42_1.json', '42_2.json', '43_1.json', '43_2.json', '44_1.json', '44_2.json','45_1.json', '45_2.json', '46_1.json', '46_2.json', '47_1.json', '47_2.json', '48_1.json', '48_2.json', '49_1.json', '49_2.json'];
+
+    let animacion = ['1_1 (1).json', '1_2 (1).json', '10_1 (1).json', '10_2 (1).json', '20_1.json', '20_2.json', '30_1.json', '30_2.json', '40_1 (1).json', '40_2 (1).json'];
+
+    //Variables de las q cogemos las texturas
+    let suelo: any, malla: any
+    //Suelo (y fondo) aparte
+    suelo = await this.gestorRecursos.ficherosAssets('suelo.json');
+    suelo.setDibujado(true);
+    let text = await this.gestorRecursos.ficherosAssets(suelo.getTexturas()[0]);
+    let texture = await this.loadTexture(text);
+    this.RMalla.addMallas(suelo);
+
+    for(let i in this.animacion){
+      malla = await this.gestorRecursos.ficherosAssets(this.animacion[i]);
+      if(i == '0' || i == '1'){
+        text = await this.gestorRecursos.ficherosAssets(malla.getTexturas()[0]);
+        texture = await this.loadTexture(text);
+      }
+      this.RMalla.addMallas(malla);
+    }
+
+    return this.RMalla.getMallas();
   }
 }

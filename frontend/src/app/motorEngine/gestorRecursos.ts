@@ -131,7 +131,7 @@ export class gestorRecursos {
         switch (partes[1]) {
             case 'json':
 
-                archivo = await this.leerArchivoRed('http://localhost:4200/assets/' + fichero);
+                archivo = await this.leerArchivoRed('http://localhost:4200/assets/animacion_chico/' + fichero);
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
@@ -146,12 +146,13 @@ export class gestorRecursos {
                 var indices = [];
 
                 for(let i = 0; i < file.model.meshes[0].vertIndices.length; i++){
-                    var pos = file.model.meshes[0].vertIndices[i]*3;
+                    let pos = file.model.meshes[0].vertIndices[i]*3;
                     indices.push(file.model.meshes[0].verts[pos]);
                     indices.push(file.model.meshes[0].verts[pos+1]);
                     indices.push(file.model.meshes[0].verts[pos+2]);
                 }
 
+                
 
                 malla.setIndices(file.model.meshes[0].face.vertElementIndices);
                 malla.setVertices(indices);
@@ -165,7 +166,7 @@ export class gestorRecursos {
                 return malla;
 
             default:
-                //archivo = await this.leerArchivoRed(environment.base_url + '/ticket/textura/' + fichero + '/' + ticket);
+                archivo = await this.leerArchivoRed('http://localhost:4200/assets/' + fichero);
 
                 // sera una imagen jpg, png...
                 this.tipoRecurso = 2;
