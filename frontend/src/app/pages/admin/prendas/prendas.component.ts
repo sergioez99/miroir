@@ -184,7 +184,9 @@ export class PrendasComponent implements OnInit {
 
   obtenerTicketPrevisualizar(prenda, talla) {
 
-    this.ticketService.obtenerTicketPrevisualizar(prenda, talla, 'usuario12@usuario.com').then((res) => {
+    let usuario = 'usuario12@usuario.com';
+
+    this.ticketService.obtenerTicketPrevisualizar(prenda, talla, usuario).then((res) => {
 
       // abrir en una pestaña nueva
       let url = environment.url_front + '/scene/' + res;

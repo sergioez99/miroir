@@ -69,7 +69,8 @@ export class TicketService {
 
       this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
 
-        /* DE SERGIO
+/* DE SERGIO
+
   obtenerTicket(idPrenda?): Promise<any> {
     return new Promise((resolve, reject) => {
 
@@ -84,7 +85,11 @@ export class TicketService {
 
 
       this.apiService.getTicketCall(cliente, usuario, prenda, talla).subscribe((res) => {
-*/
+
+/* la version de sergio acaba aqui */
+
+
+
         this.ticket = res['ticket'];
         resolve(this.ticket);
 
@@ -155,7 +160,7 @@ export class TicketService {
       // obtener la clave del cliente
       this.obtenerClave().then( (res)=>{
 
-        console.log('ehmos obtenido la clave: ', res);
+        console.log('hemos obtenido la clave: ', res);
 
         cliente = res;
 

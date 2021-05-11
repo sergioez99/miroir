@@ -64,7 +64,7 @@ export class Probador01Component implements OnInit {
       this.crearTicket();
       else
       this.canjearTicket();
-      
+
 
 
     }
@@ -76,7 +76,7 @@ export class Probador01Component implements OnInit {
         this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
-      
+
 
         this.funcionCanvas();
 
@@ -89,34 +89,32 @@ export class Probador01Component implements OnInit {
 
     crearTicket(prenda?){
 
+      /* VARIABLES MONICA
+      let cliente = '42izoRizo2mwMxQ8SOQLw8ZEL9WAPyHnYZr_AQ0VUo6a~.jt6q';
+      let usuario = 'asdf@asdf.com';
+      let prendaID = 'VEF15ORE3SC1';
+      let talla = 'XS';
+      */
+      /* VARIABLES DE SERGIO */
+      let cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
+      let usuario = 'sergi@gmail.com';
+      let prendaID = '123456789';
+      let talla = 'XS';
+
       if(prenda) {
-        this.ticketService.obtenerTicket(prenda).then((res) => {
-
-  
-          this.ticket = res;
-          this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-
-      } else{
-        this.ticketService.obtenerTicket().then((res) => {
-
-          this.ticket = res;
-          this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-
+        prendaID = prenda;
       }
 
-      
+      this.ticketService.obtenerTicket(cliente, usuario, prendaID, talla).then((res) => {
+
+        this.ticket = res;
+        this.canjearTicket();
+
+      }).catch((error) => {
+
+        console.warn(error);
+
+      });
 
     }
 
@@ -131,46 +129,46 @@ export class Probador01Component implements OnInit {
 
     iniciarEvents(){
       // Eventos de ratón aquí por el elemento canvas html
-    
+
       this.canvas.nativeElement.addEventListener('mousedown', e => {
         var x = e.clientX;
         var y = e.clientY;
-          
+
         var rect = this.canvas.nativeElement.getBoundingClientRect();
-        
+
         if (rect.left <= x && rect.right > x &&
             rect.top <= y && rect.bottom > y) {
-            this.lastX = x; 
+            this.lastX = x;
             this.lastY = y;
-            this.trackingMouseMotion = true; 
+            this.trackingMouseMotion = true;
         }
-        
-      })    
 
-      
-      this.canvas.nativeElement.addEventListener('mouseup', e => {
-        this.trackingMouseMotion = false; 
       })
-      
-      
+
+
+      this.canvas.nativeElement.addEventListener('mouseup', e => {
+        this.trackingMouseMotion = false;
+      })
+
+
       this.canvas.nativeElement.addEventListener('mousemove', e =>{
         var x = e.clientX;
         var y = e.clientY;
-                    
+
         if (this.trackingMouseMotion) {
           //Rotacion z
             this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
-            this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;            
+            this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;
             this.rotZ += 30 * this.dMouseX;
             this.rotZ %= 360;
-            
+
         }
         this.lastX = x;
         this.lastY = y;
-        
+
         //Rotación solo de Z, X e Y no son necesarias, pq la cámara deja de ver el modelo, traslación por ver
         this.webglService.updateMouseevent(this.rotZ);
-        
+
       })
 
       this.canvas.nativeElement.addEventListener('wheel', e => {
@@ -178,7 +176,7 @@ export class Probador01Component implements OnInit {
         //const [clipX, clipY] = this.getClipSpaceMousePosition(e);
 
         let hacerzoom = e.deltaY;
-        
+
         if(hacerzoom < 0){
           this.scale = this.scale + 0.05;
           hacerzoom = 0;
@@ -187,7 +185,7 @@ export class Probador01Component implements OnInit {
           this.scale = this.scale - 0.05;
           hacerzoom = 0;
         }
-        
+
 
 
         if(this.scale < 1){
@@ -195,11 +193,11 @@ export class Probador01Component implements OnInit {
         }
 
         //this.scale = Math.min(Math.max(.125, this.scale), 4);
-        
+
         this.webglService.updateZoom(this.scale);
 
 
-        
+
       }, {
         passive: false
       })
