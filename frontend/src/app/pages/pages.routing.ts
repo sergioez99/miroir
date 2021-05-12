@@ -28,6 +28,7 @@ import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.co
 import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.component';
 import { TicketComponent } from '../ticket/ticket.component';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
+import { SceneComponent } from '../scene/scene.component';
 
 
 const routes: Routes = [
@@ -107,6 +108,15 @@ const routes: Routes = [
       { path: 'cuadro', component: CuadroUsuarioComponent },
       { path:'perfil', component: PerfilUsuarioComponent },//added, not working
       { path: '**', redirectTo: '' }
+    ]
+  },
+
+  {
+    path: 'scene',
+    children: [
+      { path: '', component: SceneComponent },
+      { path: ':ticket', component: SceneComponent },
+      { path: '**', redirectTo: ''}
     ]
   },
 
