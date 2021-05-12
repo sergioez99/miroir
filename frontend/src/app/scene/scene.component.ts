@@ -23,6 +23,9 @@ export class SceneComponent implements OnInit {
   private ticket = null;
   private modelosTicket: string[];
 
+  private prendas = 0;
+  private cargarProbador = false;
+
   constructor(private router: Router,
     private route: ActivatedRoute,
     private webglService: WebGLService,
@@ -30,21 +33,25 @@ export class SceneComponent implements OnInit {
 
     //HAY QUE ACTUALIZAR
 
-  async funcionCanvas() {
-    if (!this.canvas) {
-      alert("canvas not supplied! cannot bind WebGL context!");
-      return;
+    async funcionCanvas() {
+      if (!this.canvas) {
+        alert("canvas not supplied! cannot bind WebGL context!");
+        return;
+      }
+      if(this.prendas == 0){
+        this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
+        this.iniciarEvents();
+      }
+      this.cargarProbador = await this.webglService.cargarModelos(this.ticket, this.modelosTicket);
+      this.dibujar();
     }
 
-    // await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
-    // const drawSceneInterval = interval(this._60fpsInterval);
-    // this.iniciarEvents()
-    // drawSceneInterval.subscribe(() => {
-    //   this.drawScene();
-    // });
-
-
-  }
+    dibujar(){
+      const drawSceneInterval = interval(this._60fpsInterval);
+      drawSceneInterval.subscribe(() => {
+        this.drawScene();
+      });
+    }
 
   ngOnInit(): void {
     this.modelosTicket = [];
@@ -85,7 +92,7 @@ export class SceneComponent implements OnInit {
     //this.webglService.updateViewport();
     //this.webglService.dibujadoTemporal();
 
-    //this.webglService.dibujar();
+    this.webglService.dibujar(this.cargarProbador);
   }
 
   iniciarEvents() {
