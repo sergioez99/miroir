@@ -131,7 +131,7 @@ export class gestorRecursos {
         switch (partes[1]) {
             case 'json':
 
-                archivo = await this.leerArchivoRed('http://localhost:4200/assets/animacion_chico/' + fichero);
+                archivo = await this.leerArchivoRed('http://localhost:4200/assets/animacion_alberto/' + fichero);
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();

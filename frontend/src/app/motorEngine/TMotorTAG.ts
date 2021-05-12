@@ -491,6 +491,10 @@ export class TMotorTAG {
         lightAmbiental2: this.gl.getUniformLocation(shaderProgram, 'Light2.Ambient'),
         lightDiffuse2: this.gl.getUniformLocation(shaderProgram, 'Light2.Diffuse'),
         lightSpecular2: this.gl.getUniformLocation(shaderProgram, 'Light2.Specular'),
+        lightPosition3: this.gl.getUniformLocation(shaderProgram, 'Light3.Position'),
+        lightAmbiental3: this.gl.getUniformLocation(shaderProgram, 'Light3.Ambient'),
+        lightDiffuse3: this.gl.getUniformLocation(shaderProgram, 'Light3.Diffuse'),
+        lightSpecular3: this.gl.getUniformLocation(shaderProgram, 'Light3.Specular'),
         MVPFromLight: this.gl.getUniformLocation(shaderProgram, 'u_MvpMatrixFromLight'),
         shadowMap: this.gl.getUniformLocation(shaderProgram, 'u_ShadowMap'),
       },
@@ -916,7 +920,7 @@ export class TMotorTAG {
       if(this.pos >= mallas.length-1)
         this.pos = 1;
 
-    }, 16.6666667) // 60 fps
+    }, 60)
   }
 
   async dibujarAnimaciones(){
@@ -927,7 +931,7 @@ export class TMotorTAG {
 
     this.gl.useProgram(this.programInfo.program);
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-50, -10, -50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition, [-60, -10, 50]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental, [0.3, 0.3, 0.3]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse, [0.8, 0.8, 0.8]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular, [0.2, 0.2, 0.2]);
@@ -935,10 +939,16 @@ export class TMotorTAG {
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse,  [0.0,0.0,0.0]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular,  [0.0,0.0,0.0]); */
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [50, -10, -50]);
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.2, 0.2, 0.2]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition2, [60, -10, 50]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental2, [0.3, 0.3, 0.3]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
+
+
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition3, [60, -20, -10]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental3, [0.3, 0.3, 0.3]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse3, [0.8, 0.8, 0.8]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular3, [0.2, 0.2, 0.2]);
 
 
 
@@ -1017,6 +1027,7 @@ export class TMotorTAG {
         break;
 
         default: //Avatar y prenda que parece q se ven bien asi
+        if(mallas[i].getDibujado()){
       
           this.modelViewMatrix = matrix.mat4.create();
           matrix.mat4.translate(this.modelViewMatrix,
@@ -1049,7 +1060,7 @@ export class TMotorTAG {
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
           this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-          
+        }
           break;
         
       }
@@ -1072,14 +1083,14 @@ export class TMotorTAG {
   async cargarModelos(){
     this.RMalla = this.gestorRecursos.dibujarMallas();
 
-    //MODELOS
-    this.animacion = ['1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json','5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+    //Animacion alberto
+    this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json','5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
     '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json','15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
     '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json','25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
     '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json', '34_1.json', '34_2.json','35_1.json', '35_2.json', '36_1.json', '36_2.json', '37_1.json', '37_2.json', '38_1.json', '38_2.json', '39_1.json', '39_2.json', '40_1.json', '40_2.json',
-    '41_1.json', '41_2.json', '42_1.json', '42_2.json', '43_1.json', '43_2.json', '44_1.json', '44_2.json','45_1.json', '45_2.json', '46_1.json', '46_2.json', '47_1.json', '47_2.json', '48_1.json', '48_2.json', '49_1.json', '49_2.json'];
+    '41_1.json', '41_2.json', '42_1.json', '42_2.json', '43_1.json', '43_2.json', '44_1.json', '44_2.json','45_1.json', '45_2.json', '46_1.json', '46_2.json'];
 
-    let animacion = ['1_1 (1).json', '1_2 (1).json', '10_1 (1).json', '10_2 (1).json', '20_1.json', '20_2.json', '30_1.json', '30_2.json', '40_1 (1).json', '40_2 (1).json'];
+    
 
     //Variables de las q cogemos las texturas
     let suelo: any, malla: any
