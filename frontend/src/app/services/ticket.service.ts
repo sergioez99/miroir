@@ -64,12 +64,12 @@ export class TicketService {
 
   }
 
-  obtenerTicket(clave, usuario, prendaID, talla, id?): Promise<any> {
-    return new Promise((resolve, reject) => {
+  // obtenerTicket(clave, usuario, prendaID, talla, id?): Promise<any> {
+  //   return new Promise((resolve, reject) => {
 
-      this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
+  //     this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
 
-/* DE SERGIO
+// DE SERGIO
 
   obtenerTicket(idPrenda?): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -164,7 +164,8 @@ export class TicketService {
 
         cliente = res;
 
-        this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
+        //this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
+        this.obtenerTicket().then( (res)=>{
 
           console.log('hemos obtenido el ticket: ', res);
 
