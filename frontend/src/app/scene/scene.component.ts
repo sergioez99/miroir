@@ -28,6 +28,7 @@ export class SceneComponent implements OnInit {
     private webglService: WebGLService,
     private ticketService: TicketService,) { }
 
+    //HAY QUE ACTUALIZAR
 
   async funcionCanvas() {
     if (!this.canvas) {
@@ -35,12 +36,12 @@ export class SceneComponent implements OnInit {
       return;
     }
 
-    await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
-    const drawSceneInterval = interval(this._60fpsInterval);
-    this.iniciarEvents()
-    drawSceneInterval.subscribe(() => {
-      this.drawScene();
-    });
+    // await this.webglService.initialiseWebGLContext(this.canvas.nativeElement, this.modelosTicket, this.ticket).then(gl => this.gl = gl);
+    // const drawSceneInterval = interval(this._60fpsInterval);
+    // this.iniciarEvents()
+    // drawSceneInterval.subscribe(() => {
+    //   this.drawScene();
+    // });
 
 
   }
@@ -84,7 +85,7 @@ export class SceneComponent implements OnInit {
     //this.webglService.updateViewport();
     //this.webglService.dibujadoTemporal();
 
-    this.webglService.dibujar();
+    //this.webglService.dibujar();
   }
 
   iniciarEvents() {
