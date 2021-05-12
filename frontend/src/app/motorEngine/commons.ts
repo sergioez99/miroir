@@ -44,6 +44,7 @@ class Malla {
     private diffuse;
     private specular;
     private glossiness;
+    private dibujado;
     private nombre;
 
     constructor(){
@@ -106,12 +107,19 @@ class Malla {
         return this.glossiness
     }
 
-
-    getNombre(){
-        return this.nombre;
+    setDibujado(d){
+        this.dibujado = d;
     }
+
+    getDibujado(){
+        return this.dibujado;
+    }
+
     setNombre(n){
         this.nombre = n;
+    }
+    getNombre(){
+        return this.nombre;
     }
     
 

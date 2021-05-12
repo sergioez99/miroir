@@ -191,28 +191,39 @@ export class TMotorTAG {
     return frame_buffer;
   }
 
-  async dibujarEscena(ticket, modelos) {
-    this.resizeWebGLCanvas();
-    this.updateWebGLCanvas();
+  async comprobarPrendas(ticket, modelos){
+    let RMalla = this.gestorRecursos.dibujarMallas();
 
-    let cambioAvatar = false, cambioPrenda = false, cambioSuelo = false;
+    let mallas = RMalla.getMallas();
 
-    //Para las animaciones, como no, habrá que cambiarlo xd
     if(this.nombreAvatar.localeCompare(modelos[0]) != 0){
       this.nombreAvatar = modelos[0];
       let avatarNodo = await this.crearModelo(null, null, null, null, modelos[0], ticket, "avatar");
-      cambioAvatar = true;
     }    
-    if(this.nombrePrenda.localeCompare(modelos[1]) != 0){
-      this.nombrePrenda = modelos[1];
-      let modeloNodo = await this.crearModelo(null, null, null, null, modelos[1], ticket, "prenda");
-      cambioPrenda = true;
-    }
     if(this.nombreSuelo.localeCompare("suelo.json") != 0){
       this.nombreSuelo = "suelo.json";
       let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
-      cambioSuelo = true;
     }
+    if(this.nombrePrenda.localeCompare(modelos[1]) != 0){
+      this.nombrePrenda = modelos[1];
+      let modeloNodo = await this.crearModelo(null, null, null, null, modelos[1], ticket, "prenda");
+    }
+    
+    for(let i in mallas){
+      if(mallas[i].getNombre().localeCompare(modelos[0]) == 0 || mallas[i].getNombre().localeCompare(modelos[1]) == 0 || mallas[i].getNombre().localeCompare('suelo.json') == 0){
+        mallas[i].setDibujado(true);
+      }
+      else{
+        mallas[i].setDibujado(false);
+      }
+    }
+  }
+
+  async dibujarEscena() {
+    this.resizeWebGLCanvas();
+    this.updateWebGLCanvas();
+
+   
     
 
     // // SOMBRAS (se dibujan antes que los modelos)
@@ -225,9 +236,6 @@ export class TMotorTAG {
     let mvpmatrix = matrix.mat4.create();
 
     // //dibujamos las sombras
-    let RMalla = this.gestorRecursos.dibujarMallas();
-
-    let mallas = RMalla.getMallas();
 
     // for (let i in mallas) {
     //   let vertexCount = mallas[i].getIndices().length;
@@ -369,9 +377,15 @@ export class TMotorTAG {
     // VIEWPORT
     this.updateViewport();
 
-    for (let i in mallas){
+    let RMalla = this.gestorRecursos.dibujarMallas();
+
+    let mallas = RMalla.getMallas();
+    
+    for (let i in mallas) {
       let vertexCount = mallas[i].getIndices().length;
-      if(mallas[i].getNombre().localeCompare(this.nombreAvatar) == 0){
+      switch (i) {
+        case '0': //Avatar
+        this.modelViewMatrix = matrix.mat4.create();
           matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
             [0, -3, 0])
@@ -382,8 +396,8 @@ export class TMotorTAG {
             this.modelViewMatrix,
             90 * Math.PI / 180)
 
-          if(cambioAvatar)    
-            this.buffers = await this.initialiseBuffers(mallas[i]);
+          //Puedo cambiar los buffers a array también    
+          this.buffers = await this.initialiseBuffers(mallas[i]);
 
           this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
 
@@ -396,71 +410,71 @@ export class TMotorTAG {
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
           this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
 
-          this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
-          this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
-          this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+          break;
 
-          this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
-
-          this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
-      }
-      if(mallas[i].getNombre().localeCompare(this.nombrePrenda) == 0){
-        console.log(this.num);
-        if (this.num == 1)
+        case '1': //suelo
+          this.modelViewMatrix = matrix.mat4.create();
           matrix.mat4.translate(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0, -0.033, -1.37])
-        else
+            [0, -3, 0])
           matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0.0328, 0.0328, 0.0328])
+            [0.068, 0.068, 0.068])
 
-        if(cambioPrenda)
-        this.buffers2 = await this.initialiseBuffers(mallas[i]);
 
-        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
+          this.buffers3 = await this.initialiseBuffers(mallas[i]);
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
 
-        this.bindVertexPosition(this.programInfo, this.buffers2);
+          this.bindVertexPosition(this.programInfo, this.buffers3);
+          
+          this.bindVertexTextures(this.programInfo, this.buffers3);
 
-        this.bindVertexTextures(this.programInfo, this.buffers2);
+          this.bindVertexNormal(this.programInfo, this.buffers3);
 
-        this.bindVertexNormal(this.programInfo, this.buffers2);
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
 
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-        this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-        this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
-        this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
-        this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+          break;
 
-        this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
+          default: //Prenda 1
+          //para la camiseta y el pantalon
+          this.modelViewMatrix = matrix.mat4.create();
+          matrix.mat4.translate(this.modelViewMatrix,
+            this.modelViewMatrix,
+            [0, -3, 0])
+          matrix.mat4.rotateY(this.modelViewMatrix,
+            this.modelViewMatrix,
+            180 * Math.PI / 180)
+          matrix.mat4.rotateX(this.modelViewMatrix,
+            this.modelViewMatrix,
+            90 * Math.PI / 180)
 
-        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+          if (this.num == 1) //Falda (hay que poner otro if que vaya)
+            matrix.mat4.translate(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0, -0.033, -1.37])
+          else //Camiseta y pantalón
+            matrix.mat4.scale(this.modelViewMatrix,
+              this.modelViewMatrix,
+              [0.0328, 0.0328, 0.0328])
+
+
+          this.buffers2 = await this.initialiseBuffers(mallas[i]);
+
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+
+          this.bindVertexPosition(this.programInfo, this.buffers2);
+
+          this.bindVertexTextures(this.programInfo, this.buffers2);
+
+          this.bindVertexNormal(this.programInfo, this.buffers2);
+
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
+          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
+          break;
+
       }
-      if(mallas[i].getNombre().localeCompare(this.nombreSuelo) == 0){
-        this.modelViewMatrix = matrix.mat4.create();
-        matrix.mat4.translate(this.modelViewMatrix,
-          this.modelViewMatrix,
-          [0, -3, 0])
-        matrix.mat4.scale(this.modelViewMatrix,
-          this.modelViewMatrix,
-          [0.068, 0.068, 0.068])
-
-
-        if(cambioSuelo)
-        this.buffers3 = await this.initialiseBuffers(mallas[i]);
-
-        this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
-
-        this.bindVertexPosition(this.programInfo, this.buffers3);
-        
-        this.bindVertexTextures(this.programInfo, this.buffers3);
-
-        this.bindVertexNormal(this.programInfo, this.buffers3);
-
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
-
-        this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-
+      if(mallas[i].getDibujado()){
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
         this.gl.uniform1f(this.programInfo.uniformLocations.matShininess, mallas[i].getGlossiness());
@@ -470,91 +484,6 @@ export class TMotorTAG {
         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
       }
     }
-
-
-    
-    // for (let i in mallas) {
-    //   
-    //   switch (i) {
-    //     case '0': //Avatar
-    //       matrix.mat4.translate(this.modelViewMatrix,
-    //         this.modelViewMatrix,
-    //         [0, -3, 0])
-    //       matrix.mat4.rotateY(this.modelViewMatrix,
-    //         this.modelViewMatrix,
-    //         180 * Math.PI / 180)
-    //       matrix.mat4.rotateX(this.modelViewMatrix,
-    //         this.modelViewMatrix,
-    //         90 * Math.PI / 180)
-
-    //       //Puedo cambiar los buffers a array también    
-    //       this.buffers = await this.initialiseBuffers(mallas[i]);
-
-    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
-
-    //       this.bindVertexPosition(this.programInfo, this.buffers);
-
-    //       this.bindVertexTextures(this.programInfo, this.buffers);
-
-    //       this.bindVertexNormal(this.programInfo, this.buffers);
-
-    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
-    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-
-    //       break;
-
-    //     case '1': //Prenda 1
-    //       //para la camiseta y el pantalon
-    //       if (this.num == 1)
-    //         matrix.mat4.translate(this.modelViewMatrix,
-    //           this.modelViewMatrix,
-    //           [0, -0.033, -1.37])
-    //       else
-    //         matrix.mat4.scale(this.modelViewMatrix,
-    //           this.modelViewMatrix,
-    //           [0.0328, 0.0328, 0.0328])
-
-
-    //       this.buffers2 = await this.initialiseBuffers(mallas[i]);
-
-    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
-
-    //       this.bindVertexPosition(this.programInfo, this.buffers2);
-
-    //       this.bindVertexTextures(this.programInfo, this.buffers2);
-
-    //       this.bindVertexNormal(this.programInfo, this.buffers2);
-
-    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-    //     break;
-
-    //     case '2': //suelo
-    //       this.modelViewMatrix = matrix.mat4.create();
-    //       matrix.mat4.translate(this.modelViewMatrix,
-    //         this.modelViewMatrix,
-    //         [0, -3, 0])
-    //       matrix.mat4.scale(this.modelViewMatrix,
-    //         this.modelViewMatrix,
-    //         [0.068, 0.068, 0.068])
-
-
-    //       this.buffers3 = await this.initialiseBuffers(mallas[i]);
-    //       this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
-
-    //       this.bindVertexPosition(this.programInfo, this.buffers3);
-          
-    //       this.bindVertexTextures(this.programInfo, this.buffers3);
-
-    //       this.bindVertexNormal(this.programInfo, this.buffers3);
-
-    //       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
-
-    //       this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
-    //       break;
-
-    //   }
-    // }
   }
 
   // ---------------- Inicializar el contexto de GL y los shaders ----------------
@@ -682,7 +611,7 @@ export class TMotorTAG {
   }
 
   // --------------------- Iniciar el probador -----------------------
-  async iniciarProbador(ticket, avatar, prenda) {
+  async iniciarProbador(ticket, modelos) {
     //Creamos la cámara, la luz y el viewport del probador
     const ext = this.gl.getExtension('WEBGL_depth_texture');
     let luz = this.crearLuz(null, null, null, null, null, null, null, null, null, null, null); //Todavia no sé sos
@@ -696,8 +625,12 @@ export class TMotorTAG {
     this.registrarViewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 0);
     this.setViewportActivo(0);
 
-    if (prenda == "b0c090e4-5eb5-4ee5-a185-09afefd1e83f.json")
-      this.num = 1;
+    if(modelos[1] == 'b0c090e4-5eb5-4ee5-a185-09afefd1e83f.json')
+      this.num = 1
+    else
+      this.num = 0
+
+    let cargando = await this.comprobarPrendas(ticket, modelos);
 
   }
 

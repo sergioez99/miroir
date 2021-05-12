@@ -88,7 +88,7 @@ export class gestorRecursos {
                 let malla = new Malla();
 
                 malla.setNombre(fichero);
-
+                malla.setDibujado(false);
 
                 malla.setCoordtex(file.model.meshes[0].uvs[0]);
                 malla.setNormales(file.model.meshes[0].normals);

@@ -20,7 +20,8 @@ export class Probador01Component implements OnInit {
   private lastX = 0; lastY = 0; trackingMouseMotion = false; dMouseX = 0; dMouseY = 0; rollCamera = true;
   private trasX = 0; trasY = 0; trasZ = 0;
   private scale = 1; // zoom
-  private cambioPrenda = false;
+  private prendas = 0;
+  private cargarProbador = false;
 
   private ticket = null;
   private modelosTicket: string[];
@@ -40,16 +41,19 @@ export class Probador01Component implements OnInit {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
       }
-      this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
-      this.iniciarEvents();
+      if(this.prendas == 0){
+        this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
+        this.iniciarEvents();
+      }
+      this.cargarProbador = await this.webglService.cargarModelos(this.ticket, this.modelosTicket);
       this.dibujar();
     }
 
     dibujar(){
       const drawSceneInterval = interval(this._60fpsInterval);
-      //drawSceneInterval.subscribe(() => {
+      drawSceneInterval.subscribe(() => {
         this.drawScene();
-      //});
+      });
     }
 
 
@@ -71,10 +75,6 @@ export class Probador01Component implements OnInit {
 
     }
 
-    cambiarPrenda(){
-
-    }
-
     canjearTicket() {
 
       this.ticketService.canjearTicket(this.ticket).then((res) => {
@@ -82,13 +82,12 @@ export class Probador01Component implements OnInit {
         this.modelosTicket = []
         this.modelosTicket.push(res['avatar']);
         this.modelosTicket.push(res['prenda']);
+
+        this.cargarProbador = false;
       
-        if(this.cambioPrenda)
-          this.drawScene();
-        else{
-          this.cambioPrenda = true;
-          this.funcionCanvas();
-        }
+        this.funcionCanvas();
+        this.prendas++;
+        
         
 
       }).catch((error) => {
@@ -135,7 +134,7 @@ export class Probador01Component implements OnInit {
       //this.webglService.updateViewport();
       //this.webglService.dibujadoTemporal();
 
-      this.webglService.dibujar(this.ticket, this.modelosTicket);
+      this.webglService.dibujar(this.cargarProbador);
     }
 
     iniciarEvents(){
