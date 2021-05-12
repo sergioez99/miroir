@@ -23,7 +23,6 @@ export class gestorRecursos {
         let imagen;
         let encontrado = false;
 
-        console.log(this.totalMallas)
         for(let i = 0; i < this.recursos.length && !encontrado; i++){
            if(this.recursos[i].getNombres()[0].localeCompare(nombre) == 0){
                let tipo = nombre.split(".");
@@ -41,7 +40,6 @@ export class gestorRecursos {
            }
         }
         if(!encontrado) {
-            console.log(nombre);
             miRecurso = await this.cargarFichero(nombre, ticket, tipo);
             if(this.tipoRecurso == 1){
                 this.recursoMalla.addMallas(miRecurso);
@@ -75,7 +73,6 @@ export class gestorRecursos {
         });
     }
     async cargarFichero(fichero:string, ticket, tipo){
-        console.log(fichero);
         //let url = env.base_url + +fichero;
         let partes = fichero.split("."); // ["pepe","json"]  ["textura",".jpeg"]
         let archivo;
@@ -84,14 +81,13 @@ export class gestorRecursos {
 
                 archivo = await this.leerArchivoRed(environment.base_url + '/ticket/modelo/' + tipo + '/' + ticket);
 
-                console.log('archivo devuelto: ', archivo);
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
                 let malla = new Malla();
 
                 malla.setNombre(fichero);
-                malla.setDibujado(false);
+                malla.setDibujado(true);
 
                 malla.setCoordtex(file.model.meshes[0].uvs[0]);
                 malla.setNormales(file.model.meshes[0].normals);
@@ -142,7 +138,6 @@ export class gestorRecursos {
     };
 
     async ficherosAssets(fichero){
-        console.log(fichero);
         //let url = env.base_url + +fichero;
         let partes = fichero.split("."); // ["pepe","json"]  ["textura",".jpeg"]
         let archivo;

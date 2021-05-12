@@ -734,7 +734,6 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
-    console.log(this.modelos)
     if (this.modelos == 0){
       this.gl.activeTexture(this.gl.TEXTURE0);
     }
