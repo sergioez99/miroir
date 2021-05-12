@@ -23,6 +23,14 @@ export class WebGLService {
     let espera = await this.miMotor.iniciarProbador(ticket, modelos);
     return true;
   }
+  
+  async initialiseAnimacion(canvas: HTMLCanvasElement, modelos:string[], ticket) {
+    let espera = await this.miMotor.iniciarAnimacion(ticket, modelos[0], modelos[1]); 
+  }
+
+  async animaciones(){
+    let espera = await this.miMotor.dibujarAnimaciones();
+  }
 
   dibujar(dibuja){
     if(dibuja)

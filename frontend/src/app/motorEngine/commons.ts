@@ -48,7 +48,7 @@ class Malla {
     private nombre;
 
     constructor(){
-
+        this.dibujado = false;
     }
 
     setVertices(v) {
