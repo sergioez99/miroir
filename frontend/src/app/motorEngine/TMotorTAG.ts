@@ -916,9 +916,9 @@ export class TMotorTAG {
           matrix.mat4.rotateY(this.modelViewMatrix,
             this.modelViewMatrix,
             180 * Math.PI / 180)
-          // matrix.mat4.rotateX(this.modelViewMatrix,
-          //   this.modelViewMatrix,
-          //   90 * Math.PI / 180)
+          // // matrix.mat4.rotateX(this.modelViewMatrix,
+          // //   this.modelViewMatrix,
+          // //   90 * Math.PI / 180)
           matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
             [0.0328, 0.0328, 0.0328])
@@ -1028,7 +1028,7 @@ export class TMotorTAG {
 
     matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, 1.0, 7.5);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 0.0, -12.0], [-5.0, 0.0, -12.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, 0.0, 12.0], [0.0, 1.0, 0.0]);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
 
     this.gl.useProgram(this.programShadow.program); 
@@ -1054,17 +1054,17 @@ export class TMotorTAG {
       let vertexCount = mallas[i].getIndices().length;
       switch (i) {
         case '0': //Suelo
-        matrix.mat4.translate(this.modelViewMatrix,
-          this.modelViewMatrix,
-          [0, -3, 0])
-        matrix.mat4.scale(this.modelViewMatrix,
-          this.modelViewMatrix,
-          [0.068, 0.068, 0.068])
+        // matrix.mat4.translate(this.modelViewMatrix,
+        //   this.modelViewMatrix,
+        //   [0, -3, 0])
+        // matrix.mat4.scale(this.modelViewMatrix,
+        //   this.modelViewMatrix,
+        //   [0.068, 0.068, 0.068])
 
 
-        //Posicion de la sombra
-        this.buffers3 = await this.initialiseBuffers(mallas[0]);
-        this.bindVertexPositionShadow(this.programShadow, this.buffers3);
+        // //Posicion de la sombra
+        // this.buffers3 = await this.initialiseBuffers(mallas[0]);
+        // this.bindVertexPositionShadow(this.programShadow, this.buffers3);
         break;
 
         default: //Avatar y prenda que parece q se ven bien asi
@@ -1076,6 +1076,9 @@ export class TMotorTAG {
           matrix.mat4.rotateY(this.modelViewMatrix,
             this.modelViewMatrix,
             180 * Math.PI / 180)
+          matrix.mat4.rotateZ(this.modelViewMatrix,
+            this.modelViewMatrix,
+            -90 * Math.PI / 180)
           matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
             [0.0328, 0.0328, 0.0328])
@@ -1168,6 +1171,6 @@ export class TMotorTAG {
     this.gl.cullFace(this.gl.BACK);
     this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.MVPFromLight, false, lightSpaceMatrix);
     //CONFUSION
-    //this.gl.uniform1i(this.programInfo.uniformLocations.shadowMap, 0);
+    this.gl.uniform1i(this.programInfo.uniformLocations.shadowMap, 5);
   }
 }
