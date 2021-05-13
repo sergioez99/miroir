@@ -7,10 +7,10 @@
     "materials": [
         {
             "name": "avatar_animado_caminar_000001_None",
-            "ambient": [0.8,0.8,0.8],
-            "diffuse": [0.8,0.8,0.8],
-            "specular": [0.8,0.8,0.8],
-            "glossiness": 500,
+            "ambient": [0.5,0.5,0.5],
+            "diffuse": [0.5,0.5,0.5],
+            "specular": [0.2,0.2,0.2],
+            "glossiness": 100,
             "opacity": 1,
             "maps": [
                 {

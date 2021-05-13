@@ -65,6 +65,7 @@ export class TMotorTAG {
   private pos;
 
   private animacion;
+  private andar;
 
 
   constructor() {
@@ -79,6 +80,7 @@ export class TMotorTAG {
     this.nombrePrenda = "prenda";
     this.nombreSuelo = "suelo";
     this.pos = 1;
+    this.andar = 0;
   }
 
   crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
@@ -962,10 +964,18 @@ export class TMotorTAG {
         mallas[this.pos-1].setDibujado(false)
         mallas[this.pos-2].setDibujado(false)
       }
+
   
       this.pos+=2;
-      if(this.pos >= mallas.length-1)
+      if(this.pos >= mallas.length-1){
         this.pos = 1;
+        // mallas[this.pos].setDibujado(true); //Avatar
+        // mallas[this.pos+1].setDibujado(true); //Prenda
+        // mallas[mallas.length-1].setDibujado(false); //Prenda del último 
+        // mallas[mallas.length-2].setDibujado(false);
+        // this.pos+= 2;
+      }
+        
 
     }, 60)
   }
@@ -1041,6 +1051,7 @@ export class TMotorTAG {
     // VIEWPORT
     this.updateViewport();
     
+    
     let RMalla = this.gestorRecursos.dibujarMallas();
 
     //Tengo aquí todos los modelos
@@ -1113,6 +1124,9 @@ export class TMotorTAG {
       }
 
       if(mallas[i].getDibujado()){
+        // this.andar = this.andar - 0.004;
+        // if(this.andar <= -2)
+        //   this.andar = 0;
         
         this.gl.uniform3fv(this.programInfo.uniformLocations.matDiffuse, mallas[i].getDiffuse());
         this.gl.uniform3fv(this.programInfo.uniformLocations.matSpecular, mallas[i].getSpecular());
