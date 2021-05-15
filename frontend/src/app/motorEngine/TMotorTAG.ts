@@ -1006,7 +1006,7 @@ export class TMotorTAG {
     this.gl.activeTexture(this.gl.TEXTURE5);
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT32F, 200, 200, 0, this.gl.DEPTH_COMPONENT, this.gl.FLOAT, null);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT16, 1024, 1024, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
@@ -1017,7 +1017,6 @@ export class TMotorTAG {
 
     this.gl.drawBuffers([this.gl.NONE]);
     this.gl.readBuffer(this.gl.NONE)
-
     
     this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
@@ -1028,7 +1027,7 @@ export class TMotorTAG {
 
     matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, 1.0, 7.5);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, 0.0, 12.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, -5.0, -5.0], [0.0, 1.0, 0.0]);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
 
     this.gl.useProgram(this.programShadow.program); 
@@ -1036,9 +1035,10 @@ export class TMotorTAG {
     this.gl.uniformMatrix4fv(this.programShadow.uniformLocations.lightMatrix, false, lightSpaceMatrix);
 
     // // SOMBRAS (se dibujan antes que los modelos)        
-    this.gl.viewport(0, 0, 200, 200);
+    this.gl.viewport(0, 0, 1024,1024);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);   
     this.gl.clear(this.gl.DEPTH_BUFFER_BIT);  
+    this.gl.clearColor(0.1, 0.1, 0.1, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.cullFace(this.gl.FRONT);
     
@@ -1054,17 +1054,17 @@ export class TMotorTAG {
       let vertexCount = mallas[i].getIndices().length;
       switch (i) {
         case '0': //Suelo
-        // matrix.mat4.translate(this.modelViewMatrix,
-        //   this.modelViewMatrix,
-        //   [0, -3, 0])
-        // matrix.mat4.scale(this.modelViewMatrix,
-        //   this.modelViewMatrix,
-        //   [0.068, 0.068, 0.068])
+        matrix.mat4.translate(this.modelViewMatrix,
+          this.modelViewMatrix,
+          [0, -3, 0])
+        matrix.mat4.scale(this.modelViewMatrix,
+          this.modelViewMatrix,
+          [0.068, 0.068, 0.068])
 
 
-        // //Posicion de la sombra
-        // this.buffers3 = await this.initialiseBuffers(mallas[0]);
-        // this.bindVertexPositionShadow(this.programShadow, this.buffers3);
+        //Posicion de la sombra
+        this.buffers3 = await this.initialiseBuffers(mallas[0]);
+        this.bindVertexPositionShadow(this.programShadow, this.buffers3);
         break;
 
         default: //Avatar y prenda que parece q se ven bien asi
