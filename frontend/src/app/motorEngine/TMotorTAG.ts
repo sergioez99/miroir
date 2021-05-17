@@ -1025,9 +1025,10 @@ export class TMotorTAG {
     let lightProjection = matrix.mat4.create();
     let lightView = matrix.mat4.create();
 
-    matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, 1.0, 7.5);
+    matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, this.zNear, this.zFar);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, -5.0, -5.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, 12.0, -12.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.invert(lightView, lightView);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
 
     this.gl.useProgram(this.programShadow.program); 
