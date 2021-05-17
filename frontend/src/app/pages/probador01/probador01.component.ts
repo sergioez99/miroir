@@ -49,6 +49,10 @@ export class Probador01Component implements OnInit {
       this.dibujar();
     }
 
+    async cambiarTextura(textura){
+      let espera = await this.webglService.cambiarTexturas(textura);
+    }
+
     dibujar(){
       const drawSceneInterval = interval(this._60fpsInterval);
       drawSceneInterval.subscribe(() => {
