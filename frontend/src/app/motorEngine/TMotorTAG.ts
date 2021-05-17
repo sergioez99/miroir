@@ -834,7 +834,7 @@ export class TMotorTAG {
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition3, [60, -20, -10]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition3, [0, 10, -12]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental3, [0.3, 0.3, 0.3]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse3, [0.8, 0.8, 0.8]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular3, [0.2, 0.2, 0.2]);
@@ -1027,7 +1027,7 @@ export class TMotorTAG {
 
     matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, this.zNear, this.zFar);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 12.0, -12.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, 10.0, -12.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
     matrix.mat4.invert(lightView, lightView);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
 
