@@ -626,18 +626,17 @@ export class TMotorTAG {
 
   async loadTexture(image) {
     const texture = this.gl.createTexture();
-    console.log(this.modelos)
     switch (this.modelos) {
-      case 'default.jpg': console.log('cargo default')
+      case 'default.jpg': 
        this.gl.activeTexture(this.gl.TEXTURE0); //Default (para el suelo)
         break;
-      case 'algodon.jpg': console.log('cargo algodon')
+      case 'algodon.jpg': 
       this.gl.activeTexture(this.gl.TEXTURE1); //Algodón
         break;
-      case 'cuadritos.jpg': console.log('cargo cuadritos')
+      case 'cuadritos.jpg': 
       this.gl.activeTexture(this.gl.TEXTURE2); //Cuadritos
         break;
-      case 'vaquero.jpg': console.log('cargo vaquero')
+      case 'vaquero.jpg': 
       this.gl.activeTexture(this.gl.TEXTURE3); //Vaquero
         break;
     }
@@ -958,7 +957,7 @@ export class TMotorTAG {
             if (num % 2 == 0)
               this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 1);
             else
-              this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 2);
+              this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
             //cambiar la textura si es avatar o prenda: (par o impar)
 
             this.bindVertexPosition(this.programInfo, this.buffers);
@@ -1010,6 +1009,7 @@ export class TMotorTAG {
     suelo = await this.gestorRecursos.ficherosAssets('suelo.json');
     suelo.setDibujado(true);
     let text = await this.gestorRecursos.ficherosAssets(suelo.getTexturas()[0]);
+    this.modelos = suelo.getTexturas()[0];
     let texture = await this.loadTexture(text);
     this.RMalla.addMallas(suelo);
 
@@ -1017,6 +1017,7 @@ export class TMotorTAG {
       malla = await this.gestorRecursos.ficherosAssets(this.animacion[i]);
       if (i == '0' || i == '1') {
         text = await this.gestorRecursos.ficherosAssets(malla.getTexturas()[0]);
+        this.modelos = malla.getTexturas()[0];
         texture = await this.loadTexture(text);
       }
       this.RMalla.addMallas(malla);
