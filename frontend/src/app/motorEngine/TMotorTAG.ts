@@ -284,7 +284,6 @@ export class TMotorTAG {
             this.bindVertexNormal(this.programInfo, this.buffers);
 
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
-            this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
           }
 
           break;
@@ -311,7 +310,6 @@ export class TMotorTAG {
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
 
-          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
 
           break;
 
@@ -356,7 +354,6 @@ export class TMotorTAG {
             this.bindVertexNormal(this.programInfo, this.buffers2);
 
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers2.indices);
-            this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
           }
           break;
 
@@ -427,6 +424,8 @@ export class TMotorTAG {
         lightSpecular3: this.gl.getUniformLocation(shaderProgram, 'Light3.Specular'),
         MVPFromLight: this.gl.getUniformLocation(shaderProgram, 'u_MvpMatrixFromLight'),
         shadowMap: this.gl.getUniformLocation(shaderProgram, 'u_ShadowMap'),
+        lightPos: this.gl.getUniformLocation(shaderProgram, 'lightPos'),
+        viewPos: this.gl.getUniformLocation(shaderProgram, 'viewPos'),
       },
     };
 
@@ -859,7 +858,7 @@ export class TMotorTAG {
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse2, [0.5, 0.5, 0.5]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular2, [0.2, 0.2, 0.2]);
 
-    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition3, [0, 10, -12]);
+    this.gl.uniform3fv(this.programInfo.uniformLocations.lightPosition3, [0, -1, -13]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightAmbiental3, [0.3, 0.3, 0.3]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightDiffuse3, [0.8, 0.8, 0.8]);
     this.gl.uniform3fv(this.programInfo.uniformLocations.lightSpecular3, [0.2, 0.2, 0.2]);
@@ -883,6 +882,7 @@ export class TMotorTAG {
     matrix.mat4.multiply(viewProjectionMatrix, this.projectionMatrix, viewMatrix);
 
     matrix.mat4.scale(viewProjectionMatrix, viewProjectionMatrix, [this.zoom, this.zoom, this.zoom])
+    matrix.mat4.rotateY(viewProjectionMatrix, viewProjectionMatrix, 180 * Math.PI / 180)
     matrix.mat4.rotateY(viewProjectionMatrix, viewProjectionMatrix, this.rotY)
 
     this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.projectionMatrix, false, viewProjectionMatrix);
@@ -927,7 +927,6 @@ export class TMotorTAG {
 
           this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers3.indices);
 
-          this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
 
           break;
 
@@ -938,12 +937,6 @@ export class TMotorTAG {
             matrix.mat4.translate(this.modelViewMatrix,
               this.modelViewMatrix,
               [0, -3, 0])
-            matrix.mat4.rotateY(this.modelViewMatrix,
-              this.modelViewMatrix,
-              180 * Math.PI / 180)
-            // // matrix.mat4.rotateX(this.modelViewMatrix,
-            // //   this.modelViewMatrix,
-            // //   90 * Math.PI / 180)
             matrix.mat4.scale(this.modelViewMatrix,
               this.modelViewMatrix,
               [0.0328, 0.0328, 0.0328])
@@ -964,7 +957,6 @@ export class TMotorTAG {
             this.bindVertexNormal(this.programInfo, this.buffers);
 
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
-            this.gl.uniformMatrix4fv(this.programInfo.program.MVPFromLight, false, this.mvpMatrixFromLight_t);
           }
           break;
 
@@ -1038,7 +1030,7 @@ export class TMotorTAG {
     this.gl.activeTexture(this.gl.TEXTURE5);
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT16, 1024, 1024, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT32F, 1024, 1024, 0, this.gl.DEPTH_COMPONENT, this.gl.FLOAT, null);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
@@ -1057,11 +1049,14 @@ export class TMotorTAG {
     let lightProjection = matrix.mat4.create();
     let lightView = matrix.mat4.create();
 
-    matrix.mat4.ortho(lightProjection, 10.0, -10.0, 10.0, -10.0, this.zNear, this.zFar);
+    matrix.mat4.ortho(lightProjection, -10.0, 10.0, -10.0, 10.0, 1.0, 7.5);
+    //matrix.mat4.perspective(lightProjection, this.fieldOfView, this.aspect, this.zNear, this.zFar);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 10.0, -12.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
     matrix.mat4.invert(lightView, lightView);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
+
+    //matrix.mat4.rotateY(lightSpaceMatrix, lightSpaceMatrix, 180 * Math.PI / 180);
 
     this.gl.useProgram(this.programShadow.program);
 

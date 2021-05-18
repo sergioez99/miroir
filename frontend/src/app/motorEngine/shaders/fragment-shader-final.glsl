@@ -27,9 +27,7 @@ varying highp vec3 vNormal;
 varying highp vec3 vPosition;
 
 uniform sampler2D uSampler;
-
 uniform sampler2D u_ShadowMap; //Textura proyectada que será la sombra
-
 varying vec4 v_PositionFromLight; //Coordenadas de donde estará proyectada la sombra
 
 
@@ -44,13 +42,15 @@ float ShadowCalculation(vec4 fragPosLightSpace, float bias)
 
     float currentDepth = projCoords.z;
 
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
 
     return shadow;
 }  
 
 //funcion que calcula el modelo de reflexion de Phong
 vec3 Phong() {
+    vec3 color = texture2D(uSampler, vTextureCoord).rgb;
+
     vec3 n  = normalize(vNormal);
     //distancia de la luz al vector (y dirección)
     vec3 s = normalize(Light.Position - vPosition);
@@ -79,13 +79,11 @@ vec3 Phong() {
     //componente especular
     vec3 Specular = Light.Diffuse * pow(max(dot(r,v), 0.0), Material.Shininess) * Material.Specular;
     Specular += Light2.Diffuse * pow(max(dot(r2,v), 0.0), Material.Shininess) * Material.Specular;
-    Specular += Light3.Diffuse * pow(max(dot(r3,v), 0.0), Material.Shininess) * Material.Specular;
-    
-    vec3 texelColor = texture2D(uSampler, vTextureCoord).rgb;
+    Specular += Light3.Diffuse * pow(max(dot(r3,v), 0.0), Material.Shininess) * Material.Specular;  
      
     float bias = max(0.05 * (1.0 - dot(n, s3)), 0.005); 
     float shadow = ShadowCalculation(v_PositionFromLight, bias);       
-    vec3 lighting = (Ambient + (1.0 - shadow) * (Diffuse + Specular)) * texelColor;
+    vec3 lighting = (Ambient + (1.0 - shadow) * (Diffuse + Specular)) * color;
 
     return lighting;
 }
