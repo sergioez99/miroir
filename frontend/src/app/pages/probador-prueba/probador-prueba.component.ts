@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../../services/webgl.service';
@@ -10,7 +10,7 @@ import { UsuarioService } from '../../services/usuario.service';
   templateUrl: './probador-prueba.component.html',
   styleUrls: ['./probador-prueba.component.css']
 })
-export class ProbadorPruebaComponent implements OnInit {
+export class ProbadorPruebaComponent implements OnInit, OnDestroy {
 
   @ViewChild("sceneCanvas") private canvas: ElementRef<HTMLCanvasElement>;
 
@@ -20,6 +20,7 @@ export class ProbadorPruebaComponent implements OnInit {
   private lastX = 0; lastY = 0; trackingMouseMotion = false; dMouseX = 0; dMouseY = 0; rollCamera = true;
   private trasX = 0; trasY = 0; trasZ = 0;
   private scale = 1; // zoom
+  private drawSceneInterval;
 
   private ticket = null;
   private modelosTicket: string[];
@@ -40,13 +41,10 @@ export class ProbadorPruebaComponent implements OnInit {
         return;
       }
       this.gl = await this.webglService.initialiseAnimacion(this.canvas.nativeElement, this.modelosTicket, this.ticket);
-      const drawSceneInterval = interval(this._60fpsInterval);
-      this.iniciarEvents()
-      drawSceneInterval.subscribe(() => {
+      this.drawSceneInterval = setInterval( () =>{
         this.drawScene();
-      });
-
-
+      }, this._60fpsInterval)
+      this.iniciarEvents()
     }
 
     ngOnInit(): void {
@@ -64,9 +62,6 @@ export class ProbadorPruebaComponent implements OnInit {
       this.crearTicket();
       else
       this.canjearTicket();
-      
-
-
     }
 
     canjearTicket() {
@@ -85,6 +80,11 @@ export class ProbadorPruebaComponent implements OnInit {
         console.warn(error);
 
       });
+    }
+
+    @HostListener('unloaded')
+    ngOnDestroy(): void {
+      clearInterval(this.drawSceneInterval);
     }
 
     crearTicket(prenda?){
