@@ -1,5 +1,20 @@
+<div class="mir-menu">
+
+    <button mat-icon-button color="primary" aria-label="Expandir/contraer el menú" (click)=" menuVisible()"><mat-icon>menu</mat-icon></button>
+
+    <div class="mir-barra" *ngIf="visible">
+        <canvas #pictureCanvas id="pictureCanvas" style="display: none;"></canvas>
+        <a mat-mini-fab color="warn" id="linkDescarga" (click)="guardarImagen()">
+            <mat-icon>favorite</mat-icon>
+        </a>
+        <p> Si quieres modificar tus medidas, ¡crea tu cuenta con nosotros! </p>
+        <button mat-raised-button class="mir-button" color="accent" (click)="irRegistro()">Regístrate</button>
+    </div>
+
+</div>
+
 <div class="scene">
-    <canvas #sceneCanvas>
+    <canvas #sceneCanvas id="canvas">
 
     </canvas>
 </div>
