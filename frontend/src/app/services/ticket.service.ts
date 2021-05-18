@@ -80,7 +80,7 @@ export class TicketService {
       if(idPrenda)
         prenda = idPrenda;
       else
-        prenda = '123456789';
+        prenda = '11111111';
       const talla = 'XS';
 
 

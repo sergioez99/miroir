@@ -515,7 +515,7 @@ const modeloTicket = async(req, res = response) => {
 
                         // aqui habra que definir las condiciones que diferencian un modelo de otro
 
-                        let modelo = 1;
+                        let modelo = 11;
                         if (altura > 170) {
                             modelo += 3;
                         }
