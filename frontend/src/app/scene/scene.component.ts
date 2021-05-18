@@ -57,7 +57,7 @@ export class SceneComponent implements OnInit {
     this.modelosTicket = [];
 
     this.ticket = this.route.snapshot.params['ticket'];
-
+    
     this.canjearTicket();
 
   }
@@ -83,9 +83,6 @@ export class SceneComponent implements OnInit {
 
     });
   }
-
-
-
 
 
   drawScene() {

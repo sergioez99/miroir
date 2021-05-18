@@ -71,17 +71,23 @@ export class TicketService {
 
 // DE SERGIO
 
-  obtenerTicket(idPrenda?): Promise<any> {
+//Obtener ticket del probador
+
+  obtenerTicket(idPrenda?, tallaPrenda?): Promise<any> {
     return new Promise((resolve, reject) => {
 
       const cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
       const usuario = 'sergi@gmail.com';
       let prenda;
+      let talla;
       if(idPrenda)
         prenda = idPrenda;
       else
         prenda = '123456789';
-      const talla = 'XS';
+      if(tallaPrenda)
+        talla = tallaPrenda;
+      else
+        talla = 'XS'
 
 
       this.apiService.getTicketCall(cliente, usuario, prenda, talla).subscribe((res) => {
@@ -101,6 +107,22 @@ export class TicketService {
 
     });
   }
+
+  obtenerTicket2(clave, usuario, prendaID, talla, id?): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
+      this.ticket = res['ticket'];
+      resolve(this.ticket);
+
+    }, (err) => {
+
+      reject(err);
+
+    });
+
+  });
+}
 
   canjearTicket(ticket): Promise<any> {
 
@@ -164,8 +186,8 @@ export class TicketService {
 
         cliente = res;
 
-        //this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
-        this.obtenerTicket().then( (res)=>{
+        this.obtenerTicket2(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
+        //this.obtenerTicket().then( (res)=>{
 
           console.log('hemos obtenido el ticket: ', res);
 
