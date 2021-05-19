@@ -10,6 +10,7 @@ import vertexShaderSrc from '../motorEngine/shaders/vertex-shader-final.glsl';
 import fragmentShaderShadow from '../motorEngine/shaders/fragment-shader-sombras.glsl';
 import vertexShaderShadow from '../motorEngine/shaders/vertex-shader-sombras.glsl';
 import * as matrix from 'gl-matrix';
+import { ThisReceiver } from "@angular/compiler";
 
 
 export class TMotorTAG {
@@ -68,6 +69,13 @@ export class TMotorTAG {
   private andar;
   private textura;
 
+  private animaciones;
+  private numAnimate;
+  private cargados;
+  private animate;
+  private para;
+  private fecha;
+  private update;
 
   constructor() {
     this.raiz = new TNode(null, null, null, null, null, null, null);
@@ -82,6 +90,9 @@ export class TMotorTAG {
     this.nombreSuelo = "suelo";
     this.pos = 1;
     this.andar = 0;
+    this.animaciones = [[]];
+    this.cargados = [];
+    this.para = false;
   }
 
   crearNodo(padre: TNode, trasl: matrix.vec3, rot: matrix.vec3, esc: matrix.vec3) {
@@ -804,15 +815,28 @@ export class TMotorTAG {
     this.setViewportActivo(0);
 
     //Crear modelos aquí
-    let mallas = await this.cargarModelos(num);
+    let wait = await this.cargarModelos(num);
+    let mallas = this.animaciones[num];
     //let mallas = this.RMalla.getMallas();
 
+    
+    //this.fecha = Date.now();
+    //this.update = this.fecha + 60;
+    if(num != 0)
+      this.para = true;
+
+    if(this.para)
+      clearInterval(this.animate);
+    
+     
     
     // :/ sigue mal idk
     let fecha = Date.now();
     let update = fecha + 60;
     //Animación en 30FPS 
-    setInterval(() => {
+    this.pos = 1;
+    this.animate = setInterval(() => {
+      console.log(this.pos);
       if (this.pos == 1) {
         mallas[this.pos].setDibujado(true); //Avatar
         mallas[this.pos + 1].setDibujado(true); //Prenda
@@ -835,11 +859,11 @@ export class TMotorTAG {
       
       if (this.pos >= mallas.length - 1) {
         this.pos = 1;
-        mallas[this.pos].setDibujado(true); //Avatar
-        mallas[this.pos+1].setDibujado(true); //Prenda
-        mallas[mallas.length-1].setDibujado(false); //Prenda del último 
-        mallas[mallas.length-2].setDibujado(false);
-        this.pos+= 2;
+        // mallas[this.pos].setDibujado(true); //Avatar
+        // mallas[this.pos+1].setDibujado(true); //Prenda
+        // mallas[mallas.length-1].setDibujado(false); //Prenda del último 
+        // mallas[mallas.length-2].setDibujado(false);
+        // this.pos+= 2;
       }
 
 
@@ -907,11 +931,38 @@ export class TMotorTAG {
     // VIEWPORT
     this.updateViewport();
 
-
-    let RMalla = this.gestorRecursos.dibujarMallas();
-
     //Tengo aquí todos los modelos
-    let mallas = RMalla.getMallas();
+    let mallas = this.animaciones[this.numAnimate];
+
+  // //Animación en 30FPS 
+  //   if (this.pos == 1) {
+  //     mallas[this.pos].setDibujado(true); //Avatar
+  //     mallas[this.pos + 1].setDibujado(true); //Prenda
+  //     mallas[mallas.length - 1].setDibujado(false); //Prenda del último 
+  //     mallas[mallas.length - 2].setDibujado(false); //Avatar del último
+  //   } else {
+  //     mallas[this.pos].setDibujado(true)
+  //     mallas[this.pos + 1].setDibujado(true)
+  //     mallas[this.pos - 1].setDibujado(false)
+  //     mallas[this.pos - 2].setDibujado(false)
+  //   }
+
+  //   this.fecha = Date.now();
+  //   if(this.fecha >= this.update){
+  //     this.pos += 2;
+  //     this.fecha = this.update;
+  //     this.update = this.fecha + 60;
+  //   }
+      
+    
+  //   if (this.pos >= mallas.length - 1) {
+  //     this.pos = 1;
+  //     mallas[this.pos].setDibujado(true); //Avatar
+  //     mallas[this.pos+1].setDibujado(true); //Prenda
+  //     mallas[mallas.length-1].setDibujado(false); //Prenda del último 
+  //     mallas[mallas.length-2].setDibujado(false);
+  //     this.pos+= 2;
+  //   }
 
     for (let i in mallas) {
       let vertexCount = mallas[i].getIndices().length;
@@ -947,9 +998,17 @@ export class TMotorTAG {
             matrix.mat4.translate(this.modelViewMatrix,
               this.modelViewMatrix,
               [0, -3, 0])
-            matrix.mat4.scale(this.modelViewMatrix,
-              this.modelViewMatrix,
-              [0.0328, 0.0328, 0.0328])
+            if(this.numAnimate == 1){
+              matrix.mat4.scale(this.modelViewMatrix,
+                this.modelViewMatrix,
+                [0.0128, 0.0128, 0.0128])
+            }
+            else{
+              matrix.mat4.scale(this.modelViewMatrix,
+                this.modelViewMatrix,
+                [0.0328, 0.0328, 0.0328])
+            }
+           
 
             //Puedo cambiar los buffers a array también    
             this.buffers = await this.initialiseBuffers(mallas[i]);
@@ -991,8 +1050,7 @@ export class TMotorTAG {
   }
 
   async cargarModelos(num) {
-    this.RMalla = this.gestorRecursos.dibujarMallas();
-
+    this.numAnimate = num;
     let carpeta;
     switch(num){
       case 0:
@@ -1005,29 +1063,54 @@ export class TMotorTAG {
         '41_1.json', '41_2.json', '42_1.json', '42_2.json', '43_1.json', '43_2.json', '44_1.json', '44_2.json', '45_1.json', '45_2.json', '46_1.json', '46_2.json'];
         break;
       case 1:
+        carpeta = "animacion_grande";
+        this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+        '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
+        '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
+        '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json'];
+        break;
+      case 2:
+        carpeta = "animacion_vestido_corto";
+        this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json'];
+        break;
+      case 3:
+        carpeta = "animacion_vestido_largo";
+        this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+        '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
+        '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
+        '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json','34_1.json', '34_2.json', '35_1.json', '35_2.json', '36_1.json', '36_2.json'];
+        break;
+    }
+    let secarga = true;
+
+    for(let i in this.cargados){
+      if(num == this.cargados[i])
+        secarga = false;
     }
 
-    //Variables de las q cogemos las texturas
-    let suelo: any, malla: any
-    //Suelo (y fondo) aparte
-    suelo = await this.gestorRecursos.ficherosAssets('suelo.json', carpeta);
-    suelo.setDibujado(true);
-    let text = await this.gestorRecursos.ficherosAssets(suelo.getTexturas()[0], carpeta);
-    this.modelos = suelo.getTexturas()[0];
-    let texture = await this.loadTexture(text);
-    this.RMalla.addMallas(suelo);
+    if(secarga){
+      this.animaciones.push([]);
+      //Variables de las q cogemos las texturas
+      let suelo: any, malla: any
+      //Suelo (y fondo) aparte
+      suelo = await this.gestorRecursos.ficherosAssets('suelo.json', carpeta);
+      suelo.setDibujado(true);
+      let text = await this.gestorRecursos.ficherosAssets(suelo.getTexturas()[0], carpeta);
+      this.modelos = suelo.getTexturas()[0];
+      let texture = await this.loadTexture(text);
+      this.animaciones[num].push(suelo);
 
-    for (let i in this.animacion) {
-      malla = await this.gestorRecursos.ficherosAssets(this.animacion[i], carpeta);
-      if (i == '0' || i == '1') {
-        text = await this.gestorRecursos.ficherosAssets(malla.getTexturas()[0], carpeta);
-        this.modelos = malla.getTexturas()[0];
-        texture = await this.loadTexture(text);
+      for (let i in this.animacion) {
+        malla = await this.gestorRecursos.ficherosAssets(this.animacion[i], carpeta);
+        if (i == '0' || i == '1') {
+          text = await this.gestorRecursos.ficherosAssets(malla.getTexturas()[0], carpeta);
+          this.modelos = malla.getTexturas()[0];
+          texture = await this.loadTexture(text);
+        }
+        this.animaciones[num].push(malla);
       }
-      this.RMalla.addMallas(malla);
+      this.cargados.push(num);
     }
-
-    return this.RMalla.getMallas();
   }
 
   async dibujarSombras(tipo) {
