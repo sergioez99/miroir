@@ -807,6 +807,10 @@ export class TMotorTAG {
     let mallas = await this.cargarModelos(num);
     //let mallas = this.RMalla.getMallas();
 
+    
+    // :/ sigue mal idk
+    let fecha = Date.now();
+    let update = fecha + 60;
     //Animación en 30FPS 
     setInterval(() => {
       if (this.pos == 1) {
@@ -821,15 +825,21 @@ export class TMotorTAG {
         mallas[this.pos - 2].setDibujado(false)
       }
 
-
-      this.pos += 2;
+      fecha = Date.now();
+      if(fecha >= update){
+        this.pos += 2;
+        fecha = update;
+        update = fecha + 60;
+      }
+        
+      
       if (this.pos >= mallas.length - 1) {
         this.pos = 1;
-        // mallas[this.pos].setDibujado(true); //Avatar
-        // mallas[this.pos+1].setDibujado(true); //Prenda
-        // mallas[mallas.length-1].setDibujado(false); //Prenda del último 
-        // mallas[mallas.length-2].setDibujado(false);
-        // this.pos+= 2;
+        mallas[this.pos].setDibujado(true); //Avatar
+        mallas[this.pos+1].setDibujado(true); //Prenda
+        mallas[mallas.length-1].setDibujado(false); //Prenda del último 
+        mallas[mallas.length-2].setDibujado(false);
+        this.pos+= 2;
       }
 
 
