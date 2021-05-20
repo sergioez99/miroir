@@ -78,6 +78,8 @@ export class TMotorTAG {
   private update;
   private mallas;
 
+  private lightSpaceMatrix;
+
   constructor() {
     this.raiz = new TNode(null, null, null, null, null, null, null);
     this.gestorRecursos = new gestorRecursos();
@@ -1115,17 +1117,20 @@ export class TMotorTAG {
     frame_buffer = this.gl.createFramebuffer();
     texture = this.gl.createTexture();
 
+  
     this.gl.activeTexture(this.gl.TEXTURE5);
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT32F, 1024, 1024, 0, this.gl.DEPTH_COMPONENT, this.gl.FLOAT, null);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT24, 1024, 1024, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
 
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);
     this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT, this.gl.TEXTURE_2D, texture, 0);
+
+    
 
     this.gl.drawBuffers([this.gl.NONE]);
     this.gl.readBuffer(this.gl.NONE)
@@ -1140,21 +1145,24 @@ export class TMotorTAG {
     matrix.mat4.ortho(lightProjection, -10.0, 10.0, -10.0, 10.0, 1.0, 7.5);
     //matrix.mat4.perspective(lightProjection, this.fieldOfView, this.aspect, this.zNear, this.zFar);
     //Es algo de aquí pero no entiendooooooooo
-    matrix.mat4.lookAt(lightView, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
+    matrix.mat4.lookAt(lightView, [0.0, -3.0, -20.0], [0.0, -8.0, 0.0], [0.0, 1.0, 0.0]);
     matrix.mat4.invert(lightView, lightView);
     matrix.mat4.multiply(lightSpaceMatrix, lightProjection, lightView);
 
-    //matrix.mat4.rotateY(lightSpaceMatrix, lightSpaceMatrix, 180 * Math.PI / 180);
+    matrix.mat4.rotateY(lightSpaceMatrix, lightSpaceMatrix, 180 * Math.PI / 180);
 
     this.gl.useProgram(this.programShadow.program);
 
     this.gl.uniformMatrix4fv(this.programShadow.uniformLocations.lightMatrix, false, lightSpaceMatrix);
 
+    this.lightSpaceMatrix = lightSpaceMatrix;
+
     // // SOMBRAS (se dibujan antes que los modelos)        
     this.gl.viewport(0, 0, 1024, 1024);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frame_buffer);
+ 
     this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
-    this.gl.clearColor(0.1, 0.1, 0.1, 1.0);
+    //this.gl.clearColor(0.1, 0.1, 0.1, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.cullFace(this.gl.FRONT);
 
@@ -1189,15 +1197,23 @@ export class TMotorTAG {
               matrix.mat4.translate(this.modelViewMatrix,
                 this.modelViewMatrix,
                 [0, -3, 0])
-              matrix.mat4.rotateY(this.modelViewMatrix,
-                this.modelViewMatrix,
-                180 * Math.PI / 180)
-              matrix.mat4.rotateZ(this.modelViewMatrix,
-                this.modelViewMatrix,
-                -90 * Math.PI / 180)
-              matrix.mat4.scale(this.modelViewMatrix,
-                this.modelViewMatrix,
-                [0.0328, 0.0328, 0.0328])
+              if(this.numAnimate == 1){
+                matrix.mat4.scale(this.modelViewMatrix,
+                  this.modelViewMatrix,
+                  [0.0128, 0.0128, 0.0128])
+              }
+              else{
+                matrix.mat4.scale(this.modelViewMatrix,
+                  this.modelViewMatrix,
+                  [0.0328, 0.0328, 0.0328])
+              }
+  
+              if(this.numAnimate == 2 || this.numAnimate == 3){
+                let split = mallas[i].getNombre().split("_");
+                if(i >= '49' && split[1] == '1.json'){
+                  matrix.mat4.rotateX(this.modelViewMatrix, this.modelViewMatrix, 90 * Math.PI / 180)
+                }
+              }
 
               this.buffers = await this.initialiseBuffers(mallas[i]);
               this.bindVertexPositionShadow(this.programShadow, this.buffers);
@@ -1208,7 +1224,8 @@ export class TMotorTAG {
         if (mallas[i].getDibujado()) {
           //Transformaciones del modelo de la sombra      
           this.gl.uniformMatrix4fv(this.programShadow.uniformLocations.modelViewMatrix, false, this.modelViewMatrix);
-          this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+          //this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.gl.UNSIGNED_SHORT, 0);
+          this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, vertexCount);
         }
       }
 
@@ -1285,8 +1302,9 @@ export class TMotorTAG {
     // //YA HEMOS DIBUJADO LAS SOMBRAS (SE SUPONE)
     this.gl.useProgram(this.programInfo.program);
     this.gl.cullFace(this.gl.BACK);
-    this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.MVPFromLight, false, lightSpaceMatrix);
-    //CONFUSION
+    this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.MVPFromLight, false, this.lightSpaceMatrix);
+
     this.gl.uniform1i(this.programInfo.uniformLocations.shadowMap, 5);
+
   }
 }

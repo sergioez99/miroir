@@ -32,9 +32,9 @@ varying vec4 v_PositionFromLight; //Coordenadas de donde estará proyectada la s
 
 
 //funcion que calcula las sombras
-float ShadowCalculation(vec4 fragPosLightSpace, float bias)
+float ShadowCalculation()
 {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    vec3 projCoords = v_PositionFromLight.xyz / v_PositionFromLight.w;
 
     projCoords = projCoords * 0.5 + 0.5;
 
@@ -82,7 +82,7 @@ vec3 Phong() {
     Specular += Light3.Diffuse * pow(max(dot(r3,v), 0.0), Material.Shininess) * Material.Specular;  
      
     float bias = max(0.05 * (1.0 - dot(n, s3)), 0.005); 
-    float shadow = ShadowCalculation(v_PositionFromLight, bias);       
+    float shadow = ShadowCalculation();       
     vec3 lighting = (Ambient + (1.0 - shadow) * (Diffuse + Specular)) * color;
 
     return lighting;
