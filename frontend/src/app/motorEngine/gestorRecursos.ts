@@ -154,6 +154,7 @@ export class gestorRecursos {
                 let file = await archivo.json();
                 let malla = new Malla();
 
+                malla.setNombre(fichero);
                 malla.setDibujado(false);
 
 

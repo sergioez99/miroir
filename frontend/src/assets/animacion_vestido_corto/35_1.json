@@ -7,10 +7,10 @@
     "materials": [
         {
             "name": "None_022",
-            "ambient": [0.8,0.8,0.8],
-            "diffuse": [0.8,0.8,0.8],
-            "specular": [0.0370935,0.0370935,0.0370935],
-            "glossiness": 57.9586,
+            "ambient": [0.5,0.5,0.5],
+            "diffuse": [0.5,0.5,0.5],
+            "specular": [0.2,0.2,0.2],
+            "glossiness": 100,
             "opacity": 1,
             "maps": [
                 {
