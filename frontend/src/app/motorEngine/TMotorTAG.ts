@@ -650,6 +650,9 @@ export class TMotorTAG {
       case 'vaquero.jpg': 
       this.gl.activeTexture(this.gl.TEXTURE3); //Vaquero
         break;
+      case 'blanco.jpg': 
+      this.gl.activeTexture(this.gl.TEXTURE4); //Fondo
+        break;
     }
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
@@ -883,7 +886,7 @@ export class TMotorTAG {
   async dibujarAnimaciones() {
     this.resizeWebGLCanvas();
     this.updateWebGLCanvas();
-    let sombras = await this.dibujarSombras(1);
+    //let sombras = await this.dibujarSombras(1);
 
     // LUCES
 
@@ -954,11 +957,11 @@ export class TMotorTAG {
             [0, -3, 0])
           matrix.mat4.scale(this.modelViewMatrix,
             this.modelViewMatrix,
-            [0.068, 0.068, 0.068])
+            [0.368, 0.068, 0.368])
 
 
           this.buffers3 = await this.initialiseBuffers(mallas[0]);
-          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 0);
+          this.gl.uniform1i(this.programInfo.uniformLocations.uSampler, 4);
 
           this.bindVertexPosition(this.programInfo, this.buffers3);
 
@@ -970,6 +973,7 @@ export class TMotorTAG {
 
 
           break;
+         
 
         default: //Avatar y prenda que parece q se ven bien asi
           if (mallas[i].getDibujado()) {
@@ -1081,7 +1085,7 @@ export class TMotorTAG {
     if(secarga){
       this.animaciones.push([]);
       //Variables de las q cogemos las texturas
-      let suelo: any, malla: any
+      let suelo: any, malla: any;
       //Suelo (y fondo) aparte
       suelo = await this.gestorRecursos.ficherosAssets('suelo.json', carpeta);
       suelo.setDibujado(true);
@@ -1089,6 +1093,7 @@ export class TMotorTAG {
       this.modelos = suelo.getTexturas()[0];
       let texture = await this.loadTexture(text);
       this.animaciones[num].push(suelo);
+
 
       for (let i in this.animacion) {
         malla = await this.gestorRecursos.ficherosAssets(this.animacion[i], carpeta);
