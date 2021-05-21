@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
-import { interval } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { WebGLService } from '../services/webgl.service';
 import { TicketService } from '../services/ticket.service';
 import { environment } from '../../environments/environment';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-scene',
@@ -30,6 +30,12 @@ export class SceneComponent implements OnInit {
 
   // variable para la barra de menu
   public visible: boolean = true;
+  public ayuda: boolean = false;
+  public drawSceneInterval: Observable<number>;
+  public subs: Subscription;
+
+  public guardar = false;
+
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -52,8 +58,8 @@ export class SceneComponent implements OnInit {
   }
 
   dibujar() {
-    const drawSceneInterval = interval(this._60fpsInterval);
-    drawSceneInterval.subscribe(() => {
+    this.drawSceneInterval = interval(this._60fpsInterval);
+    this.subs = this.drawSceneInterval.subscribe(() => {
       this.drawScene();
     });
   }
@@ -186,22 +192,201 @@ export class SceneComponent implements OnInit {
   }
 
   guardarImagen() {
-    console.log('vamos a guardar una imagen del canvas');
 
-    let canvas_probador = this.canvas.nativeElement.toDataURL();
+
+    Swal.fire({
+      title: 'Selecciona el formato:',
+      icon: 'question',
+      showCloseButton: true,
+      showDenyButton: true,
+      focusConfirm: false,
+      confirmButtonText: '1920x1080',
+      confirmButtonAriaLabel: 'Ordenador',
+      denyButtonText: '1080x1920',
+      denyButtonAriaLabel: 'Movil',
+      denyButtonColor: "#b388ff",
+      confirmButtonColor: "#b388ff",
+    }).then((result) => {
+
+      let width: number;
+      let height: number;
+
+      if (result.isConfirmed) {
+        // console.log('confirmado');
+        width = 1920;
+        height = 1080;
+      }
+      if (result.isDenied) {
+        width = 1080;
+        height = 1920;
+      }
+
+      if (result.isDenied || result.isConfirmed) {
+        this.guardarImagen_toBlob(width, height);
+      }
+    });
+
+  }
+
+  canvasToBlob(canvas: HTMLCanvasElement, contador): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+
+      try {
+        canvas.toBlob((res: Blob) => {
+
+          let proporcion = res.size / (canvas.width * canvas.height);
+
+          // console.log('blob dentro de la funcion: ', res);
+          // console.log('proporcion: ', proporcion);
+          // console.log('contador: ', contador);
+
+          if (proporcion < 0.08 && contador < 20) {
+            contador++;
+            this.canvasToBlob(canvas, contador).then((res) => {
+              resolve(res);
+            }).catch((error) => {
+              reject(null);
+            });
+          }
+          else {
+            resolve(res);
+          }
+        }, "image/png", 0.9);
+
+      }
+      catch (err) {
+        reject(null);
+      }
+
+    });
+  }
+
+  guardarImagen_toBlob(width, height) {
+
+    let canvasProbador = document.getElementById('canvas') as HTMLCanvasElement;
+
+    this.canvasToBlob(canvasProbador, 0).then((res) => {
+
+      console.log('hemos podido', res);
+
+      let blob = res;
+
+      let logo = new Image();
+
+      logo.onload = () => {
+
+        let canvas = document.getElementById('pictureCanvas') as HTMLCanvasElement;
+        canvas.width = width;
+        canvas.height = height;
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var imagen_probador = new Image();
+
+        imagen_probador.onload = function () {
+
+          let proporcion = canvas.height / canvas.width;
+
+          let imagen_ancho;
+          let imagen_alto;
+          if (proporcion > 1) {
+            //movil
+            proporcion = canvas.width / canvas.height;
+            imagen_ancho = imagen_probador.height * proporcion;
+            imagen_alto = imagen_probador.height;
+          }
+          else {
+            //pc
+            imagen_ancho = imagen_probador.width;
+            imagen_alto = imagen_probador.width * proporcion;
+          }
+
+          let imagen_x = Math.abs(imagen_probador.width - imagen_ancho) / 2;
+          let imagen_y = Math.abs(imagen_probador.height - imagen_alto) / 2;
+
+/*
+          console.log('canvas: height: ', canvas.height);
+          console.log('canvas: width: ', canvas.width);
+          console.log('canvas: proporcion: ', proporcion);
+          console.log('imagen_ancho:', imagen_ancho);
+          console.log('imagen_alto:', imagen_alto);
+          console.log('imagen_x:', imagen_x);
+          console.log('imagen_y:', imagen_y); */
+
+          if (proporcion > 1) {
+            ctx.drawImage(imagen_probador,
+              imagen_x, imagen_y, imagen_ancho, imagen_alto,
+              0, 0, canvas.width, canvas.height);
+          }
+          else {
+            ctx.drawImage(imagen_probador,
+              imagen_x, imagen_y, imagen_ancho, imagen_alto,
+              0, 0, canvas.width, canvas.height);
+          }
+
+
+
+          ctx.drawImage(logo, 0, 0, 100, 100);
+
+
+          canvas.toBlob((res: Blob) => {
+
+            let image = res;
+
+            const data = window.URL.createObjectURL(image);
+
+
+            const a = document.createElement('a')
+            a.href = data;
+            a.download = "descarga.png";
+            a.focus();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+
+          }, "image/png", 0.9);
+
+        }
+
+        imagen_probador.src = URL.createObjectURL(blob);
+
+      }
+      logo.src = '../../assets/Miroir M.png';
+
+
+    }).catch((error) => {
+      console.log('no ha podido: ', error);
+      Swal.fire({
+        title: 'Ha habido algún problema, por favor, inténtelo de nuevo.',
+        showCloseButton: true,
+        confirmButtonText: 'Aceptar',
+      });
+    });
+
+  }
+
+
+  guardarImagen_toDataURL(width: number, height: number) {
+    console.log('vamos a guardar una imagen del canvas');
+    // this.subs.unsubscribe();
+    // this.sleep(1000);
+    let canvas_probador = this.canvas.nativeElement.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    console.log(canvas_probador);
     let imagen_probador = new Image();
 
     imagen_probador.onload = () => {
 
       let logo = new Image();
 
-      logo.onload = ()=> {
+      logo.onload = () => {
 
         let canvas = document.getElementById('pictureCanvas') as HTMLCanvasElement;
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0,0,1920,1080);
-        canvas.width = 1920;
-        canvas.height = 1080;
+        canvas.width = width;
+        canvas.height = height;
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
         /*
         // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
@@ -222,23 +407,33 @@ export class SceneComponent implements OnInit {
         let proporcion = canvas.height / canvas.width;
         let imagen_ancho = imagen_probador.width;
         let imagen_alto = imagen_probador.width * proporcion;
-        let imagen_x = Math.abs (imagen_probador.width - imagen_ancho) /2;
-        let imagen_y = Math.abs (imagen_probador.height - imagen_alto) /2;
+        let imagen_x = Math.abs(imagen_probador.width - imagen_ancho) / 2;
+        let imagen_y = Math.abs(imagen_probador.height - imagen_alto) / 2;
 
         ctx.drawImage(imagen_probador,
-                      imagen_x, imagen_y, imagen_probador.width, imagen_alto,
-                      0, 0, canvas.width, canvas.height);
-
+          imagen_x, imagen_y, imagen_probador.width, imagen_alto,
+          0, 0, canvas.width, canvas.height);
 
         ctx.drawImage(logo, 0, 0, 100, 100);                       // FILL THE CANVAS WITH THE IMAGE.
 
-        let image = canvas.toDataURL();
 
-        let a = document.getElementById('linkDescarga') as HTMLAnchorElement;
-        console.log('a: ', a);
+        let image = canvas.toDataURL("image/png")
+        // .replace("image/png", "image/octet-stream");
 
-        a.download = "esta vez si.png";
+        console.log('image: ', image);
+
+        // window.location.href=image;
+
+
+        const a = document.createElement('a')
         a.href = image;
+        a.download = "descarga.png";
+        a.focus();
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+
 
       }
       logo.src = '../../assets/Miroir M.png';
@@ -246,72 +441,22 @@ export class SceneComponent implements OnInit {
     }
     imagen_probador.src = canvas_probador;
 
-
-    /*
-    // GET THE IMAGE.
-    var img = new Image();
-    img.src = '../../assets/Miroir banner.png';
-
-    // WAIT TILL IMAGE IS LOADED.
-    img.onload = () => {
-      let canvasProbador = document.getElementById('canvas') as HTMLCanvasElement;
-      let probador = canvasProbador.toDataURL();
-      let imagen_probador = new Image();
-      imagen_probador.src = probador;
-
-      imagen_probador.onload = () => {
-        console.log(imagen_probador);
-
-        let canvas = document.getElementById('pictureCanvas') as HTMLCanvasElement;
-        var ctx = canvas.getContext("2d");
-        canvas.width = 1920;
-        canvas.height = 1080;
-
-        ctx.drawImage(imagen_probador, 0, 0, 200, 137);      // FILL THE CANVAS WITH THE IMAGE.
-        ctx.drawImage(img, 1000, 300, 200, 137);      // FILL THE CANVAS WITH THE IMAGE.
-
-        let image = canvas.toDataURL();
-
-
-        let a = document.getElementById('linkDescarga') as HTMLAnchorElement;
-        console.log('a: ', a);
-
-        a.download = "esta vez si.png";
-        a.href = image;
-      }
-
-    }
-
-    */
-
-
-    /*
-
-        //let canvas = document.getElementById('canvas') as HTMLCanvasElement;
-        let image = this.canvas.nativeElement.toDataURL();
-
-        let a = document.getElementById('linkDescarga') as HTMLAnchorElement;
-        console.log('a: ', a);
-
-        a.download = "esta vez si.png";
-        a.href = image;
-        */
-
   }
 
-  menuVisible(){
+
+  menuVisible() {
     this.visible = !this.visible;
 
-    if(this.visible){
+    if (this.visible) {
       let objetos = document.getElementsByClassName('mir-menu');
-      for(let i=0; i<objetos.length; i++){
+      for (let i = 0; i < objetos.length; i++) {
         let aux = objetos[i] as HTMLElement;
         aux.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';
       }
     }
-    else{
+    else {
       let objetos = document.getElementsByClassName('mir-menu');
-      for(let i=0; i<objetos.length; i++){
+      for (let i = 0; i < objetos.length; i++) {
         let aux = objetos[i] as HTMLElement;
         aux.style.backgroundColor = 'rgba(200, 200, 200, 0.0)';
       }

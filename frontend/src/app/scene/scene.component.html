@@ -4,11 +4,31 @@
 
     <div class="mir-barra" *ngIf="visible">
         <canvas #pictureCanvas id="pictureCanvas" style="display: none;"></canvas>
+
+
+
         <a mat-mini-fab color="warn" id="linkDescarga" (click)="guardarImagen()">
             <mat-icon>favorite</mat-icon>
         </a>
+
+
+
+
+
+
         <p> Si quieres modificar tus medidas, ¡crea tu cuenta con nosotros! </p>
         <button mat-raised-button class="mir-button" color="accent" (click)="irRegistro()">Regístrate</button>
+        <a mat-mini-fab (click)="ayuda=!ayuda">
+            <mat-icon>help</mat-icon>
+        </a>
+    </div>
+    <div *ngIf="ayuda">
+        <p> Si quieres un avatar personalizado sigue los siguientes pasos:
+            <br> 1 - Crea una cuenta en:
+            <a routerLink="/registrarse" target="_blank">Miroir</a>
+            <br> 2 - Inicia sesión y personaliza tu avatar.
+            <br> 3 - Inicia sesión en esta web.
+        </p>
     </div>
 
 </div>
