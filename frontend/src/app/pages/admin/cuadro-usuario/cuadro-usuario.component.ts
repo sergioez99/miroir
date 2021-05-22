@@ -33,13 +33,15 @@ export class CuadroUsuarioComponent implements OnInit {
   public totalClientes;
   public totalPrendas;
 
+  //DATOS DE MAPA PREDETERMINADOS
+
   public geoChart: GoogleChartInterface = {
     chartType: 'GeoChart',
     dataTable: [
       [ 'Comunidad', 'Prenda', 'Núm. de pruebas' ],
-      [ 'ES-AR', 'zapatacas', 75 ],
-      [ 'ES-CL', 'gameboy', 12 ],
-      [ 'ES-VC', 'cacota', 600 ]
+      [ 'ES-AR', 'Camiseta de tirantes azul', 75 ],
+      [ 'ES-CL', 'Jersey de lana rojo', 12 ],
+      [ 'ES-VC', 'Pantalón vaquero gris', 600 ]
     ],
     //firstRowIsData: true,
     options: {region: 'ES',
@@ -294,18 +296,22 @@ export class CuadroUsuarioComponent implements OnInit {
 
     let datos = await this.GeoService.getRegiones();
 
-    console.log(datos);
+    if(datos[1] != null){
 
-    this.geoChart = {
-      chartType: 'GeoChart',
-      dataTable: datos,
-      //firstRowIsData: true,
-      options: {region: 'ES',
-                resolution:'provinces',
-                colorAxis:{'colors:': ['#00853f', '#81d4fa', '#e31b23']},
-                backgroundColor:'#81d4fa',
-              }
+      console.log(datos);
+
+      this.geoChart = {
+        chartType: 'GeoChart',
+        dataTable: datos,
+        //firstRowIsData: true,
+        options: {region: 'ES',
+                  resolution:'provinces',
+                  colorAxis:{'colors:': ['#00853f', '#81d4fa', '#e31b23']},
+                  backgroundColor:'#81d4fa',
+                }
       };
+
+    }
 
   }
 
