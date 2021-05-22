@@ -82,6 +82,7 @@ export class PrendasComponent implements OnInit {
 
         }
         this.loading = false;
+
       }).catch((err) => {
         Swal.fire({ icon: 'error', title: 'Oops...', text: 'No se pudo completar la acción, vuelva a intentarlo', });
         //console.warn('error:', err);

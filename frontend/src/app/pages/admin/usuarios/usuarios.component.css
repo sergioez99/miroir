@@ -1,63 +1,66 @@
 th {
-    
     background-color: #b388ff;
     color: white;
     border: solid #292929 1px;
 }
-.nuevo-usu{
+
+.nuevo-usu {
     margin-bottom: 5px;
     vertical-align: middle;
 }
 
-.delete{
+.delete {
     color: orangered;
-    cursor:pointer;
+    cursor: pointer;
     margin-left: 10px;
 }
 
-.edit{
-    color:green;
-    cursor:pointer;
+.edit {
+    color: green;
+    cursor: pointer;
     margin-right: 10px;
 }
 
 .table-striped {
     border: solid #292929 1px;
     background-color: #e6d2ff;
- }
+}
 
- 
-
-.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(2n+1)>th {
     background-color: #f4ebff;
     border: solid #292929 1px;
- }
+}
 
- .table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {
+.table-striped>tbody>tr:nth-child(2n)>td,
+.table-striped>tbody>tr:nth-child(2n)>th {
     border: solid #292929 1px;
- }
+}
 
- .form-control, .micursor{
-     background-color: #e6d2ff;
-     border: solid #292929 1px;
- }
+.form-control,
+.micursor {
+    background-color: #e6d2ff;
+    border: solid #292929 1px;
+}
 
- .micursor{
-     cursor: pointer;
- }
+.micursor {
+    cursor: pointer;
+}
 
- .btn-primary, .btn-primary:active, .btn-primary:visited {
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited {
     background-color: #b388ff;
     text-align: center;
     border: none;
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
     background-color: #fb9b02;
     border: none;
 }
 
-::placeholder{
+::placeholder {
     color: #292929;
     opacity: 0.8;
 }
@@ -74,4 +77,10 @@ h1 {
     text-align: center;
     display: inline-block;
     width: 100%;
+}
+
+.mir-loading {
+    position: absolute;
+    right: 50%;
+    top: 50%;
 }

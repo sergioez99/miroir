@@ -1,5 +1,5 @@
 <section class="sectionn">
-    <section>
+    <section *ngIf="noAdmin">
         <h2> Probador virtual</h2>
         <article>
             <header>
@@ -7,96 +7,110 @@
             </header>
             <p> aqui se visualizará el probador con el avatar para dar a los usuarios una vista previa del avatar con sus medidas.</p>
         </article>
-    
+
         <!-- componente probador -->
         <app-probador01></app-probador01>
-    
+
     </section>
-    
-    <section>
+
+    <section class="mir-seccion">
         <div class="centro">
-        <h2> Datos del usuario </h2>
-        <article>
-            <div>
-    
-                <form [formGroup]="formMedidas" (ngSubmit)="actualizarUsuario();">
-                    <div>
-                        <mat-form-field appearance="outline" class="mir-block">
-                            <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-                            <mat-hint>Introduzca el email</mat-hint>
-                        </mat-form-field>
-                    </div>
-                        
-                    <div *ngIf="this.isNew">
-                        <mat-form-field appearance="outline" class="mir-block">
-                            <mat-label>Contraseña</mat-label>
-                            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
-                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <h2> Datos del usuario </h2>
+            <article>
+                <div>
+
+                    <form [formGroup]="formMedidas" (ngSubmit)="actualizarUsuario();">
+
+                        <div class="mir-bloque">
+
+                            <div>
+                                <mat-form-field appearance="fill" class="mir-block">
+                                    <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+                                    <mat-hint>Introduzca el email</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.isNew">
+                                <mat-form-field appearance="fill" class="mir-block">
+                                    <mat-label>Contraseña</mat-label>
+                                    <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
+                                    <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
-                            <mat-hint>Introduzca la contraseña</mat-hint>
-                        </mat-form-field>
-                    </div>
-    
-                    <div>
-                        <mat-label>Rol: </mat-label>
-                        <select formControlName="rol">
-                            <option [ngValue]="objeto" *ngFor="let objeto of lista">{{objeto}}</option>
-                        </select>
-                    </div>
-    
-                    <div>
-                        <mat-label>Activo: </mat-label>
-                        <select formControlName="activo">
-                            <option [ngValue]="true">Si</option>
-                            <option [ngValue]="false">No</option>    
-                        </select>
-                    </div>
-    
-                    <div>
-                        <mat-label>Validado: </mat-label>
-                        <select formControlName="validado">
-                            <option [ngValue]="true">Si</option>
-                            <option [ngValue]="false">No</option>    
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <mat-slider thumbLabel formControlName="peso" min="10" max="200" step="1" [(ngModel)]=this.peso></mat-slider>
-                        <mat-label>Peso: {{this.peso}} kg</mat-label>
-                    </div>
-    
-                    <div>
-                        <mat-slider thumbLabel formControlName="altura" min="100" max="200" step="1" [(ngModel)]=this.altura></mat-slider>
-                        <mat-label>Altura: {{this.altura}} cm</mat-label>
-                    </div>
-    
-                    <div>
-                        <mat-slider thumbLabel formControlName="pecho" min="10" max="200" step="1" [(ngModel)]=this.pecho></mat-slider>
-                        <mat-label>Pecho: {{this.pecho}} cm</mat-label>
-                    </div>
-    
-                    <div>
-                        <mat-slider thumbLabel formControlName="cintura" min="10" max="200" step="1" [(ngModel)]=this.cintura></mat-slider>
-                        <mat-label>Cintura: {{this.cintura}} cm</mat-label>
-                    </div>
-    
-                    <div>
-                        <mat-slider thumbLabel formControlName="cadera" min="10" max="200" step="1" [(ngModel)]=this.cadera></mat-slider>
-                        <mat-label>Cadera: {{this.cadera}} cm</mat-label>
-                    </div>
-                    <div *ngIf="this.isNew; else noNew">
-                        <button type="submit" mat-raised-button color="accent" class="boton">Crear</button>
-                    </div>
-                    <ng-template #noNew>
-                        <button type="submit" mat-raised-button color="accent" class="boton">Actualizar</button>
-                    </ng-template>
-                    
-                </form>
-    
-            </div>
-    
-        </article></div>
+                                    <mat-hint>Introduzca la contraseña</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Seleccione el rol</mat-label>
+                                    <mat-select formControlName="rol">
+                                        <mat-option *ngFor="let objeto of lista" [value]="objeto"> {{objeto}} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+
+                            <div>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Activo</mat-label>
+                                    <mat-select formControlName="activo">
+                                        <mat-option [value]="true"> SI </mat-option>
+                                        <mat-option [value]="false"> NO </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Validado</mat-label>
+                                    <mat-select formControlName="validado">
+                                        <mat-option [value]="true"> SI </mat-option>
+                                        <mat-option [value]="false"> NO </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="mir-bloque">
+                            <div class="mir-espacio"></div>
+
+                            <div>
+                                <mat-label>Peso: {{this.peso}} kg</mat-label>
+                                <mat-slider thumbLabel formControlName="peso" min="10" max="200" step="1" [(ngModel)]=this.peso></mat-slider>
+                            </div>
+
+                            <div>
+                                <mat-label>Altura: {{this.altura}} cm</mat-label>
+                                <mat-slider thumbLabel formControlName="altura" min="100" max="200" step="1" [(ngModel)]=this.altura></mat-slider>
+                            </div>
+
+                            <div>
+                                <mat-label>Pecho: {{this.pecho}} cm</mat-label>
+                                <mat-slider thumbLabel formControlName="pecho" min="10" max="200" step="1" [(ngModel)]=this.pecho></mat-slider>
+                            </div>
+
+                            <div>
+                                <mat-label>Cintura: {{this.cintura}} cm</mat-label>
+                                <mat-slider thumbLabel formControlName="cintura" min="10" max="200" step="1" [(ngModel)]=this.cintura></mat-slider>
+                            </div>
+
+                            <div>
+                                <mat-label>Cadera: {{this.cadera}} cm</mat-label>
+                                <mat-slider thumbLabel formControlName="cadera" min="10" max="200" step="1" [(ngModel)]=this.cadera></mat-slider>
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.isNew; else noNew">
+                            <button type="submit" mat-raised-button color="accent" class="boton">Crear</button>
+                        </div>
+                        <ng-template #noNew>
+                            <button type="submit" mat-raised-button color="accent" class="boton">Actualizar</button>
+                        </ng-template>
+                    </form>
+
+                </div>
+
+            </article>
+        </div>
     </section>
-    </section>
-    
+</section>
