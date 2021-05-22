@@ -110,18 +110,19 @@ export class Probador01Component implements OnInit, OnDestroy {
 
     crearTicket(prenda?){
 
-      /* VARIABLES MONICA */
+      /* // VARIABLES MONICA
       let cliente = '42izoRizo2mwMxQ8SOQLw8ZEL9WAPyHnYZr_AQ0VUo6a~.jt6q';
       let usuario = 'asdf@asdf.com';
       let prendaID = 'VEF15ORE3SC1';
       let talla = 'XS';
+      */
 
-      /* VARIABLES DE SERGIO
+      /* // VARIABLES DE SERGIO */
       let cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
       let usuario = 'sergi@gmail.com';
       let prendaID = '123456789';
       let talla = 'XS';
-      */
+
 
       if(prenda) {
         prendaID = prenda;

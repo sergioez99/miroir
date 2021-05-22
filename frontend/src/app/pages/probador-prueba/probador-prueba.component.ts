@@ -50,21 +50,21 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.modelosTicket = [];
 
-      /* VARIABLES DE MONICA */
+      /* // VARIABLES DE MONICA
       this.prendaID = 'VEF15ORE3SC1'; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
       this.usuario = 'asdf@asdf.com';
       this.clave = "42izoRizo2mwMxQ8SOQLw8ZEL9WAPyHnYZr_AQ0VUo6a~.jt6q" // default
+      */
 
 
-
-      /* VARIABLES DE SERGIO
+      /* // VARIABLES DE SERGIO */
       this.prendaID = "1234"; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
       //this.usuario = this.usuarioService.getEmail();
       this.usuario = "sergi@gmail.com";
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
-      */
+
 
       this.ticket = this.route.snapshot.params['ticket'];
 
