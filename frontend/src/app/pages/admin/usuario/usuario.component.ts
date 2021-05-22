@@ -29,6 +29,7 @@ export class UsuarioComponent implements OnInit {
   @Input() cadera :number;
 
   public noAdmin = true;
+  public hide = true;
 
 
 

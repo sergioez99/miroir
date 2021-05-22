@@ -1,69 +1,69 @@
 <div class="main">
-<article class="mir-login-box">
-    <div class="signup-content">
-    <h1 class="mir-title"> Inicia Sesión </h1>
-    <form class="mir-login-form" [formGroup]="formLogin" (ngSubmit)="login();">
+    <article class="mir-login-box">
+        <div class="signup-content">
+            <h1 class="mir-title"> Inicia Sesión </h1>
+            <form class="mir-login-form" [formGroup]="formLogin" (ngSubmit)="login();">
 
 
-        <div class="mir-box-link"> ¿Aún no tienes cuenta?
-            <a class="loginhere-link" routerLink="/registrarse">Regístrate</a>
-        </div>
+                <div class="mir-box-link"> ¿Aún no tienes cuenta?
+                    <a class="loginhere-link" routerLink="/registrarse">Regístrate</a>
+                </div>
 
-        <!-- INPUT: EMAIL -->
-        <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Email</mat-label>
-            <input type="email" matInput formControlName="email" class="form-input" placeholder="ejemplo@email.com">
-            <button mat-icon-button matSuffix type="button">
+                <!-- INPUT: EMAIL -->
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput formControlName="email" class="form-input" placeholder="ejemplo@email.com">
+                    <button mat-icon-button matSuffix type="button">
                       <mat-icon>alternate_email</mat-icon>
                     </button>
-            <mat-hint>Introduzca su email</mat-hint>
+                    <mat-hint>Introduzca su email</mat-hint>
 
-            <!-- ERRORES -->
-            <mat-error *ngIf="formLogin.get('email').hasError('email');">
-                Por favor, introduce un email <strong>válido</strong>
-            </mat-error>
-            <mat-error *ngIf="formLogin.get('email').hasError('required');">
-                Email  <strong>necesario</strong>
-            </mat-error>
+                    <!-- ERRORES -->
+                    <mat-error *ngIf="formLogin.get('email').hasError('email');">
+                        Por favor, introduce un email <strong>válido</strong>
+                    </mat-error>
+                    <mat-error *ngIf="formLogin.get('email').hasError('required');">
+                        Email <strong>necesario</strong>
+                    </mat-error>
 
-        </mat-form-field>
-        <!-- ------------ -->
-        <!-- INPUT: PASSWORD -->
-        <mat-form-field appearance="outline" class="mir-block">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
-            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </mat-form-field>
+                <!-- ------------ -->
+                <!-- INPUT: PASSWORD -->
+                <mat-form-field appearance="outline" class="mir-block">
+                    <mat-label>Contraseña</mat-label>
+                    <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
+                    <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                 </button>
-            <mat-hint>Introduzca su contraseña</mat-hint>
+                    <mat-hint>Introduzca su contraseña</mat-hint>
 
-            <!-- ERRORES -->
-            <mat-error *ngIf="formLogin.get('password').hasError('required');">
-                Contraseña <strong>necesaria</strong>
-            </mat-error>
+                    <!-- ERRORES -->
+                    <mat-error *ngIf="formLogin.get('password').hasError('required');">
+                        Contraseña <strong>necesaria</strong>
+                    </mat-error>
 
-        </mat-form-field>
-        <!-- ------------ -->
+                </mat-form-field>
+                <!-- ------------ -->
 
-        <mat-checkbox matInput formControlName="remember"> Recuérdame </mat-checkbox>
-        <div class ="botones">
-            <div class="mir-box-buttons">
-                <div id="my-signin2"></div>
-            </div>
-            
+                <mat-checkbox matInput formControlName="remember"> Recuérdame </mat-checkbox>
+                <div class="botones">
+                    <div class="mir-box-buttons">
+                        <div id="my-signin2"></div>
+                    </div>
 
-            <div class="mir-box-buttons">
-                <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Login</button>
-                <app-button-back ></app-button-back>
-            </div>
-        </div>  
-        <div class="mir-box-link"> ¿Has olvidado tu contraseña?
-            <a class="loginhere-link" routerLink="/recovery">Recuperar contraseña</a>
+
+                    <div class="mir-box-buttons">
+                        <button type="submit" class="mir-login-button" mat-raised-button color="accent" type="submit">Login</button>
+                        <app-button-back></app-button-back>
+                    </div>
+                </div>
+                <div class="mir-box-link"> ¿Has olvidado tu contraseña?
+                    <a class="loginhere-link" routerLink="/recovery">Recuperar contraseña</a>
+                </div>
+
+
+            </form>
+
         </div>
-
-
-    </form>
-
-</div>
-</article>
+    </article>
 </div>

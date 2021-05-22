@@ -39,7 +39,7 @@
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
           </button>
             <mat-hint>Introduzca su contraseña</mat-hint>
 
@@ -55,7 +55,7 @@
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-            <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-icon>{{hideR ? 'visibility' : 'visibility_off'}}</mat-icon>
         </button>
             <mat-hint>Repita su contraseña</mat-hint>
 
@@ -119,7 +119,7 @@
 
 
         <div class="mir-box-buttons">
-            
+
             <button type="submit" class="mir-login-button" mat-raised-button color="accent" [disabled]="!terminos">Registrarse</button>
             <app-button-back></app-button-back>
         </div>
