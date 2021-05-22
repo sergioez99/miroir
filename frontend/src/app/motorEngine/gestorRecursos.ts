@@ -105,7 +105,11 @@ export class gestorRecursos {
                 malla.setIndices(file.model.meshes[0].face.vertElementIndices);
                 malla.setVertices(indices);
 
-                malla.setTexturas(file.materials[0].maps[0].file)
+                for(let i in file.materials[0].maps){
+                    malla.setTexturas(file.materials[0].maps[i].file)
+                }
+                   
+                
 
                 malla.setDiffuse(file.materials[0].diffuse);
                 malla.setSpecular(file.materials[0].specular);

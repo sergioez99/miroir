@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, Host } from "@angular/core";
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../../services/webgl.service';
@@ -11,7 +11,7 @@ import { UsuarioService } from '../../services/usuario.service';
   styleUrls: ['./probador01.component.css']
 })
 
-export class Probador01Component implements OnInit {
+export class Probador01Component implements OnInit, OnDestroy {
   @ViewChild("sceneCanvas") private canvas: ElementRef<HTMLCanvasElement>;
 
   private _60fpsInterval = 16.666666666666666667;
@@ -25,6 +25,7 @@ export class Probador01Component implements OnInit {
 
   private ticket = null;
   private modelosTicket: string[];
+  private drawSceneInterval;
 
   //cosas pal ticket
   private clave; usuario; prendaID; talla;
@@ -49,11 +50,14 @@ export class Probador01Component implements OnInit {
       this.dibujar();
     }
 
+    async cambiarTextura(textura){
+      let espera = await this.webglService.cambiarTexturas(textura);
+    }
+
     dibujar(){
-      const drawSceneInterval = interval(this._60fpsInterval);
-      drawSceneInterval.subscribe(() => {
+      this.drawSceneInterval = setInterval( () =>{
         this.drawScene();
-      });
+      }, this._60fpsInterval)
     }
 
 
@@ -66,7 +70,7 @@ export class Probador01Component implements OnInit {
       this.usuario = "sergi@gmail.com";
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
-      this.ticket = this.route.snapshot.params['ticket'];
+      //this.ticket = this.route.snapshot.params['ticket'];
 
       if(this.ticket == null)
       this.crearTicket();
@@ -75,6 +79,11 @@ export class Probador01Component implements OnInit {
 
 
 
+    }
+
+    @HostListener('unloaded')
+    ngOnDestroy(): void {
+      clearInterval(this.drawSceneInterval);
     }
 
     canjearTicket() {

@@ -2,9 +2,9 @@
     <button (click)="crearTicket('122345678')">Camiseta</button>
     <button (click)="crearTicket('112345678')">Falda</button>
     <button (click)="crearTicket('123456789')">Pantalón</button>
-    <button>Algodón</button>
-    <button>Vaquero</button>
-    <button>Cuadros</button>
+    <button (click)="cambiarTextura(1)">Algodón</button>
+    <button (click)="cambiarTextura(3)">Vaquero</button>
+    <button (click)="cambiarTextura(2)">Cuadros</button>
 </div>
 
 <canvas #sceneCanvas id="probador" width="650" height="650">

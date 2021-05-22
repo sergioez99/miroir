@@ -81,6 +81,22 @@ export class TicketService {
     });
   }
 
+  obtenerTicket2(clave, usuario, prendaID, talla, id?): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
+      this.ticket = res['ticket'];
+      resolve(this.ticket);
+
+    }, (err) => {
+
+      reject(err);
+
+    });
+
+  });
+}
+
   canjearTicket(ticket): Promise<any> {
 
     return new Promise((resolve, reject) => {

@@ -35,6 +35,10 @@ export class WebGLService {
     let espera = await this.miMotor.dibujarAnimaciones();
   }
 
+  async cambiarTexturas(textura){
+    let espera = await this.miMotor.cambioTexturas(textura);
+  }
+
   dibujar(dibuja){
     if(dibuja)
     this.miMotor.dibujarEscena();
