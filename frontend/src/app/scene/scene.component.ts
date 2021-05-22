@@ -75,12 +75,12 @@ export class SceneComponent implements OnInit {
 
   canjearTicket() {
 
-    console.log('empezamos canjear ticket: ', this.ticket);
+    // console.log('empezamos canjear ticket: ', this.ticket);
 
     this.ticketService.canjearTicket(this.ticket).then((res) => {
 
-      console.log('canjear ticket ha ido bien (ticket component)');
-      console.log(res);
+      // console.log('canjear ticket ha ido bien (ticket component)');
+      // console.log(res);
       this.modelosTicket.push(res['avatar']);
       this.modelosTicket.push(res['prenda']);
 
@@ -199,7 +199,6 @@ export class SceneComponent implements OnInit {
       icon: 'question',
       showCloseButton: true,
       showDenyButton: true,
-      focusConfirm: false,
       confirmButtonText: '1920x1080',
       confirmButtonAriaLabel: 'Ordenador',
       denyButtonText: '1080x1920',
@@ -212,7 +211,6 @@ export class SceneComponent implements OnInit {
       let height: number;
 
       if (result.isConfirmed) {
-        // console.log('confirmado');
         width = 1920;
         height = 1080;
       }
@@ -235,10 +233,6 @@ export class SceneComponent implements OnInit {
         canvas.toBlob((res: Blob) => {
 
           let proporcion = res.size / (canvas.width * canvas.height);
-
-          // console.log('blob dentro de la funcion: ', res);
-          // console.log('proporcion: ', proporcion);
-          // console.log('contador: ', contador);
 
           if (proporcion < 0.08 && contador < 20) {
             contador++;
@@ -267,8 +261,6 @@ export class SceneComponent implements OnInit {
 
     this.canvasToBlob(canvasProbador, 0).then((res) => {
 
-      console.log('hemos podido', res);
-
       let blob = res;
 
       let logo = new Image();
@@ -284,6 +276,22 @@ export class SceneComponent implements OnInit {
         var imagen_probador = new Image();
 
         imagen_probador.onload = function () {
+
+        /*
+        // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+        image: elemento a dibujar
+
+        sx => La coordenada X de la esquina superior izquierda del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
+        sy => La coordenada Y de la esquina superior izquierda del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
+        sWidth => El ancho del sub-rectangulo de la imagen origen a dibujar en el contexto de destino. Si no se especifica, se utiliza todo el rectangulo entero desde las coordenadas especificadas por sx y sy hasta la esquina inferior derecha de la imagen.
+        sHeight => La altura del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
+
+        dx => La coordenada X del canvas destino en la cual se coloca la esquina superior izquierda de la imagen origen.
+        dy => La coordenada Y del canvas destino en la cual se coloca la esquina superior izquierda de la imagen origen.
+        dWidth => El ancho para dibujar la imagen en el canvas destino.
+        dHeight => El alto para dibujar la imagen en el canvas destino. Esto permite escalar la imagen dibujada. Si no se especifica, el alto de  la imagen no se escala al dibujar.
+        */
 
           let proporcion = canvas.height / canvas.width;
 
@@ -304,14 +312,17 @@ export class SceneComponent implements OnInit {
           let imagen_x = Math.abs(imagen_probador.width - imagen_ancho) / 2;
           let imagen_y = Math.abs(imagen_probador.height - imagen_alto) / 2;
 
-/*
-          console.log('canvas: height: ', canvas.height);
-          console.log('canvas: width: ', canvas.width);
-          console.log('canvas: proporcion: ', proporcion);
-          console.log('imagen_ancho:', imagen_ancho);
-          console.log('imagen_alto:', imagen_alto);
-          console.log('imagen_x:', imagen_x);
-          console.log('imagen_y:', imagen_y); */
+          /*
+            // CONSOLE LOG VARIOS
+
+            console.log('canvas: height: ', canvas.height);
+            console.log('canvas: width: ', canvas.width);
+            console.log('canvas: proporcion: ', proporcion);
+            console.log('imagen_ancho:', imagen_ancho);
+            console.log('imagen_alto:', imagen_alto);
+            console.log('imagen_x:', imagen_x);
+            console.log('imagen_y:', imagen_y);
+          */
 
           if (proporcion > 1) {
             ctx.drawImage(imagen_probador,
@@ -365,84 +376,6 @@ export class SceneComponent implements OnInit {
     });
 
   }
-
-
-  guardarImagen_toDataURL(width: number, height: number) {
-    console.log('vamos a guardar una imagen del canvas');
-    // this.subs.unsubscribe();
-    // this.sleep(1000);
-    let canvas_probador = this.canvas.nativeElement.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    console.log(canvas_probador);
-    let imagen_probador = new Image();
-
-    imagen_probador.onload = () => {
-
-      let logo = new Image();
-
-      logo.onload = () => {
-
-        let canvas = document.getElementById('pictureCanvas') as HTMLCanvasElement;
-        canvas.width = width;
-        canvas.height = height;
-        let ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-        /*
-        // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-
-        image: elemento a dibujar
-
-        sx => La coordenada X de la esquina superior izquierda del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
-        sy => La coordenada Y de la esquina superior izquierda del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
-        sWidth => El ancho del sub-rectangulo de la imagen origen a dibujar en el contexto de destino. Si no se especifica, se utiliza todo el rectangulo entero desde las coordenadas especificadas por sx y sy hasta la esquina inferior derecha de la imagen.
-        sHeight => La altura del sub-rectangulo de la imagen origen a dibujar en el contexto de destino.
-
-        dx => La coordenada X del canvas destino en la cual se coloca la esquina superior izquierda de la imagen origen.
-        dy => La coordenada Y del canvas destino en la cual se coloca la esquina superior izquierda de la imagen origen.
-        dWidth => El ancho para dibujar la imagen en el canvas destino.
-        dHeight => El alto para dibujar la imagen en el canvas destino. Esto permite escalar la imagen dibujada. Si no se especifica, el alto de  la imagen no se escala al dibujar.
-        */
-
-        let proporcion = canvas.height / canvas.width;
-        let imagen_ancho = imagen_probador.width;
-        let imagen_alto = imagen_probador.width * proporcion;
-        let imagen_x = Math.abs(imagen_probador.width - imagen_ancho) / 2;
-        let imagen_y = Math.abs(imagen_probador.height - imagen_alto) / 2;
-
-        ctx.drawImage(imagen_probador,
-          imagen_x, imagen_y, imagen_probador.width, imagen_alto,
-          0, 0, canvas.width, canvas.height);
-
-        ctx.drawImage(logo, 0, 0, 100, 100);                       // FILL THE CANVAS WITH THE IMAGE.
-
-
-        let image = canvas.toDataURL("image/png")
-        // .replace("image/png", "image/octet-stream");
-
-        console.log('image: ', image);
-
-        // window.location.href=image;
-
-
-        const a = document.createElement('a')
-        a.href = image;
-        a.download = "descarga.png";
-        a.focus();
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-
-
-      }
-      logo.src = '../../assets/Miroir M.png';
-
-    }
-    imagen_probador.src = canvas_probador;
-
-  }
-
 
   menuVisible() {
     this.visible = !this.visible;
