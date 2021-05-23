@@ -64,31 +64,10 @@ export class TicketService {
 
   }
 
-  // obtenerTicket(clave, usuario, prendaID, talla, id?): Promise<any> {
-  //   return new Promise((resolve, reject) => {
+   obtenerTicket(clave, usuario, prendaID, talla, id?): Promise<any> {
+     return new Promise((resolve, reject) => {
 
-  //     this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
-
-// DE SERGIO
-
-  obtenerTicket(idPrenda?): Promise<any> {
-    return new Promise((resolve, reject) => {
-
-      const cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
-      const usuario = localStorage.getItem("email");
-      let prenda;
-      if(idPrenda)
-        prenda = idPrenda;
-      else
-        prenda = '11111111';
-      const talla = 'XS';
-
-
-      this.apiService.getTicketCall(cliente, usuario, prenda, talla).subscribe((res) => {
-
-/* la version de sergio acaba aqui */
-
-
+      this.apiService.getTicketCall(clave, usuario, prendaID, talla, id).subscribe((res) => {
 
         this.ticket = res['ticket'];
         resolve(this.ticket);
@@ -164,8 +143,8 @@ export class TicketService {
 
         cliente = res;
 
-        //this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
-        this.obtenerTicket().then( (res)=>{
+        this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
+        //this.obtenerTicket().then( (res)=>{
 
           console.log('hemos obtenido el ticket: ', res);
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, Host } from "@angular/core";
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { interval } from 'rxjs';
 import { WebGLService } from '../../services/webgl.service';
@@ -11,7 +11,7 @@ import { UsuarioService } from '../../services/usuario.service';
   styleUrls: ['./probador01.component.css']
 })
 
-export class Probador01Component implements OnInit {
+export class Probador01Component implements OnInit, OnDestroy {
   @ViewChild("sceneCanvas") private canvas: ElementRef<HTMLCanvasElement>;
 
   private _60fpsInterval = 16.666666666666666667;
@@ -25,6 +25,7 @@ export class Probador01Component implements OnInit {
 
   private ticket = null;
   private modelosTicket: string[];
+  private drawSceneInterval;
 
   //cosas pal ticket
   private clave; usuario; prendaID; talla;
@@ -54,10 +55,9 @@ export class Probador01Component implements OnInit {
     }
 
     dibujar(){
-      const drawSceneInterval = interval(this._60fpsInterval);
-      drawSceneInterval.subscribe(() => {
+      this.drawSceneInterval = setInterval( () =>{
         this.drawScene();
-      });
+      }, this._60fpsInterval)
     }
 
 
@@ -72,7 +72,7 @@ export class Probador01Component implements OnInit {
        console.log(this.usuario)
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
-      this.ticket = this.route.snapshot.params['ticket'];
+      //this.ticket = this.route.snapshot.params['ticket'];
 
       if(this.ticket == null)
       this.crearTicket();
@@ -81,6 +81,11 @@ export class Probador01Component implements OnInit {
 
 
 
+    }
+
+    @HostListener('unloaded')
+    ngOnDestroy(): void {
+      clearInterval(this.drawSceneInterval);
     }
 
     canjearTicket() {
@@ -92,11 +97,11 @@ export class Probador01Component implements OnInit {
         this.modelosTicket.push(res['prenda']);
 
         this.cargarProbador = false;
-      
+
         this.funcionCanvas();
         this.prendas++;
-        
-        
+
+
 
       }).catch((error) => {
 
@@ -107,55 +112,34 @@ export class Probador01Component implements OnInit {
 
     crearTicket(prenda?){
 
-      if(prenda) {
-        this.ticketService.obtenerTicket(prenda).then((res) => {
-        this.ticket = res;
-        this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-
-      } else{
-        this.ticketService.obtenerTicket().then((res) => {
-
-          this.ticket = res;
-          this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-      /* VARIABLES MONICA
+      /* // VARIABLES MONICA
       let cliente = '42izoRizo2mwMxQ8SOQLw8ZEL9WAPyHnYZr_AQ0VUo6a~.jt6q';
       let usuario = 'asdf@asdf.com';
       let prendaID = 'VEF15ORE3SC1';
       let talla = 'XS';
       */
-      /* VARIABLES DE SERGIO */
+
+      /* // VARIABLES DE SERGIO */
       let cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
       let usuario = localStorage.getItem("email");
       let prendaID = '123456789';
       let talla = 'XS';
 
-      // if(prenda) {
-      //   prendaID = prenda;
-      // }
 
-      // this.ticketService.obtenerTicket(cliente, usuario, prendaID, talla).then((res) => {
-
-      //   this.ticket = res;
-      //   this.canjearTicket();
-
-      // }).catch((error) => {
-
-      //   console.warn(error);
-
-      // });
+      if(prenda) {
+        prendaID = prenda;
       }
+
+      this.ticketService.obtenerTicket(cliente, usuario, prendaID, talla).then((res) => {
+
+        this.ticket = res;
+        this.canjearTicket();
+
+      }).catch((error) => {
+
+        console.warn(error);
+
+      });
 
     }
 

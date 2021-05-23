@@ -20,7 +20,7 @@ const sleep = (ms) => {
     // ---------------------------------------
 
 
-const salirSiUsuarioNoAdmin = (token) => {
+const salirSiUsuarioNoAdmin = (res, token) => {
     if (!(infoToken(token).rol === 'ROL_ADMIN')) {
         //ESTO DA ERROR, NO EXISTE RES, LO HE QUITADO
         /*return res.status(400).json({
@@ -357,7 +357,7 @@ const sumarUsoPrenda = async(id) => {
 
 const obtenerUsuariosClientesFecha = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
 
@@ -413,7 +413,7 @@ const obtenerUsuariosClientesFecha = async(req, res = response) => {
 
 const obtenerUsuariosClientesHora = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
 
@@ -598,7 +598,7 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
 
 const obtenerTotalUsuarios = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
 
@@ -622,7 +622,7 @@ const obtenerTotalUsuarios = async(req, res = response) => {
 
 const obtenerTotalClientes = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
         const total = await DatoKPI.findOne({ identificador: 'total_clientes' });
@@ -645,7 +645,7 @@ const obtenerTotalClientes = async(req, res = response) => {
 
 const obtenerTotalPrendas = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
         const total = await DatoKPI.findOne({ identificador: 'total_prendas' });
@@ -673,7 +673,7 @@ const obtenerTotalPrendas = async(req, res = response) => {
 
 const obtenerTodosUsuarios = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -722,7 +722,7 @@ const obtenerTodosUsuarios = async(req, res = response) => {
 
 const obtenerTodosClientes = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -817,7 +817,7 @@ const agregarDatoMapa = async(req, res) => {
 
 const obtenerDatosRegiones = async(req, res = response) => {
 
-    salirSiUsuarioNoAdmin(req.header('x-token'));
+    salirSiUsuarioNoAdmin(res, req.header('x-token'));
 
     try {
 

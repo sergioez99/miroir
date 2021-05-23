@@ -38,7 +38,10 @@ export class RegisterClienteComponent implements OnInit {
     });
 
     this.formRegistroCliente.get('passwordRepeat').setValidators(
-      CustomValidators.equals(this.formRegistroCliente.get('password'))
+      [
+        Validators.required,
+        CustomValidators.equals(this.formRegistroCliente.get('password'))
+      ]
     );
   }
 
