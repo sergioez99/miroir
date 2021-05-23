@@ -57,11 +57,11 @@ export class UsuarioComponent implements OnInit {
 
     this.formMedidas = this.fb.group({
       uid:this.uid,
-      rol:this.rol,
-      activo:this.activo,
-      validado:this.validado,
-      email: this.email,
-      password:this.password,
+      rol:[this.rol,[Validators.required]],
+      activo:[this.activo, [Validators.required]],
+      validado:[this.validado, [Validators.required]],
+      email:[ this.email, [Validators.required, Validators.email]],
+      password:[this.password, [Validators.required]],
       peso: [this.peso, [Validators.required, Validators.min(10), Validators.max(200)]],
       altura: [this.altura, [Validators.required, Validators.min(100), Validators.max(200)]],
       pecho: [this.pecho, [Validators.required, Validators.min(10), Validators.max(200)]],

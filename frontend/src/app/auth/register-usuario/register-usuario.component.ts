@@ -34,7 +34,10 @@ export class RegisterUsuarioComponent implements OnInit {
     });
 
     this.formRegister.get('passwordRepeat').setValidators(
-      CustomValidators.equals(this.formRegister.get('password'))
+      [
+        Validators.required,
+        CustomValidators.equals(this.formRegister.get('password'))
+      ]
     );
 
   }

@@ -1,17 +1,23 @@
 <section class="section">
     <div class="centro">
-        <h1> Datos del cliente</h1>
-        <article>
+        <h2> Datos del cliente</h2>
+        <article class="mir-bloque">
 
 
             <form [formGroup]="formCliente" (ngSubmit)="actualizarCliente();">
                 <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>Email</mat-label>
-                        <input type="email" matInput formControlName="email" placeholder=this.email>
-                        <button mat-icon-button matSuffix type="button" disabled>
-                        <mat-icon>alternate_email</mat-icon>
-                    </button>
+                        <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+                        <button mat-icon-button matSuffix type="button" disabled> <mat-icon>alternate_email</mat-icon> </button>
+                        <mat-hint>Introduzca el email</mat-hint>
+                        <!-- ERRORES -->
+                        <mat-error *ngIf="formCliente.get('email').hasError('email');">
+                            Por favor, introduce un email <strong>válido</strong>
+                        </mat-error>
+                        <mat-error *ngIf="formCliente.get('email').hasError('required');">
+                            Email <strong>necesario</strong>
+                        </mat-error>
 
                     </mat-form-field>
                 </div>
@@ -24,54 +30,76 @@
                         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                         <mat-hint>Introduzca su contraseña</mat-hint>
+                        <!-- ERRORES -->
+                        <mat-error *ngIf="formCliente.get('password').hasError('required');">
+                            Contraseña <strong>necesaria</strong>
+                        </mat-error>
                     </mat-form-field>
-                </div>
-
-
-
-                <div>
-                    <mat-label>Activo: </mat-label>
-                    <select formControlName="activo">
-                    <option [ngValue]="true">Si</option>
-                    <option [ngValue]="false">No</option>
-                </select>
-                </div>
-
-                <div>
-                    <mat-label>Validado: </mat-label>
-                    <select formControlName="validado">
-                    <option [ngValue]="true">Si</option>
-                    <option [ngValue]="false">No</option>
-                </select>
                 </div>
 
                 <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>Empresa</mat-label>
-                        <input matInput formControlName="nombreEmpresa" placeholder=this.empresa>
+                        <input matInput formControlName="nombreEmpresa" placeholder="Nombre de la empresa">
+                        <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>Nombre</mat-label>
-                        <input matInput formControlName="nombre" placeholder=this.nombre>
+                        <input matInput formControlName="nombre" placeholder="Su nombre">
+                        <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>NIF</mat-label>
-                        <input matInput formControlName="nif" placeholder=this.NIF>
+                        <input matInput formControlName="nif" placeholder="NIF de la empresa">
+                        <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field appearance="outline" class="mir-block">
                         <mat-label>Teléfono</mat-label>
-                        <input matInput formControlName="telefono" placeholder=this.telefono>
+                        <input matInput formControlName="telefono" placeholder="Teléfono de contacto">
+                        <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
+
                     </mat-form-field>
                 </div>
+
+                <!-- SELECCIONAR ACTIVO -->
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Activo</mat-label>
+                        <mat-select formControlName="activo">
+                            <mat-option [value]="true"> SI </mat-option>
+                            <mat-option [value]="false"> NO </mat-option>
+                        </mat-select>
+                        <!-- ERRORES -->
+                        <mat-error *ngIf="formCliente.get('activo').hasError('required');">
+                            Valor <strong>necesario</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- SELECCIONAR VALIDADO -->
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Validado</mat-label>
+                        <mat-select formControlName="validado">
+                            <mat-option [value]="true"> SI </mat-option>
+                            <mat-option [value]="false"> NO </mat-option>
+                        </mat-select>
+                        <!-- ERRORES -->
+                        <mat-error *ngIf="formCliente.get('validado').hasError('required');">
+                            Valor <strong>necesario</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
 
                 <div *ngIf="this.isNew; else noNew">
                     <button type="submit" mat-raised-button color="accent" class="boton">Crear</button>

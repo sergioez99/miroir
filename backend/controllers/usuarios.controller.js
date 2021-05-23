@@ -189,7 +189,7 @@ const crearUsuario = async(req, res) => {
             const cpassword = bcrypt.hashSync(password, salt);
 
 
-            // extraer la variable alta
+            // extraer la variable alta, validado, activo, rol
             const { alta, validado, activo, rol, ...object } = req.body;
             // crear objeto
             const usuario = new Usuario(object);

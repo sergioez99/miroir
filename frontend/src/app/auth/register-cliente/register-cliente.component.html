@@ -7,10 +7,12 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput class="mir-input" formControlName="nombre" placeholder="Nombre">
-            <button mat-icon-button matSuffix type="button" disabled>
-              <mat-icon>alternate_email</mat-icon>
-            </button>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
             <mat-hint>Díganos su nombre</mat-hint>
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRegistroCliente.get('nombre').hasError('required');">
+                El nombre es <strong>necesario</strong>
+            </mat-error>
 
         </mat-form-field>
         <!-- ------------ -->
@@ -19,9 +21,7 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Email</mat-label>
             <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-            <button mat-icon-button matSuffix type="button" disabled>
-                <mat-icon>alternate_email</mat-icon>
-              </button>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>alternate_email</mat-icon> </button>
             <mat-hint>Introduzca su email</mat-hint>
 
             <!-- ERRORES -->
@@ -74,10 +74,12 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput class="mir-input" formControlName="nombreEmpresa" placeholder="Nombre de la empresa">
-            <button mat-icon-button matSuffix type="button" disabled>
-              <mat-icon>alternate_email</mat-icon>
-            </button>
-            <mat-hint>Díganos su nombre</mat-hint>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
+            <mat-hint>Nombre de la empresa</mat-hint>
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRegistroCliente.get('nombreEmpresa').hasError('required');">
+                El nombre de empresa es <strong>necesario</strong>
+            </mat-error>
 
         </mat-form-field>
         <!-- ------------ -->
@@ -86,14 +88,13 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>NIF</mat-label>
             <input type="text" matInput class="mir-input" formControlName="nif" placeholder="A1234657X">
-            <button mat-icon-button matSuffix type="button" disabled>
-                <mat-icon>alternate_email</mat-icon>
-            </button>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
+
             <mat-hint>Número de identificación fiscal</mat-hint>
 
             <!-- ERRORES -->
-            <mat-error *ngIf="formRegistroCliente.get('email').hasError('required');">
-                El nombre es <strong>necesario</strong>
+            <mat-error *ngIf="formRegistroCliente.get('nif').hasError('required');">
+                El NIF es <strong>necesario</strong>
             </mat-error>
 
         </mat-form-field>
@@ -103,10 +104,13 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Teléfono</mat-label>
             <input type="text" matInput class="mir-input" formControlName="telefono" placeholder="999-555-111">
-            <button mat-icon-button matSuffix type="button" disabled>
-              <mat-icon>alternate_email</mat-icon>
-          </button>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>view_headline</mat-icon> </button>
+
             <mat-hint>Teléfono de contacto</mat-hint>
+            <!-- ERRORES -->
+            <mat-error *ngIf="formRegistroCliente.get('telefono').hasError('required');">
+                <strong>Necesitamos</strong> un teléfono de contacto
+            </mat-error>
 
 
         </mat-form-field>

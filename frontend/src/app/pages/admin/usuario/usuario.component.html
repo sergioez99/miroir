@@ -23,54 +23,82 @@
 
                         <div class="mir-bloque">
 
+                            <!-- SELECCIONAR EL EMAIL -->
                             <div>
-                                <mat-form-field appearance="fill" class="mir-block">
+                                <mat-form-field appearance="outline" class="mir-block">
+                                    <mat-label>Email</mat-label>
                                     <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
+                                    <button mat-icon-button matSuffix type="button" disabled> <mat-icon>alternate_email</mat-icon> </button>
                                     <mat-hint>Introduzca el email</mat-hint>
+                                    <!-- ERRORES -->
+                                    <mat-error *ngIf="formMedidas.get('email').hasError('email');">
+                                        Por favor, introduce un email <strong>válido</strong>
+                                    </mat-error>
+                                    <mat-error *ngIf="formMedidas.get('email').hasError('required');">
+                                        Email <strong>necesario</strong>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
-
+                            <!-- SELECCIONAR EL PASSWORD -->
                             <div *ngIf="this.isNew">
-                                <mat-form-field appearance="fill" class="mir-block">
+                                <mat-form-field appearance="outline" class="mir-block">
                                     <mat-label>Contraseña</mat-label>
                                     <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
                                     <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                             </button>
                                     <mat-hint>Introduzca la contraseña</mat-hint>
+                                    <!-- ERRORES -->
+                                    <mat-error *ngIf="formMedidas.get('password').hasError('required');">
+                                        Contraseña <strong>necesaria</strong>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
-
+                            <!-- SELECCIONAR EL ROL -->
                             <div>
-                                <mat-form-field appearance="fill">
+                                <mat-form-field appearance="outline">
                                     <mat-label>Seleccione el rol</mat-label>
                                     <mat-select formControlName="rol">
                                         <mat-option *ngFor="let objeto of lista" [value]="objeto"> {{objeto}} </mat-option>
                                     </mat-select>
+                                    <!-- ERRORES -->
+                                    <mat-error *ngIf="formMedidas.get('rol').hasError('required');">
+                                        Rol <strong>necesario</strong>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
 
-
+                            <!-- SELECCIONAR ACTIVO -->
                             <div>
-                                <mat-form-field appearance="fill">
+                                <mat-form-field appearance="outline">
                                     <mat-label>Activo</mat-label>
                                     <mat-select formControlName="activo">
                                         <mat-option [value]="true"> SI </mat-option>
                                         <mat-option [value]="false"> NO </mat-option>
                                     </mat-select>
+                                    <!-- ERRORES -->
+                                    <mat-error *ngIf="formMedidas.get('activo').hasError('required');">
+                                        Valor <strong>necesario</strong>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
 
+                            <!-- SELECCIONAR VALIDADO -->
                             <div>
-                                <mat-form-field appearance="fill">
+                                <mat-form-field appearance="outline">
                                     <mat-label>Validado</mat-label>
                                     <mat-select formControlName="validado">
                                         <mat-option [value]="true"> SI </mat-option>
                                         <mat-option [value]="false"> NO </mat-option>
                                     </mat-select>
+                                    <!-- ERRORES -->
+                                    <mat-error *ngIf="formMedidas.get('validado').hasError('required');">
+                                        Valor <strong>necesario</strong>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
+                        <!-- SELECCIONAR LAS MEDIDAS -->
                         <div class="mir-bloque">
                             <div class="mir-espacio"></div>
 
