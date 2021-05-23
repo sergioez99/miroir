@@ -6,15 +6,15 @@
     "materials": [{
         "name": "FABRIC_1_FRONT_3504_004",
         "ambient": [1, 1, 1],
-        "diffuse": "algodon.jpg",
-        "specular": "algodon.jpg",
+        "diffuse": [0.8, 0.8, 0.8],
+        "specular": [0.0185754,0.0185754,0.0185754],
         "glossiness": 16.7623,
         "opacity": 1,
         "maps": [{
             "name": "base_color_texture",
             "type": "diffuse",
             "uvsIndex": 0,
-            "file": "algodon.jpg"
+            "file": "vaquero.jpg"
         }]
     }],
     "model": {

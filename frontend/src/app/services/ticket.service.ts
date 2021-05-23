@@ -75,7 +75,7 @@ export class TicketService {
     return new Promise((resolve, reject) => {
 
       const cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
-      const usuario = 'sergi@gmail.com';
+      const usuario = localStorage.getItem("email");
       let prenda;
       if(idPrenda)
         prenda = idPrenda;

@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
 
         this.usuarioService.setEmail(this.formLogin.value.email);
         console.log(this.formLogin.value.email);
+        localStorage.setItem("email", this.formLogin.value.email);
 
         // navegacion en función del tipo de usuario
 

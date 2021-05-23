@@ -387,7 +387,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                 const cadera = usuario.cadera;
                 const imc = peso / ((altura / 100) * (altura / 100));
 
-                let modelo = 1;
+                let modelo = 11;
                 if (altura > 170) {
                     modelo += 3;
                 }
@@ -470,13 +470,21 @@ const modeloTicket = async(req, res = response) => {
 
             if (ticketBD) {
 
-                const prendaID = ticketBD.prenda;
+                let prendaID = ticketBD.prenda;
                 const usuarioID = ticketBD.usuario;
+               
                 const talla = ticketBD.talla;
 
                 // averiguar el tipo y buscar el archivo que necesitamos
 
                 let ruta = null;
+                const usuario = await Usuario.findById(usuarioID);
+                console.log("usuario" + usuario)
+                let altura = usuario.altura;
+                let peso = usuario.peso;
+                let imc = peso / ((altura / 100) * (altura / 100));
+                let modelo = 11;
+                const sexo = usuario.sexo;
 
                 switch (tipo) {
                     case 'avatar':
@@ -484,7 +492,7 @@ const modeloTicket = async(req, res = response) => {
 
                         console.log('devolver un avatar');
 
-                        const usuario = await Usuario.findById(usuarioID);
+                        
 
                         //comprobar que el usuario existe
                         if (!usuario) {
@@ -502,20 +510,15 @@ const modeloTicket = async(req, res = response) => {
                         }
 
                         // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
-                        const sexo = usuario.sexo;
-                        const altura = usuario.altura;
-                        const peso = usuario.peso;
+                        
                         const pecho = usuario.pecho;
                         const cintura = usuario.cintura;
                         const cadera = usuario.cadera;
-
-                        const imc = peso / ((altura / 100) * (altura / 100));
 
                         console.log('IMC calculado: ...', imc);
 
                         // aqui habra que definir las condiciones que diferencian un modelo de otro
 
-                        let modelo = 11;
                         if (altura > 170) {
                             modelo += 3;
                         }
@@ -528,9 +531,9 @@ const modeloTicket = async(req, res = response) => {
                                 modelo += 1;
                             }
                         }
-                        if (sexo && sexo == 'M') {
+                        /*if (sexo && sexo == 'M') {
                             modelo += 10;
-                        }
+                        }*/
 
                         ruta = path.join(__dirname, '../assets/modelo/avatar', `${modelo}.json`);
                         // console.log(path);
@@ -546,9 +549,131 @@ const modeloTicket = async(req, res = response) => {
 
                     case 'prenda':
 
+                        const prendaProbador = await Prenda.findById(prendaID);
+                        console.log("prendaprobador" + prendaProbador.identificador)
+                        let identificadorPrenda = prendaProbador.identificador;
                         console.log('devolver una prenda');
+
+                        modelo = 11;
+                        if(altura > 170) {
+                            modelo += 3;
+                        }
+                        if (altura > 180) {
+                            modelo += 3;
+                        }
+                        if (imc > 20) {
+                            modelo += 1;
+                            if (cintura > 80) {
+                                modelo += 1;
+                            }
+                        }
+
+                        console.log("id antes" + prendaID + "modelo " + modelo)
+                        console.log(altura)
+                        identificadorPrenda = '22222222';
+                        switch(identificadorPrenda) {
+                            case "11111111":
+                                switch (modelo) {
+                                    case 11:
+                                        prendaID = '111111111';
+                                        break;
+                                    case 12:
+                                        prendaID = '111111112';
+                                        break;
+                                    case 13:
+                                        prendaID = '111111113';
+                                        break;
+                                    case 14:
+                                        prendaID = '111111114';
+                                        break;
+                                    case 15:
+                                        prendaID = '111111115';
+                                        break;
+                                    case 16:
+                                        prendaID = '111111116';
+                                        break;
+                                    case 17:
+                                        prendaID = '111111117';
+                                        break;
+                                    case 18:
+                                        prendaID = '11111111';
+                                        break;
+                                    case 19:
+                                        prendaID = '111111119';
+                                        break;
+
+                                }
+                                break;
+                            case "22222222":
+                                switch (modelo) {
+                                    case 11:
+                                        prendaID = '222222211';
+                                        break;
+                                    case 12:
+                                        prendaID = '222222212';
+                                        break;
+                                    case 13:
+                                        prendaID = '222222213';
+                                        break;
+                                    case 14:
+                                        prendaID = '222222214';
+                                        break;
+                                    case 15:
+                                        prendaID = '222222215';
+                                        break;
+                                    case 16:
+                                        prendaID = '222222216';
+                                        break;
+                                    case 17:
+                                        prendaID = '222222217';
+                                        break;
+                                    case 18:
+                                        prendaID = '22222222';
+                                        break;
+                                    case 19:
+                                        prendaID = '222222219';
+                                        break;
+                                    
+
+                                }
+                                break;
+                                case "33333333":
+                                    switch (modelo) {
+                                        case 11:
+                                            prendaID = '333333311';
+                                            break;
+                                        case 12:
+                                            prendaID = '333333312';
+                                            break;
+                                        case 13:
+                                            prendaID = '333333313';
+                                            break;
+                                        case 14:
+                                            prendaID = '333333314';
+                                            break;
+                                        case 15:
+                                            prendaID = '333333315';
+                                            break;
+                                        case 16:
+                                            prendaID = '333333316';
+                                            break;
+                                        case 17:
+                                            prendaID = '333333317';
+                                            break;
+                                        case 18:
+                                            prendaID = '333333318';
+                                            break;
+                                        case 19:
+                                            prendaID = '333333319';
+                                            break;
+    
+                                    }
+                                    break;
+                        }
+
                         // devolver prenda
-                        const prenda = await Prenda.findById(prendaID);
+                        console.log("ID" + prendaID);
+                        const prenda = await Prenda.findOne({ identificador: prendaID });
                         console.log("hola" + prenda)
 
                         // comprobar que la prenda existe

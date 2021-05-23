@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const { actualizarBD } = require('../helpers/actualizarbd');
 //para el acceso al sistema de archivos
 const fs = require('fs');
-const path = require('path');
+let path = require('path');
 
 
 

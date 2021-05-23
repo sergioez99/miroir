@@ -22,10 +22,12 @@ const sleep = (ms) => {
 
 const salirSiUsuarioNoAdmin = (token) => {
     if (!(infoToken(token).rol === 'ROL_ADMIN')) {
-        return res.status(400).json({
+        //ESTO DA ERROR, NO EXISTE RES, LO HE QUITADO
+        /*return res.status(400).json({
             ok: false,
             msg: 'No tiene permiso',
-        });
+        });*/
+        
     }
 }
 
@@ -449,7 +451,7 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 }
 
 const obtenerUsosPrendas = async(req, res = response) => {
-    console.log("hola????")
+    console.log("hola????aaaaaaaa")
         //salirSiUsuarioNoAdmin(req.header('x-token'));
 
 
@@ -500,7 +502,7 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
             veces = [],
             nomPrenda = [];
 
-        for (let x = 0; x < prendasClientes.length; x++) {
+        for (let x = 0; x < prendasClientes.length && x < busqueda.length; x++) {
             if (prendasClientes[x].idCliente == id) {
                 prendas.push(busqueda[x].idPrenda);
                 veces.push(busqueda[x].usos);
@@ -531,13 +533,13 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 }
 
 const obtenerTallasPrendasCliente = async(req, res = response) => {
-
+    
     let id = req.header('id');
 
     try {
         const busqueda = await tallasUsadas.find(); //id, talla, usos
         const prendasClientes = await Prenda.find(); //aqui 
-
+        
         let existe = false;
 
         let prendas = [],
@@ -546,7 +548,8 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
         let nPrenda = [],
             nomPrenda = [];
 
-        for (let x = 0; x < prendasClientes.length; x++) {
+        for (let x = 0; x < prendasClientes.length && x < busqueda.length; x++) {
+            
             if (prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
                 prendas.push(busqueda[x].idPrenda) //añado el id de la prenda a prendas
 
@@ -564,6 +567,7 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
 
                 //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
                 nomPrenda.push(prendasClientes[x].nombre);
+                console.log(nomPrenda)
             }
 
         }
