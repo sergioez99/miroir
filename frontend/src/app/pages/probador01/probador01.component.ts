@@ -122,7 +122,7 @@ export class Probador01Component implements OnInit, OnDestroy {
       /* // VARIABLES DE SERGIO */
       let cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
       let usuario = localStorage.getItem("email");
-      let prendaID = '123456789';
+      let prendaID = '11111111';
       let talla = 'XS';
 
 

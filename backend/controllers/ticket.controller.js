@@ -474,6 +474,7 @@ const modeloTicket = async(req, res = response) => {
                 const usuarioID = ticketBD.usuario;
                
                 const talla = ticketBD.talla;
+                console.log(prendaID)
 
                 // averiguar el tipo y buscar el archivo que necesitamos
 
@@ -485,6 +486,7 @@ const modeloTicket = async(req, res = response) => {
                 let imc = peso / ((altura / 100) * (altura / 100));
                 let modelo = 11;
                 const sexo = usuario.sexo;
+                const cintura = usuario.cintura;
 
                 switch (tipo) {
                     case 'avatar':
@@ -512,7 +514,7 @@ const modeloTicket = async(req, res = response) => {
                         // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
                         
                         const pecho = usuario.pecho;
-                        const cintura = usuario.cintura;
+                        
                         const cadera = usuario.cadera;
 
                         console.log('IMC calculado: ...', imc);
@@ -554,7 +556,6 @@ const modeloTicket = async(req, res = response) => {
                         let identificadorPrenda = prendaProbador.identificador;
                         console.log('devolver una prenda');
 
-                        modelo = 11;
                         if(altura > 170) {
                             modelo += 3;
                         }
@@ -570,7 +571,6 @@ const modeloTicket = async(req, res = response) => {
 
                         console.log("id antes" + prendaID + "modelo " + modelo)
                         console.log(altura)
-                        identificadorPrenda = '22222222';
                         switch(identificadorPrenda) {
                             case "11111111":
                                 switch (modelo) {
