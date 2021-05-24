@@ -451,24 +451,24 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 }
 
 const obtenerUsosPrendas = async(req, res = response) => {
-    console.log("hola????aaaaaaaa")
+  
         //salirSiUsuarioNoAdmin(req.header('x-token'));
 
 
     try {
         const busqueda = await prendasUsadas.find();
-
         let prendas = [],
             veces = [];
         let nPrenda = [],
             nomPrenda = [];
         for (let i = 0; i < busqueda.length; i++) {
-            prendas[i] = busqueda[i].idPrenda;
-            veces[i] = busqueda[i].usos;
-
-            nPrenda.push(await Prenda.findById(busqueda[i].idPrenda));
-            nomPrenda.push(nPrenda[i].nombre);
+            prendas.push(busqueda[i].idPrenda);
+            veces.push(busqueda[i].usos);
+            let buscada = await Prenda.findById(busqueda[i].idPrenda);
+            nPrenda.push(buscada);
+            nomPrenda.push(buscada.nombre);
         }
+        console.log(veces, nomPrenda)
 
         return res.json({
             ok: true,
@@ -506,8 +506,8 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
             if (prendasClientes[x].idCliente == id) {
                 prendas.push(busqueda[x].idPrenda);
                 veces.push(busqueda[x].usos);
-                //nPrenda.push(await Prenda.findById(busqueda[x].idPrenda));
-                nomPrenda.push(prendasClientes[x].nombre);
+                let buscada = await Prenda.findById(busqueda[x].idPrenda);
+                nomPrenda.push(buscada.nombre);
 
             }
         }

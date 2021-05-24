@@ -64,7 +64,7 @@ export class Probador01Component implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.modelosTicket = [];
 
-      this.prendaID = "1234"; //Camiseta como default
+      this.prendaID = "11111111"; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
      
        this.usuario = localStorage.getItem("email");
