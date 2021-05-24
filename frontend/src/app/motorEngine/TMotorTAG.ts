@@ -984,7 +984,7 @@ export class TMotorTAG {
             matrix.mat4.translate(this.modelViewMatrix,
               this.modelViewMatrix,
               [0, -3, 0])
-            if(this.numAnimate == 1){
+            if(this.numAnimate == 1 || this.numAnimate == 2){
               matrix.mat4.scale(this.modelViewMatrix,
                 this.modelViewMatrix,
                 [0.0128, 0.0128, 0.0128])
@@ -995,12 +995,12 @@ export class TMotorTAG {
                 [0.0328, 0.0328, 0.0328])
             }
 
-            if(this.numAnimate == 2 || this.numAnimate == 3){
-              let split = mallas[i].getNombre().split("_");
-              if(i >= '49' && split[1] == '1.json'){
-                matrix.mat4.rotateX(this.modelViewMatrix, this.modelViewMatrix, 90 * Math.PI / 180)
-              }
-            }
+            // if(this.numAnimate == 2 || this.numAnimate == 3){
+            //   let split = mallas[i].getNombre().split("_");
+            //   if(i >= '49' && split[1] == '1.json'){
+            //     matrix.mat4.rotateX(this.modelViewMatrix, this.modelViewMatrix, 90 * Math.PI / 180)
+            //   }
+            // }
            
 
             //Puedo cambiar los buffers a array también    
@@ -1063,19 +1063,26 @@ export class TMotorTAG {
         '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json'];
         break;
       case 2:
-        carpeta = "animacion_vestido_corto";
-        this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
-        '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
-        '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json','24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
-        '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json','34_1.json', '34_2.json', '35_1.json', '35_2.json', '36_1.json', '36_2.json']
-        break;
-      case 3:
-        carpeta = "animacion_vestido_largo";
+        carpeta = "animacion_camiseta_ajustada";
         this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
         '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
         '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
-        '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json','34_1.json', '34_2.json', '35_1.json', '35_2.json', '36_1.json', '36_2.json'];
+        '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json'];
         break;
+      // case 2:
+      //   carpeta = "animacion_vestido_corto";
+      //   this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+      //   '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
+      //   '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json','24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
+      //   '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json','34_1.json', '34_2.json', '35_1.json', '35_2.json', '36_1.json', '36_2.json']
+      //   break;
+      // case 3:
+      //   carpeta = "animacion_vestido_largo";
+      //   this.animacion = ['0_1.json', '0_2.json', '1_1.json', '1_2.json', '2_1.json', '2_2.json', '3_1.json', '3_2.json', '4_1.json', '4_2.json', '5_1.json', '5_2.json', '6_1.json', '6_2.json', '7_1.json', '7_2.json', '8_1.json', '8_2.json', '9_1.json', '9_2.json', '10_1.json', '10_2.json',
+      //   '11_1.json', '11_2.json', '12_1.json', '12_2.json', '13_1.json', '13_2.json', '14_1.json', '14_2.json', '15_1.json', '15_2.json', '16_1.json', '16_2.json', '17_1.json', '17_2.json', '18_1.json', '18_2.json', '19_1.json', '19_2.json', '20_1.json', '20_2.json',
+      //   '21_1.json', '21_2.json', '22_1.json', '22_2.json', '23_1.json', '23_2.json', '24_1.json', '24_2.json', '25_1.json', '25_2.json', '26_1.json', '26_2.json', '27_1.json', '27_2.json', '28_1.json', '28_2.json', '29_1.json', '29_2.json', '30_1.json', '30_2.json',
+      //   '31_1.json', '31_2.json', '32_1.json', '32_2.json', '33_1.json', '33_2.json','34_1.json', '34_2.json', '35_1.json', '35_2.json', '36_1.json', '36_2.json'];
+      //   break;
     }
     let secarga = true;
 
@@ -1098,6 +1105,7 @@ export class TMotorTAG {
 
 
       for (let i in this.animacion) {
+        console.log(this.animacion[i])
         malla = await this.gestorRecursos.ficherosAssets(this.animacion[i], carpeta);
         if (i == '0' || i == '1') {
           text = await this.gestorRecursos.ficherosAssets(malla.getTexturas()[0], carpeta);
