@@ -242,7 +242,6 @@ const obtenerTicket = async(req, res = response) => {
             ticketBD = new Ticket({ ticket: ticket, cliente: uid, usuario: usuario.id, prenda: prenda.id, talla: prendaTalla });
         }
 
-
         await ticketBD.save();
 
         return res.json({
@@ -284,7 +283,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
             if (ticketBD) {
 
                 const clienteID = ticketBD.cliente;
-                const prendaID = ticketBD.prenda;
+                let prendaID = ticketBD.prenda;
                 const usuarioID = ticketBD.usuario;
                 const talla = ticketBD.talla;
 
@@ -405,13 +404,118 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                 }*/
 
                 // aqui ya tenemos el modelo del avatar
+                
                 const avatarFichero = `${modelo}.json`;
+
+                const prendaProbador = await Prenda.findById(prendaID);
+                let identificadorPrenda = prendaProbador.identificador;
+
+                switch(identificadorPrenda) {
+                    case "11111111":
+                        switch (modelo) {
+                            case 11:
+                                prendaID = '111111111';
+                                break;
+                            case 12:
+                                prendaID = '111111112';
+                                break;
+                            case 13:
+                                prendaID = '111111113';
+                                break;
+                            case 14:
+                                prendaID = '111111114';
+                                break;
+                            case 15:
+                                prendaID = '111111115';
+                                break;
+                            case 16:
+                                prendaID = '111111116';
+                                break;
+                            case 17:
+                                prendaID = '111111117';
+                                break;
+                            case 18:
+                                prendaID = '11111111';
+                                break;
+                            case 19:
+                                prendaID = '111111119';
+                                break;
+
+                        }
+                        break;
+                    case "22222222":
+                        switch (modelo) {
+                            case 11:
+                                prendaID = '222222211';
+                                break;
+                            case 12:
+                                prendaID = '222222212';
+                                break;
+                            case 13:
+                                prendaID = '222222213';
+                                break;
+                            case 14:
+                                prendaID = '222222214';
+                                break;
+                            case 15:
+                                prendaID = '222222215';
+                                break;
+                            case 16:
+                                prendaID = '222222216';
+                                break;
+                            case 17:
+                                prendaID = '222222217';
+                                break;
+                            case 18:
+                                prendaID = '22222222';
+                                break;
+                            case 19:
+                                prendaID = '222222219';
+                                break;
+                            
+
+                        }
+                        break;
+                        case "33333333":
+                            switch (modelo) {
+                                case 11:
+                                    prendaID = '333333311';
+                                    break;
+                                case 12:
+                                    prendaID = '333333312';
+                                    break;
+                                case 13:
+                                    prendaID = '333333313';
+                                    break;
+                                case 14:
+                                    prendaID = '333333314';
+                                    break;
+                                case 15:
+                                    prendaID = '333333315';
+                                    break;
+                                case 16:
+                                    prendaID = '333333316';
+                                    break;
+                                case 17:
+                                    prendaID = '333333317';
+                                    break;
+                                case 18:
+                                    prendaID = '33333333';
+                                    break;
+                                case 19:
+                                    prendaID = '333333319';
+                                    break;
+
+                            }
+                            break;
+                }
 
                 // ahora la prenda, con la talla averiguaremos el modelo que tenemos que devolver
                 let prendaFichero = 'default.json';
 
                 // habrá que buscar el modelo de esta prenda con esta talla
-
+                prenda = await Prenda.findOne({ identificador: prendaID });
+                console.log("prenda final",prenda)
                 const modelosPrenda = prenda.modelo;
 
                 if (modelosPrenda) {
@@ -423,7 +527,6 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                         }
                     }
                 }
-                console.log(prendaFichero)
 
                 return res.json({
                     ok: true,
@@ -538,6 +641,7 @@ const modeloTicket = async(req, res = response) => {
                             modelo += 10;
                         }*/
 
+                        
                         ruta = path.join(__dirname, '../assets/modelo/avatar', `${modelo}.json`);
                         // console.log(path);
 
@@ -553,7 +657,6 @@ const modeloTicket = async(req, res = response) => {
                     case 'prenda':
 
                         const prendaProbador = await Prenda.findById(prendaID);
-                        console.log("prendaprobador" + prendaProbador.identificador)
                         let identificadorPrenda = prendaProbador.identificador;
                         console.log('devolver una prenda');
 
@@ -661,7 +764,7 @@ const modeloTicket = async(req, res = response) => {
                                             prendaID = '333333317';
                                             break;
                                         case 18:
-                                            prendaID = '333333318';
+                                            prendaID = '33333333';
                                             break;
                                         case 19:
                                             prendaID = '333333319';

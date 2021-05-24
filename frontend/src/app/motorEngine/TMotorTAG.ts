@@ -67,6 +67,7 @@ export class TMotorTAG {
   private animacion;
   private andar;
   private textura;
+  private size = 0;
 
 
   constructor() {
@@ -161,6 +162,20 @@ export class TMotorTAG {
       let sueloNodo = await this.crearModelo(null, null, null, null, "suelo.json", ticket, "suelo");
     }
     if (this.nombrePrenda.localeCompare(modelos[1]) != 0) {
+      let size1 = ["tirantes11.json", "pantalon11.json", "tirantes12.json", "pantalon12.json","tirantes13.json", "pantalon13.json"];
+      let size2 = ["pantalon14.json"];
+      let size3 = ["tirantes15.json", "tirantes14.json", "tirantes16.json"];
+      let size4 = [];
+      if(size1.includes(modelos[1]))
+        this.size = 1;
+      else if (size2.includes(modelos[1]))
+        this.size = 2;
+      else if (size3.includes(modelos[1]))
+        this.size = 3;
+      else if (size4.includes(modelos[1]))
+        this.size = 4;
+      else
+        this.size = 0;
       this.nombrePrenda = modelos[1];
       let modeloNodo = await this.crearModelo(null, null, null, null, modelos[1], ticket, "prenda");
     }
@@ -329,14 +344,30 @@ export class TMotorTAG {
               this.modelViewMatrix,
               90 * Math.PI / 180)
 
-            if (this.num == 1) //Falda (hay que poner otro if que vaya)
-              matrix.mat4.translate(this.modelViewMatrix,
-                this.modelViewMatrix,
-                [0, -0.033, -1.37])
-            else //Camiseta y pantalón
-              matrix.mat4.scale(this.modelViewMatrix,
-                this.modelViewMatrix,
-                [0.0328, 0.0328, 0.0328])
+              
+            
+            switch(this.size){
+              case 1: matrix.mat4.scale(this.modelViewMatrix,
+                      this.modelViewMatrix,
+                      [0.021, 0.021, 0.021])
+                      break;
+              case 0: matrix.mat4.scale(this.modelViewMatrix,
+                      this.modelViewMatrix,
+                      [0.0328, 0.0328, 0.0328])
+                      break;
+              case 2: matrix.mat4.scale(this.modelViewMatrix,
+                      this.modelViewMatrix,
+                      [0.0299, 0.0299, 0.0299])
+                      break;
+              case 3: matrix.mat4.scale(this.modelViewMatrix,
+                      this.modelViewMatrix,
+                      [0.0221, 0.0221, 0.0221])
+                      break;
+              case 4: matrix.mat4.scale(this.modelViewMatrix,
+                      this.modelViewMatrix,
+                      [0.033, 0.033, 0.033])
+                      break;
+            }
 
 
             this.buffers2 = await this.initialiseBuffers(mallas[i]);
