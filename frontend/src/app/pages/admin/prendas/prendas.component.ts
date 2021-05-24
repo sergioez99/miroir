@@ -46,6 +46,7 @@ export class PrendasComponent implements OnInit {
   cargarPrendas(textoBuscar: string) {
 
     this.ultimaBusqueda = textoBuscar;
+    this.prendasFlitradas = [];
     this.loading = true;
     this.prendaService.cargarPrendas(this.posicionactual, textoBuscar)
       .then(res => {
@@ -68,7 +69,6 @@ export class PrendasComponent implements OnInit {
 
             this.listaPrendas = res['prendas'];
             this.totalprendas = res['page'].total;
-
 
         }
 
