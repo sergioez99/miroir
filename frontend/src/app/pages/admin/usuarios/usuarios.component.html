@@ -7,7 +7,7 @@
                     <div class="row justify-content-end">
                         <div class="float-right">
                             <button class="btn btn-primary nuevo-usu" routerLink="/admin/usuarios/usuario/nuevo"><span class="material-icons">person_add</span></button>
-                       
+
                         </div>
                     </div>
                 </div>
@@ -28,11 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-primary text-center" *ngIf="loading">
-                    <h4 class="alert-heading">Cargando!</h4>
-                    <i class="fa fa-spin fa-spinner fa-3x"></i>
-                    <p>Por favor, espere</p>
-                </div>
+                <mat-spinner class="mir-loading" *ngIf="loading"></mat-spinner>
                 <div class="table-responsive">
                     <table id="tabla_usuarios" class="table table-striped table-bordered">
                         <thead>

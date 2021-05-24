@@ -6,9 +6,7 @@
         <mat-form-field appearance="outline" class="mir-block">
             <mat-label>Email</mat-label>
             <input type="email" matInput formControlName="email" placeholder="ejemplo@email.com">
-            <button mat-icon-button matSuffix type="button">
-                <mat-icon>alternate_email</mat-icon>
-              </button>
+            <button mat-icon-button matSuffix type="button" disabled> <mat-icon>alternate_email</mat-icon> </button>
             <mat-hint>Introduzca su email</mat-hint>
 
             <!-- ERRORES -->
@@ -26,7 +24,7 @@
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
           </button>
             <mat-hint>Introduzca su contraseña</mat-hint>
 
@@ -42,7 +40,7 @@
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="passwordRepeat" [type]="hideR ? 'password' : 'text'" placeholder="Repetir Contraseña">
             <button mat-icon-button matSuffix type="button" (click)="hideR = !hideR" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-            <mat-icon>{{hideR ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-icon>{{hideR ? 'visibility' : 'visibility_off'}}</mat-icon>
         </button>
             <mat-hint>Repita su contraseña</mat-hint>
 
@@ -62,9 +60,9 @@
             Acepte nuestros
             <a routerLink="#" class="loginhere-link">Términos y condiciones</a> para poder continuar
         </mat-checkbox>
-        
+
         <div class="mir-box-buttons">
-            
+
             <button class="mir-register-button" mat-raised-button color="accent" [disabled]="!terminos" type="submit">Registrarse</button>
             <app-button-back></app-button-back>
         </div>

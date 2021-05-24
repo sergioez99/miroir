@@ -66,8 +66,10 @@ export class Probador01Component implements OnInit, OnDestroy {
 
       this.prendaID = "1234"; //Camiseta como default
       this.talla = "XS"; //Alguna talla como default
-      //this.usuario = this.usuarioService.getEmail();
-      this.usuario = "sergi@gmail.com";
+     
+       this.usuario = localStorage.getItem("email");
+
+       console.log(this.usuario)
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
       //this.ticket = this.route.snapshot.params['ticket'];
@@ -95,11 +97,11 @@ export class Probador01Component implements OnInit, OnDestroy {
         this.modelosTicket.push(res['prenda']);
 
         this.cargarProbador = false;
-      
+
         this.funcionCanvas();
         this.prendas++;
-        
-        
+
+
 
       }).catch((error) => {
 
@@ -110,55 +112,34 @@ export class Probador01Component implements OnInit, OnDestroy {
 
     crearTicket(prenda?){
 
-      if(prenda) {
-        this.ticketService.obtenerTicket(prenda).then((res) => {
-        this.ticket = res;
-        this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-
-      } else{
-        this.ticketService.obtenerTicket().then((res) => {
-
-          this.ticket = res;
-          this.canjearTicket();
-  
-        }).catch((error) => {
-  
-          console.warn(error);
-  
-        });
-      /* VARIABLES MONICA
+      /* // VARIABLES MONICA
       let cliente = '42izoRizo2mwMxQ8SOQLw8ZEL9WAPyHnYZr_AQ0VUo6a~.jt6q';
       let usuario = 'asdf@asdf.com';
       let prendaID = 'VEF15ORE3SC1';
       let talla = 'XS';
       */
-      /* VARIABLES DE SERGIO */
+
+      /* // VARIABLES DE SERGIO */
       let cliente = 'JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz.';
-      let usuario = 'sergi@gmail.com';
-      let prendaID = '123456789';
+      let usuario = localStorage.getItem("email");
+      let prendaID = '11111111';
       let talla = 'XS';
 
-      // if(prenda) {
-      //   prendaID = prenda;
-      // }
 
-      // this.ticketService.obtenerTicket(cliente, usuario, prendaID, talla).then((res) => {
-
-      //   this.ticket = res;
-      //   this.canjearTicket();
-
-      // }).catch((error) => {
-
-      //   console.warn(error);
-
-      // });
+      if(prenda) {
+        prendaID = prenda;
       }
+
+      this.ticketService.obtenerTicket(cliente, usuario, prendaID, talla).then((res) => {
+
+        this.ticket = res;
+        this.canjearTicket();
+
+      }).catch((error) => {
+
+        console.warn(error);
+
+      });
 
     }
 

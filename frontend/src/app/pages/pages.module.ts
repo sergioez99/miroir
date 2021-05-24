@@ -38,6 +38,8 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
 import { ProbadorPruebaComponent } from './probador-prueba/probador-prueba.component';
 
+import { SceneComponent } from '../scene/scene.component';
+
 @NgModule({
   declarations: [
     BaseLayoutComponent,
@@ -68,6 +70,8 @@ import { ProbadorPruebaComponent } from './probador-prueba/probador-prueba.compo
     CambioContraComponent,
     CuadroClienteComponent,
     ClaveClienteComponent,
+
+    SceneComponent,
 
 
   ],

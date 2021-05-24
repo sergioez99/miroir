@@ -54,10 +54,6 @@ const UsuarioSchema = Schema({
         type: Number,
         default: 90,
     },
-    validado: {
-        type: Boolean,
-        default: false,
-    },
     imagen: {
         type: String,
     },

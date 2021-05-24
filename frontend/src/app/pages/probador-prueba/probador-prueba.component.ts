@@ -67,13 +67,10 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
   }
 
   drawScene() {
-    //this.webglService.updateViewport();
-    //this.webglService.dibujadoTemporal();
-
     this.webglService.animaciones();
   }
 
-  iniciarEvents() {
+  iniciarEvents(){
     // Eventos de ratón aquí por el elemento canvas html
 
     this.canvas.nativeElement.addEventListener('mousedown', e => {
@@ -83,10 +80,10 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
       var rect = this.canvas.nativeElement.getBoundingClientRect();
 
       if (rect.left <= x && rect.right > x &&
-        rect.top <= y && rect.bottom > y) {
-        this.lastX = x;
-        this.lastY = y;
-        this.trackingMouseMotion = true;
+          rect.top <= y && rect.bottom > y) {
+          this.lastX = x;
+          this.lastY = y;
+          this.trackingMouseMotion = true;
       }
 
     })
@@ -97,16 +94,16 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
     })
 
 
-    this.canvas.nativeElement.addEventListener('mousemove', e => {
+    this.canvas.nativeElement.addEventListener('mousemove', e =>{
       var x = e.clientX;
       var y = e.clientY;
 
       if (this.trackingMouseMotion) {
         //Rotacion z
-        this.dMouseX = (x - this.lastX) / this.canvas.nativeElement.width;
-        this.dMouseY = (y - this.lastY) / this.canvas.nativeElement.height;
-        this.rotZ += 30 * this.dMouseX;
-        this.rotZ %= 360;
+          this.dMouseX = (x - this.lastX)/this.canvas.nativeElement.width;
+          this.dMouseY = (y - this.lastY)/this.canvas.nativeElement.height;
+          this.rotZ += 30 * this.dMouseX;
+          this.rotZ %= 360;
 
       }
       this.lastX = x;
@@ -123,18 +120,18 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
 
       let hacerzoom = e.deltaY;
 
-      if (hacerzoom < 0) {
+      if(hacerzoom < 0){
         this.scale = this.scale + 0.05;
         hacerzoom = 0;
       }
-      if (hacerzoom > 0) {
+      if(hacerzoom > 0){
         this.scale = this.scale - 0.05;
         hacerzoom = 0;
       }
 
 
 
-      if (this.scale < 1) {
+      if(this.scale < 1){
         this.scale = 1;
       }
 
