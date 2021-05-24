@@ -36,7 +36,7 @@ export class GeoService {
 
     let coordenadas = await this.getLatLng();
 
-    let respuesta = await this.HttpClient.get('http://api.positionstack.com/v1/reverse?access_key=bad68737990841824410541a4c64f127&query=' + coordenadas[0] + ',' + coordenadas[1] + '&limit=1').toPromise();
+    let respuesta = await this.HttpClient.get('https://api.positionstack.com/v1/reverse?access_key=40dd594d99cd7c88132ba1e6c7bcebeb&query=' + coordenadas[0] + ',' + coordenadas[1] + '&limit=1').toPromise();
 
     return respuesta['data'][0]['region_code'];
 
