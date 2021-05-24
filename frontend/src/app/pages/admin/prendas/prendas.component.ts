@@ -46,6 +46,7 @@ export class PrendasComponent implements OnInit {
   cargarPrendas(textoBuscar: string) {
 
     this.ultimaBusqueda = textoBuscar;
+    this.prendasFlitradas = [];
     this.loading = true;
     this.prendaService.cargarPrendas(this.posicionactual, textoBuscar)
       .then(res => {
@@ -73,14 +74,17 @@ export class PrendasComponent implements OnInit {
               }
             }
             this.listaPrendas = this.prendasFlitradas;
-            this.totalprendas = this.listaPrendas.length;
+            console.log(this.posicionactual);
+            this.totalprendas = this.posicionactual + this.listaPrendas.length;
+            console.log(this.totalprendas);
+
           } else {
             this.listaPrendas = res['prendas'];
             this.totalprendas = res['page'].total;
           }
 
-
         }
+
         this.loading = false;
 
       }).catch((err) => {
