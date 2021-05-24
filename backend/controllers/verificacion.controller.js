@@ -143,6 +143,7 @@ const reenviarToken = async(req, res = response) => {
         file = file.replace('KKMENSAJEPERSONALIZADOKK', mensaje);
         
 
+        
         var mailOptions = {
             from: 'insight.abp@gmail.com',
             to: email,
