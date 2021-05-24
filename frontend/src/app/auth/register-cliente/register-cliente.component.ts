@@ -56,7 +56,7 @@ export class RegisterClienteComponent implements OnInit {
 
           Swal.fire({
             title:'Usuario creado correctamente',
-            text: 'Le hemos enviado un email de confirmación. <br> Por favor, revise su bendeja de entrada.',
+            text: 'Le hemos enviado un email de confirmación.      Por favor, revise su bendeja de entrada.',
             icon: 'success',
             showCloseButton: true,
             confirmButtonText: 'Aceptar'

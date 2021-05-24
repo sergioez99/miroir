@@ -141,19 +141,20 @@ export class gestorRecursos {
         }
     };
 
-    async ficherosAssets(fichero){
+    async ficherosAssets(fichero, carpeta){
         //let url = env.base_url + +fichero;
         let partes = fichero.split("."); // ["pepe","json"]  ["textura",".jpeg"]
         let archivo;
         switch (partes[1]) {
             case 'json':
 
-                archivo = await this.leerArchivoRed('http://localhost:4200/assets/animacion_alberto/' + fichero);
+                archivo = await this.leerArchivoRed('http://localhost:4200/assets/'+ carpeta + '/' + fichero);
 
                 this.tipoRecurso = 1;
                 let file = await archivo.json();
                 let malla = new Malla();
 
+                malla.setNombre(fichero);
                 malla.setDibujado(false);
 
 
