@@ -64,23 +64,14 @@ export class PrendasComponent implements OnInit {
             this.listaPrendas = [];
             this.totalprendas = 0;
           }
-        } else {
+        }else {
 
-          if (this.usuarioService.isCliente()) {
-            for (let i = 0; i < res['prendas'].length; i++) {
-              if (res['prendas'][i].idCliente == this.uid) {
-                this.prendasFlitradas.push(res['prendas'][i]);
-              }
-            }
-            this.listaPrendas = this.prendasFlitradas;
-            this.totalprendas = this.listaPrendas.length;
-          } else {
             this.listaPrendas = res['prendas'];
             this.totalprendas = res['page'].total;
-          }
 
 
         }
+
         this.loading = false;
 
       }).catch((err) => {
