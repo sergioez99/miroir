@@ -169,9 +169,9 @@ const obtenerTicket = async(req, res = response) => {
         // primero comprobar la clave del cliente
         // const cliente = await Cliente.findOne({ clave: clienteClave });
 
-        console.log('clave recibida: ', clienteClave);
-        console.log('clave maestra: ', process.env.CLAVE_ADMIN);
-        console.log('igualdad: ', cliente != process.env.CLAVE_ADMIN);
+        //console.log('clave recibida: ', clienteClave);
+        //console.log('clave maestra: ', process.env.CLAVE_ADMIN);
+        //console.log('igualdad: ', cliente != process.env.CLAVE_ADMIN);
 
         if (clienteClave != process.env.CLAVE_ADMIN) {
             if (!cliente) {
@@ -309,7 +309,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                 if (!cliente) {
                     cliente = await Usuario.findById(clienteID);
                 }
-                console.log('el cliente: ', cliente);
+                
 
                 if (!cliente) {
                     console.log('no tenemos cliente');
@@ -400,9 +400,9 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                         modelo += 1;
                     }
                 }
-                if (sexo == 'M') {
+                /*if (sexo == 'M') {
                     modelo += 10;
-                }
+                }*/
 
                 // aqui ya tenemos el modelo del avatar
                 const avatarFichero = `${modelo}.json`;
@@ -423,6 +423,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                         }
                     }
                 }
+                console.log(prendaFichero)
 
                 return res.json({
                     ok: true,
@@ -520,7 +521,7 @@ const modeloTicket = async(req, res = response) => {
                         console.log('IMC calculado: ...', imc);
 
                         // aqui habra que definir las condiciones que diferencian un modelo de otro
-
+                        
                         if (altura > 170) {
                             modelo += 3;
                         }
@@ -568,7 +569,6 @@ const modeloTicket = async(req, res = response) => {
                                 modelo += 1;
                             }
                         }
-
                         console.log("id antes" + prendaID + "modelo " + modelo)
                         console.log(altura)
                         switch(identificadorPrenda) {
@@ -715,6 +715,7 @@ const modeloTicket = async(req, res = response) => {
                                 }
                             }
                         }
+                        
 
 
                         //comprobar si existe el archivo
@@ -723,6 +724,7 @@ const modeloTicket = async(req, res = response) => {
                             ruta = path.join(__dirname, `../assets/modelo/prenda/`, `default.json`);
                         }
                         //si todo bien lo enviamos
+                        console.log(ruta)
                         return res.sendFile(ruta);
 
 
