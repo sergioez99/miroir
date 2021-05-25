@@ -22,13 +22,47 @@ const sleep = (ms) => {
 
 const salirSiUsuarioNoAdmin = (res, token) => {
     if (!(infoToken(token).rol === 'ROL_ADMIN')) {
-        //ESTO DA ERROR, NO EXISTE RES, LO HE QUITADO
-        /*return res.status(400).json({
+        return res.status(400).json({
             ok: false,
             msg: 'No tiene permiso',
-        });*/
-        
+        });
     }
+}
+
+const actualizarTodo = async(req, res = response) => {
+
+    try {
+        salirSiUsuarioNoAdmin(res, req.header('x-token'));
+
+        console.log('hola, quiero actualizar cosas');
+
+        await recalcularfechahoraAlta();
+        await recalcularUsuariosTotales();
+        await recalcularClientesTotales();
+        await recalcularPrendasTotales();
+
+
+        console.log('se supone que ha esperado todo');
+        return res.json({
+            ok: true,
+            msg: 'BD de charts actualizadas',
+        });
+
+
+    } catch (error) {
+        console.log('error actualizando los datos de KPI');
+        return res.status(400).json({
+            ok: false,
+            msg: 'error actualizando datos de KPI',
+            error: error
+        });
+
+    }
+
+
+
+
+
 }
 
 
@@ -43,12 +77,16 @@ const recalcularUsuariosTotales = async() => {
         console.log('TOTAL USUARIOS:........ ', total);
 
         // guardarlo en la colección de datos genéricos
-
-        let salida = new DatoKPI();
-        salida.identificador = 'total_usuarios';
-        salida.datoNumber = total;
-
-        await salida.save();
+        let nombre = 'total_usuarios';
+        let bd = await DatoKPI.findOne({ identificador: nombre });
+        if (bd) {
+            await DatoKPI.findByIdAndUpdate(bd.id, { datoNumber: total });
+        } else {
+            let salida = new DatoKPI();
+            salida.identificador = nombre;
+            salida.datoNumber = total;
+            await salida.save();
+        }
 
         return true;
 
@@ -68,12 +106,17 @@ const recalcularClientesTotales = async() => {
         console.log('TOTAL CLIENTES:........ ', total);
 
         // guardarlo en la colección de datos genéricos
+        let nombre = 'total_clientes';
+        let bd = await DatoKPI.findOne({ identificador: nombre });
+        if (bd) {
+            await DatoKPI.findByIdAndUpdate(bd.id, { datoNumber: total });
+        } else {
+            let salida = new DatoKPI();
+            salida.identificador = nombre;
+            salida.datoNumber = total;
+            await salida.save();
+        }
 
-        let salida = new DatoKPI();
-        salida.identificador = 'total_clientes';
-        salida.datoNumber = total;
-
-        await salida.save();
         return true;
 
     } catch (error) {
@@ -90,12 +133,17 @@ const recalcularPrendasTotales = async() => {
         console.log('TOTAL PRENDAS:........ ', total);
 
         // guardarlo en la colección de datos genéricos
+        let nombre = 'total_prendas';
+        let bd = await DatoKPI.findOne({ identificador: nombre });
+        if (bd) {
+            await DatoKPI.findByIdAndUpdate(bd.id, { datoNumber: total });
+        } else {
+            let salida = new DatoKPI();
+            salida.identificador = nombre;
+            salida.datoNumber = total;
+            await salida.save();
+        }
 
-        let salida = new DatoKPI();
-        salida.identificador = 'total_prendas';
-        salida.datoNumber = total;
-
-        await salida.save();
         return true;
 
     } catch (error) {
@@ -108,7 +156,7 @@ const recalcularfechahoraAlta = async() => {
     try {
         const salida = await fechaAlta.deleteMany();
         console.log(salida);
-        await horaAlta.remove();
+        await horaAlta.deleteMany();
         let docs = [];
         for (let i = 0; i < 24; i++) {
             let hora = new horaAlta();
@@ -201,6 +249,7 @@ const recalcularfechahoraAlta = async() => {
         return error;
     }
 }
+
 
 const insertarfechahoraUsuarioCliente = async(tipo, alta) => {
 
@@ -451,8 +500,8 @@ const obtenerUsuariosClientesHora = async(req, res = response) => {
 }
 
 const obtenerUsosPrendas = async(req, res = response) => {
-  
-        //salirSiUsuarioNoAdmin(req.header('x-token'));
+
+    //salirSiUsuarioNoAdmin(req.header('x-token'));
 
 
     try {
@@ -533,13 +582,13 @@ const obtenerUsosPrendasCliente = async(req, res = response) => {
 }
 
 const obtenerTallasPrendasCliente = async(req, res = response) => {
-    
+
     let id = req.header('id');
 
     try {
         const busqueda = await tallasUsadas.find(); //id, talla, usos
         const prendasClientes = await Prenda.find(); //aqui 
-        
+
         let existe = false;
 
         let prendas = [],
@@ -549,7 +598,7 @@ const obtenerTallasPrendasCliente = async(req, res = response) => {
             nomPrenda = [];
 
         for (let x = 0; x < prendasClientes.length && x < busqueda.length; x++) {
-            
+
             if (prendasClientes[x].idCliente == id) { //si el id de la prenda corresponde con el del cliente
                 prendas.push(busqueda[x].idPrenda) //añado el id de la prenda a prendas
 
@@ -910,4 +959,5 @@ module.exports = {
     restarPrendaKPI,
     sumarUsoPrenda,
     agregarDatoMapa,
+    actualizarTodo,
 }

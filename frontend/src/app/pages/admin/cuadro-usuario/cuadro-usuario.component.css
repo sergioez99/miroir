@@ -187,3 +187,51 @@ p {
         grid-template-columns: 250px 100px;
     }
 }
+
+.mir-loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+
+.mir-boton-margen {
+    margin: 10px 15px;
+}
+
+.mir-mapa {
+    margin: auto;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        display: block;
+        width: 80%;
+    }
+    .div-canvas {
+        height: 530px;
+        /* margin-left: 0; */
+        /* margin-right: 0; */
+    }
+    .mir-canvas {
+        position: relative;
+        top: 30%;
+        min-width: 500px;
+        min-height: 250px;
+    }
+    .mir-login-form {
+        position: relative;
+        bottom: -150%;
+    }
+    .container3 {
+        grid-template-columns: 50% 50% 50%;
+    }
+}
+
+@media(max-width: 1000px) {
+    .container {
+        width: 670px;
+    }
+    .mir-mapa {
+        padding: 0;
+    }
+}

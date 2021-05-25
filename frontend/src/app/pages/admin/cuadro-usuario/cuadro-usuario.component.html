@@ -1,8 +1,11 @@
 <h1> Cuadros de mandos </h1>
 <div class="container">
+
+    <mat-spinner class="mir-loading" *ngIf="loading"></mat-spinner>
+
     <div class='div-canvas'>
         <h2>Registros por día</h2>
-        <canvas id="chartFechaAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
+        <canvas class="mir-canvas" id="chartFechaAltaUsuario" width="800" height="400"></canvas>
 
         <form class="mir-login-form" [formGroup]="formFechas" (ngSubmit)="cargarChartFechasAlta();">
 
@@ -25,9 +28,9 @@
     </div>
 
 
-    <div class='div-canvas arriba'>
+    <div class='div-canvas arriba div-canvas'>
         <h2>Horas de registro</h2>
-        <canvas id="chartHoraAltaUsuario" width="800" height="400" style="border:1px solid #000000;"></canvas>
+        <canvas class="mir-canvas" id="chartHoraAltaUsuario" width="800" height="400"></canvas>
 
     </div>
 
@@ -42,16 +45,18 @@
         </div>
     </div>
 
-    <div class="div-canvas">
+    <div class="div-canvas div-canvas">
         <h2>Prendas más probadas</h2>
-        <canvas id="chartPrendasUsadas" width="800" height="400" style="border:1px solid #000000;"></canvas>
+        <canvas class="mir-canvas" id="chartPrendasUsadas" width="800" height="400"></canvas>
     </div>
 
-    <div class="div-canvas">
-        <h2>Prendas más populares de cada provincia</h2>
-        <google-chart [data]="geoChart"></google-chart>
+    <div class="div-canvas div-canvas">
+        <h2>Prendas más populares por provincia</h2>
+        <google-chart class="mir-mapa" [data]="geoChart"></google-chart>
     </div>
 
-    <br>
+    <div class="mir-boton-margen">
+        <button mat-raised-button color="accent" class="boton" (click)="confirmacionActualizar()">Actualizar los datos</button>
+    </div>
 
 </div>

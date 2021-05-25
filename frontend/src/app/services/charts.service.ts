@@ -136,4 +136,18 @@ export class ChartService{
     });
   }
 
+  actualizarCharts(){
+    return new Promise ( (resolve, reject) => {
+      this.apiService.actualizarChartsTodoCall(this.usuarioService.getToken()).subscribe( (res) => {
+        console.log("chart service" + res);
+        resolve(res);
+
+      }, (err) =>{
+        console.error(err);
+        reject(err);
+      });
+
+    });
+  }
+
 }

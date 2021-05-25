@@ -20,6 +20,7 @@ const {
     obtenerTallasPrendasCliente,
     agregarDatoMapa,
     obtenerDatosRegiones,
+    actualizarTodo,
 
 } = require('../controllers/charts.controller');
 
@@ -62,5 +63,7 @@ router.get('/mapa', [
 router.post('/mapa', [
     validarJWT,
 ], agregarDatoMapa);
+
+router.get('/actualizar', [], actualizarTodo);
 
 module.exports = router;
