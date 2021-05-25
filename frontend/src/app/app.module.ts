@@ -42,11 +42,8 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
     CarouselModule,
     WavesModule,
 
-<<<<<<< HEAD
     MatExpansionModule,
-=======
     Ng2GoogleChartsModule
->>>>>>> develop
 
   ],
   providers: [DatePipe],
