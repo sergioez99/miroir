@@ -297,9 +297,15 @@ crearDatosPrendasCall( formData, token) {
     return this.http.get(this.url+'/ticket/clave/cambiar/'+id, { headers: headers });
   }
 
-  getTicketCall(cliente: string, usuario: string, prenda: string, talla: string){
+  getTicketCall(cliente: string, usuario: string, prenda: string, talla: string, id?:string){
 
-    return this.http.get(this.url + '/ticket/obtener/' + '?email=' + usuario + '&identificador=' + prenda + '&clave=' + cliente + '&talla='+talla);
+    let peticion = this.url + '/ticket/obtener/' + '?email=' + usuario + '&identificador=' + prenda + '&clave=' + cliente + '&talla='+talla;
+
+    if(id){
+      peticion += '&id=' + id;
+    }
+
+    return this.http.get(peticion);
   }
 
   validarTicketCall(ticket: string){
@@ -328,5 +334,23 @@ crearDatosPrendasCall( formData, token) {
     }
   }
 
+  getListaRegionesChartCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/chart/mapa', { headers: headers });
+  }
+
+  registrarGeoCall(token, ciudad, prenda){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+
+    const datos: FormData = new FormData();
+    datos.append('ciudad', ciudad);
+    datos.append('prenda', prenda);
+
+    return this.http.post(this.url+'/chart/mapa', datos, { headers: headers });
+  }
 
 }

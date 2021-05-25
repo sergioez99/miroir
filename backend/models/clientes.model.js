@@ -64,7 +64,7 @@ const ClienteSchema = Schema({
 
 ClienteSchema.method('toJSON', function() {
 
-    const { __v, _id, password, ...object } = this.toObject();
+    const { __v, _id, password, clave, ...object } = this.toObject();
 
     object.uid = _id;
     return object;

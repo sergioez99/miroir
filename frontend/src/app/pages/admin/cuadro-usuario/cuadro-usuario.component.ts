@@ -6,6 +6,10 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { DatePipe } from '@angular/common';
 import { ChartService } from '../../../services/charts.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { GeoService } from '../../../services/geo.service';
+import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
+import { fromEventPattern } from 'rxjs';
+import { GoogleChartsDataTable } from 'ng2-google-charts/lib/google-charts-datatable';
 
 @Component({
   selector: 'app-cuadro-usuario',
@@ -29,9 +33,28 @@ export class CuadroUsuarioComponent implements OnInit {
   public totalClientes;
   public totalPrendas;
 
+  //DATOS DE MAPA PREDETERMINADOS
+
+  public geoChart: GoogleChartInterface = {
+    chartType: 'GeoChart',
+    dataTable: [
+      [ 'Comunidad', 'Prenda', 'Núm. de pruebas' ],
+      [ 'ES-AR', 'Camiseta de tirantes azul', 75 ],
+      [ 'ES-CL', 'Jersey de lana rojo', 12 ],
+      [ 'ES-VC', 'Pantalón vaquero gris', 600 ]
+    ],
+    //firstRowIsData: true,
+    options: {region: 'ES',
+              resolution:'provinces',
+              colorAxis:{'colors:': ['#00853f', 'orange', '#e31b23']},
+              backgroundColor:'#81d4fa',
+            }
+    };
+
   constructor( private chartServices :ChartService,
                private fb: FormBuilder,
-               private datepipe: DatePipe) { }
+               private datepipe: DatePipe,
+               private GeoService: GeoService) { }
 
   ngOnInit():void {
     this.canvas01 = <HTMLCanvasElement> document.querySelector('#chartFechaAltaUsuario');
@@ -53,6 +76,8 @@ export class CuadroUsuarioComponent implements OnInit {
     this.cargarChartFechasAlta();
     this.cargarChartHorasAlta();
     this.cargarChartUsos();
+
+    this.cargarMapaRegiones();
 
   }
   cargarChartHorasAlta(){
@@ -204,7 +229,7 @@ export class CuadroUsuarioComponent implements OnInit {
       this.chart03.destroy();
     }
     this.chartServices.getUsosPrendas().then( (res)=>{
-  
+
       let prendas = res['prenda'];
       let usos = res['usos'];
       let nombres = res['nombres'];
@@ -219,9 +244,9 @@ export class CuadroUsuarioComponent implements OnInit {
             usos[i] = usos[j];
             prendas[i] = prendas[j];
             nombres[i] = nombres [j];
-            usos[j] = aux; 
-            prendas[j] = aux1; 
-            nombres[j] = aux2; 
+            usos[j] = aux;
+            prendas[j] = aux1;
+            nombres[j] = aux2;
           }
         }
       }
@@ -247,7 +272,7 @@ export class CuadroUsuarioComponent implements OnInit {
             backgroundColor: "rgba(251, 155, 2, 0.3)",
             borderColor:"rgb(251, 155, 2)",
             borderWidth:2
-  
+
           }]
         },
         options: {
@@ -264,7 +289,31 @@ export class CuadroUsuarioComponent implements OnInit {
     }).catch(error=>{
       console.log(error);
     });
-  
+
   }
+
+  async cargarMapaRegiones(){
+
+    let datos = await this.GeoService.getRegiones();
+
+    if(datos[1] != null){
+
+      console.log(datos);
+
+      this.geoChart = {
+        chartType: 'GeoChart',
+        dataTable: datos,
+        //firstRowIsData: true,
+        options: {region: 'ES',
+                  resolution:'provinces',
+                  colorAxis:{'colors:': ['#00853f', '#81d4fa', '#e31b23']},
+                  backgroundColor:'#81d4fa',
+                }
+      };
+
+    }
+
+  }
+
 }
 

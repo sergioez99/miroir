@@ -55,11 +55,11 @@ export class ClienteComponent implements OnInit {
 
     this.formCliente = this.fb.group({
       //rol:this.rol,
-      activo:this.activo,
-      validado:this.validado,
+      activo:[this.activo, [Validators.required]],
+      validado:[this.validado, [Validators.required]],
       uid:this.uid,//
-      email: this.email,//
-      password:this.password,
+      email: [this.email, [Validators.required, Validators.email]],
+      password:[this.password, [Validators.required]],
       nombreEmpresa: this.empresa,
       nombre: this.nombre,
       nif: this.NIF,
@@ -98,9 +98,9 @@ export class ClienteComponent implements OnInit {
     }
     else{
       this.isNew = false;
-    } 
+    }
   }
-  
+
   actualizarCliente(){
     if (this.formCliente.valid) {
 
@@ -137,5 +137,5 @@ export class ClienteComponent implements OnInit {
     }
 
   }
-  
+
 }

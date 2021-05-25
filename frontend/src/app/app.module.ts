@@ -16,11 +16,18 @@ import { DatePipe } from '@angular/common';
 import { TicketComponent } from './ticket/ticket.component';
 
 import { MatExpansionModule } from '@angular/material/expansion';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+
+// const MyGoogleChartsSettings: GoogleChartsSettings = {
+//   mapsApiKey: 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY',
+//   googleChartsVersion: '46',
+//   language: 'es',
+// };
 
 @NgModule({
   declarations: [
     AppComponent,
-    TicketComponent
+    TicketComponent,
 
   ],
   imports: [
@@ -35,7 +42,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CarouselModule,
     WavesModule,
 
+<<<<<<< HEAD
     MatExpansionModule,
+=======
+    Ng2GoogleChartsModule
+>>>>>>> develop
 
   ],
   providers: [DatePipe],

@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const { actualizarBD } = require('../helpers/actualizarbd');
 //para el acceso al sistema de archivos
 const fs = require('fs');
+let path = require('path');
 
 
 
@@ -52,7 +53,7 @@ const subirArchivo = async(req, res = response) => {
     //cogemos el ultimo
     const extension = nombrePartido[nombrePartido.length - 1];
 
-    let path = `${process.env.PATHUPLOAD}/`;
+    path = path.join(__dirname, '../assets/');
 
     switch (tipo) {
         case 'fotoperfil':

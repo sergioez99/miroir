@@ -74,7 +74,7 @@ const conversacion = async(req, res = response) => {
         if(prendas.length == 0){
             prendas = await Prenda.find(); // Quiero que busque todas
             respuesta = {
-                'fulfillmentText' : 'En Miroir disponemos ahora mismo de ' + prendas.length + ' prendas'
+                'fulfillmentText' : 'En Miroir disponemos ahora mismo de ' + prendas.length + ' prendas a tu disposición'
             }
         }
         else{

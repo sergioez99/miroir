@@ -31,7 +31,6 @@ export class ClientesComponent implements OnInit {
   cargarClientes( textoBuscar: string ) {
     this.ultimaBusqueda = textoBuscar;
     this.loading = true;
-    console.log("hola");
     this.clienteService.cargarClientes( this.posicionactual, textoBuscar )
       .subscribe( res => {
         // Lo que nos llega lo asignamos a lista clienntes para renderizar la tabla

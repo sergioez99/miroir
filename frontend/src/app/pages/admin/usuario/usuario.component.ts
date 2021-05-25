@@ -28,6 +28,9 @@ export class UsuarioComponent implements OnInit {
   @Input() cintura :number;
   @Input() cadera :number;
 
+  public noAdmin = true;
+  public hide = true;
+
 
 
   constructor( private fb: FormBuilder,
@@ -54,18 +57,22 @@ export class UsuarioComponent implements OnInit {
 
     this.formMedidas = this.fb.group({
       uid:this.uid,
-      rol:this.rol,
-      activo:this.activo,
-      validado:this.validado,
-      email: this.email,
-      password:this.password,
+      rol:[this.rol,[Validators.required]],
+      activo:[this.activo, [Validators.required]],
+      validado:[this.validado, [Validators.required]],
+      email:[ this.email, [Validators.required, Validators.email]],
+      password:[this.password, [Validators.required]],
       peso: [this.peso, [Validators.required, Validators.min(10), Validators.max(200)]],
       altura: [this.altura, [Validators.required, Validators.min(100), Validators.max(200)]],
       pecho: [this.pecho, [Validators.required, Validators.min(10), Validators.max(200)]],
       cintura: [this.cintura, [Validators.required, Validators.min(10), Validators.max(200)]],
       cadera: [this.cadera, [Validators.required, Validators.min(10), Validators.max(200)]]
     });
- 
+
+    if(this.usuarioService.isAdmin()){
+      this.noAdmin = false;
+    }
+
   }
   cargarFormulario(res:any):void{
     this.formMedidas.get('rol').setValue(res['usuarios'].rol);
@@ -78,13 +85,13 @@ export class UsuarioComponent implements OnInit {
     this.formMedidas.get('cintura').setValue(res['usuarios'].cintura);
     this.formMedidas.get('cadera').setValue(res['usuarios'].cadera);
   }
-  
+
   cargarFormularioNuevo(){
-    this.rol='ROL_USUARIO';
+    this.rol='';
     this.activo=true;
     this.validado=true;
     this.uid='nuevo';
-    this.email='ejemplo@gmail.com';
+    this.email='';
     this.peso=10;
     this.altura=100;
     this.pecho=10;
@@ -97,11 +104,11 @@ export class UsuarioComponent implements OnInit {
     }
     else{
       this.isNew = false;
-    } 
+    }
   }
   actualizarUsuario(){
     if (this.formMedidas.valid) {
-      
+
       this.usuarioService.actualizarMedidasUsuario(this.formMedidas.value).then((response) => {
         // medidas introducidas correctamente
 

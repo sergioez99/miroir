@@ -1,1 +1,12 @@
-<p>probador01 works!</p>
+<div> 
+    <button (click)="crearTicket('22222222')">Camiseta</button>
+    <button (click)="crearTicket('33333333')">Tirantes</button>
+    <button (click)="crearTicket('11111111')">Pantalón</button>
+    <button (click)="cambiarTextura(1)">Algodón</button>
+    <button (click)="cambiarTextura(3)">Vaquero</button>
+    <button (click)="cambiarTextura(2)">Cuadros</button>
+</div>
+
+<canvas #sceneCanvas id="probador" width="650" height="650">
+
+</canvas>

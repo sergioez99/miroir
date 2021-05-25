@@ -76,7 +76,7 @@ const obtenerPrendas = async(req, res = response) => {
                     // promesa para que se ejecuten las dos llamadas a la vez, cuando las dos acaben se sale de la promesa
                     [prendas, total] = await Promise.all([
                         Prenda.find({ idCliente: uid }).skip(desde).limit(registropp),
-                        Prenda.countDocuments()
+                        Prenda.countDocuments({ idCliente: uid })
                     ]);
                 }
             } else {

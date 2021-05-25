@@ -13,19 +13,33 @@ export class WebGLService {
 
   constructor() { }
 
-  async initialiseWebGLContext(canvas: HTMLCanvasElement, modelos:string[], ticket) {
-
+  async initialiseWebGLContext(canvas: HTMLCanvasElement) {
     this.miMotor = new TMotorTAG();
     var gl = this.miMotor.iniciarGL(canvas);
-    console.log('modelos: ', modelos);
-    await this.miMotor.iniciarProbador(ticket, modelos[0], "cuadritos.jpg", modelos[1], "CamisetaRoja.jpg"); //El segundo modelo no lo pinta
-
     return gl;
   }
 
-  dibujadoTemporal() {
-    this.miMotor.dibujadoTemporal();
+  async cargarModelos(ticket, modelos){
+    let espera = await this.miMotor.iniciarProbador(ticket, modelos);
+    return true;
+  }
+  
+  async initialiseAnimacion(num) {
+    let espera = await this.miMotor.iniciarAnimacion(num);
+    return true;
+  }
 
+  async animaciones(){
+    let espera = await this.miMotor.dibujarAnimaciones();
+  }
+
+  async cambiarTexturas(textura){
+    let espera = await this.miMotor.cambioTexturas(textura);
+  }
+
+  dibujar(dibuja){
+    if(dibuja)
+    this.miMotor.dibujarEscena();
   }
 
   updateMouseevent(rotZ) {
@@ -38,6 +52,10 @@ export class WebGLService {
 
   updateViewport(){
     this.miMotor.updateViewport();
+  }
+
+  zoomCamara([clipX, clipY]){
+    this.miMotor.camaraZoom([clipX, clipY]);
   }
 
 }

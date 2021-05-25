@@ -22,7 +22,6 @@ import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component';
-import { SceneComponent } from '../scene/scene.component';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
@@ -30,6 +29,7 @@ import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.comp
 import { TicketComponent } from '../ticket/ticket.component';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
 import { AyudaClienteComponent } from './admin/ayuda-cliente/ayuda-cliente.component';
+import { SceneComponent } from '../scene/scene.component';
 
 
 const routes: Routes = [
@@ -117,6 +117,7 @@ const routes: Routes = [
     path: 'scene',
     children: [
       { path: '', component: SceneComponent },
+      { path: ':ticket', component: SceneComponent },
       { path: '**', redirectTo: ''}
     ]
   },
