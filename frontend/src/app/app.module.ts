@@ -15,6 +15,7 @@ import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
 import { DatePipe } from '@angular/common';
 import { TicketComponent } from './ticket/ticket.component';
 
+import { MatExpansionModule } from '@angular/material/expansion';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 // const MyGoogleChartsSettings: GoogleChartsSettings = {
@@ -41,6 +42,7 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
     CarouselModule,
     WavesModule,
 
+    MatExpansionModule,
     Ng2GoogleChartsModule
 
   ],

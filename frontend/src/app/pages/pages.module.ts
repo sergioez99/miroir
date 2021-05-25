@@ -36,6 +36,8 @@ import { CambioContraComponent } from './perfil/cambio-contra/cambio-contra.comp
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ClaveClienteComponent } from './perfil/clave-cliente/clave-cliente.component';
+import { AyudaClienteComponent } from './admin/ayuda-cliente/ayuda-cliente.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { ProbadorPruebaComponent } from './probador-prueba/probador-prueba.component';
 
 import { SceneComponent } from '../scene/scene.component';
@@ -70,6 +72,7 @@ import { SceneComponent } from '../scene/scene.component';
     CambioContraComponent,
     CuadroClienteComponent,
     ClaveClienteComponent,
+    AyudaClienteComponent,
 
     SceneComponent,
 
@@ -93,7 +96,9 @@ import { SceneComponent } from '../scene/scene.component';
     ElementosComunesModule,
     Ng2GoogleChartsModule,
 
-    SidebarModule.forRoot()
+    SidebarModule.forRoot(),
+
+    MatExpansionModule
   ],
 })
 export class PagesModule { }
