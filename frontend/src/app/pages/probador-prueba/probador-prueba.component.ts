@@ -49,7 +49,9 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
     this.prendas++;
     this.animacion+=num;
     if(this.animacion < 0)
-      this.animacion = 5; //El número máximo de animaciones que haya
+      this.animacion = 2; //El número máximo de animaciones que haya
+    if(this.animacion > 2)
+      this.animacion = 0;
     let cambio = await this.webglService.initialiseAnimacion(this.animacion);
     this.drawSceneInterval = setInterval(() => {
       this.drawScene();

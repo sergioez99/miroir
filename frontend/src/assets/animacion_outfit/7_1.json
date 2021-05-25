@@ -4,7 +4,24 @@
         "version": "1.1.1",
         "generator": "cgdev json exporter"
     },
-    
+    "materials": [
+        {
+            "name": "avatar_animado_caminar_000000_None",
+            "ambient": [0.5,0.5,0.5],
+            "diffuse": [0.5,0.5,0.5],
+            "specular": [0.2,0.2,0.2],
+            "glossiness": 100,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "base_color_texture",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "algodon.jpg"
+                }
+            ]
+        }
+    ],
     "model": 
     {
         "meshes": [
