@@ -409,7 +409,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
 
                 const prendaProbador = await Prenda.findById(prendaID);
                 let identificadorPrenda = prendaProbador.identificador;
-
+                console.log(identificadorPrenda)
                 switch(identificadorPrenda) {
                     case "11111111":
                         switch (modelo) {
@@ -508,11 +508,18 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
 
                             }
                             break;
+                        default:
+                            prendaID = identificadorPrenda
+                            break;
+                            
+                        
+
                 }
+                
 
                 // ahora la prenda, con la talla averiguaremos el modelo que tenemos que devolver
                 let prendaFichero = 'default.json';
-
+                console.log(prendaID)
                 // habrá que buscar el modelo de esta prenda con esta talla
                 prenda = await Prenda.findOne({ identificador: prendaID });
                 console.log("prenda final",prenda)
@@ -771,6 +778,9 @@ const modeloTicket = async(req, res = response) => {
                                             break;
     
                                     }
+                                    break;
+                                default:
+                                    prendaID = identificadorPrenda;
                                     break;
                         }
 
