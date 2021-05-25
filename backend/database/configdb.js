@@ -9,7 +9,7 @@ const dbConnection = async() => {
             useUnifiedTopology: true,
             useCreateIndex: true,
             // para que las funciones que usemos no den error
-            userFindAndModify: false
+            useFindAndModify: false
         });
         console.log('DB online');
     } catch (error) {

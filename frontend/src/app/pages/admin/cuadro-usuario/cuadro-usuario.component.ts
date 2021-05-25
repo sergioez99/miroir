@@ -10,6 +10,7 @@ import { GeoService } from '../../../services/geo.service';
 import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
 import { fromEventPattern } from 'rxjs';
 import { GoogleChartsDataTable } from 'ng2-google-charts/lib/google-charts-datatable';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cuadro-usuario',
@@ -21,50 +22,54 @@ export class CuadroUsuarioComponent implements OnInit {
   public formFechas: FormGroup | null = null;
 
   public canvas01;
-  public chart01:Chart;
+  public chart01: Chart;
 
   public canvas02;
-  public chart02:Chart;
+  public chart02: Chart;
 
   public canvas03;
-  public chart03:Chart;
+  public chart03: Chart;
 
   public totalUsuarios;
   public totalClientes;
   public totalPrendas;
+
+  public loading;
 
   //DATOS DE MAPA PREDETERMINADOS
 
   public geoChart: GoogleChartInterface = {
     chartType: 'GeoChart',
     dataTable: [
-      [ 'Comunidad', 'Prenda', 'Núm. de pruebas' ],
-      [ 'ES-AR', 'Camiseta de tirantes azul', 75 ],
-      [ 'ES-CL', 'Jersey de lana rojo', 12 ],
-      [ 'ES-VC', 'Pantalón vaquero gris', 600 ]
+      ['Comunidad', 'Prenda', 'Núm. de pruebas'],
+      ['ES-AR', 'Camiseta de tirantes azul', 75],
+      ['ES-CL', 'Jersey de lana rojo', 12],
+      ['ES-VC', 'Pantalón vaquero gris', 600]
     ],
     //firstRowIsData: true,
-    options: {region: 'ES',
-              resolution:'provinces',
-              colorAxis:{'colors:': ['#00853f', 'orange', '#e31b23']},
-              backgroundColor:'#81d4fa',
-            }
-    };
+    options: {
+      region: 'ES',
+      resolution: 'provinces',
+      colorAxis: { 'colors:': ['#00853f', 'orange', '#e31b23'] },
+      backgroundColor: '#81d4fa',
+    }
+  };
 
-  constructor( private chartServices :ChartService,
-               private fb: FormBuilder,
-               private datepipe: DatePipe,
-               private GeoService: GeoService) { }
+  constructor(private chartServices: ChartService,
+    private fb: FormBuilder,
+    private datepipe: DatePipe,
+    private GeoService: GeoService) { }
 
-  ngOnInit():void {
-    this.canvas01 = <HTMLCanvasElement> document.querySelector('#chartFechaAltaUsuario');
-    this.canvas02 = <HTMLCanvasElement> document.querySelector('#chartHoraAltaUsuario');
-    this.canvas03 = <HTMLCanvasElement> document.querySelector('#chartPrendasUsadas');
+  ngOnInit(): void {
+    this.loading = true;
+    this.canvas01 = <HTMLCanvasElement>document.querySelector('#chartFechaAltaUsuario');
+    this.canvas02 = <HTMLCanvasElement>document.querySelector('#chartHoraAltaUsuario');
+    this.canvas03 = <HTMLCanvasElement>document.querySelector('#chartPrendasUsadas');
 
     // preparar el formulario de fechas
     let fechaF = new Date(Date.now());
     let fechaI = new Date(fechaF);
-    fechaI.setDate(fechaI.getDate()-30);
+    fechaI.setDate(fechaI.getDate() - 30);
 
     this.formFechas = this.fb.group({
       fechaI: [fechaI, [Validators.required]],
@@ -72,21 +77,29 @@ export class CuadroUsuarioComponent implements OnInit {
     });
 
 
+
+    this.cargarValores();
+    this.loading = false;
+
+  }
+
+  cargarValores(){
     this.cargarValoresFijos();
     this.cargarChartFechasAlta();
     this.cargarChartHorasAlta();
     this.cargarChartUsos();
-
     this.cargarMapaRegiones();
-
   }
-  cargarChartHorasAlta(){
+
+
+
+  cargarChartHorasAlta() {
 
     // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
-    if (this.chart02){
+    if (this.chart02) {
       this.chart02.destroy();
     }
-    this.chartServices.getAltasHoras().then( (res)=>{
+    this.chartServices.getAltasHoras().then((res) => {
 
       let labels = res['rango'];
       let usuarios = res['usuarios'];
@@ -95,58 +108,58 @@ export class CuadroUsuarioComponent implements OnInit {
       this.chart02 = new Chart(this.canvas02, {
         type: "bar",
         data: {
-            labels: labels, //eje x
-            datasets: [{
-              label: 'Número de usuarios',
-              data: usuarios,
-              backgroundColor: "rgba(179, 136, 255, 0.3)",
-              borderColor:"rgb(179, 136, 255)",
-              borderWidth:2
-          },{
+          labels: labels, //eje x
+          datasets: [{
+            label: 'Número de usuarios',
+            data: usuarios,
+            backgroundColor: "rgba(179, 136, 255, 0.3)",
+            borderColor: "rgb(179, 136, 255)",
+            borderWidth: 2
+          }, {
             label: 'Número de clientes',
             data: clientes,
             backgroundColor: "rgba(251, 155, 2, 0.3)",
-            borderColor:"rgb(251, 155, 2)",
-            borderWidth:2
+            borderColor: "rgb(251, 155, 2)",
+            borderWidth: 2
 
           }]
         },
         options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 10,
-                    }
-                }]
-            }
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 0,
+                suggestedMax: 10,
+              }
+            }]
+          }
         }
       });
-    }).catch(error=>{
+    }).catch(error => {
       console.log(error);
     });
 
   }
 
-  cargarChartFechasAlta(){
+  cargarChartFechasAlta() {
 
     // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
-    if (this.chart01){
+    if (this.chart01) {
       console.log('anterior chart destruido');
       this.chart01.destroy();
     }
 
-    if(this.formFechas.valid){
+    if (this.formFechas.valid) {
       // cargar las nuevas fechas del formulario
       let fecha_inicial = this.formFechas.value.fechaI;
       let fecha_final = this.formFechas.value.fechaF;
 
       // hacer la peticion al backend (la creada para este chart)
-      this.chartServices.getAltasFechas(fecha_inicial, fecha_final).then( (res)=>{
+      this.chartServices.getAltasFechas(fecha_inicial, fecha_final).then((res) => {
 
         let labels = [];
         let aux;
-        for (let i=0; i < res['rango'].length; i++){
+        for (let i = 0; i < res['rango'].length; i++) {
           aux = new Date(res['rango'][i]);
           labels[i] = this.datepipe.transform(aux, 'yyyy-MM-dd');
 
@@ -159,35 +172,35 @@ export class CuadroUsuarioComponent implements OnInit {
         this.chart01 = new Chart(this.canvas01, {
           type: "line",
           data: {
-              labels: labels, //eje x
-              datasets: [{
-                    label: 'Número de usuarios',
-                    data: usuarios,
-                    backgroundColor: "rgba(179, 136, 255, 0.3)",
-                    borderColor:"rgb(179, 136, 255)",
-                    borderWidth:2
-                },{
-                    label: 'Número de clientes',
-                    data: clientes,
-                    backgroundColor: "rgba(251, 155, 2, 0.3)",
-                    borderColor:"rgb(251, 155, 2)",
-                    borderWidth:2
+            labels: labels, //eje x
+            datasets: [{
+              label: 'Número de usuarios',
+              data: usuarios,
+              backgroundColor: "rgba(179, 136, 255, 0.3)",
+              borderColor: "rgb(179, 136, 255)",
+              borderWidth: 2
+            }, {
+              label: 'Número de clientes',
+              data: clientes,
+              backgroundColor: "rgba(251, 155, 2, 0.3)",
+              borderColor: "rgb(251, 155, 2)",
+              borderWidth: 2
 
-                }]
+            }]
           },
           options: {
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          suggestedMin: 0,
-                          suggestedMax: 10,
-                      }
-                  }]
-              }
+            scales: {
+              yAxes: [{
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: 10,
+                }
+              }]
+            }
           }
         });
 
-      }).catch(error=>{
+      }).catch(error => {
 
         console.log(error);
       });
@@ -196,54 +209,54 @@ export class CuadroUsuarioComponent implements OnInit {
 
   }
 
-  cargarValoresFijos(){
+  cargarValoresFijos() {
 
     // total de usuarios
     this.chartServices.getTotalUsuarios().then(res => {
       this.totalUsuarios = res;
-    }).catch( error =>{
+    }).catch(error => {
       console.log(error);
     });
 
     // total de clientes
     this.chartServices.getTotalClientes().then(res => {
       this.totalClientes = res;
-    }).catch( error =>{
+    }).catch(error => {
       console.log(error);
     });
 
     // total de clientes
     this.chartServices.getTotalPrendas().then(res => {
       this.totalPrendas = res;
-    }).catch( error =>{
+    }).catch(error => {
       console.log(error);
     });
 
 
   }
 
-  cargarChartUsos(){
+  cargarChartUsos() {
     console.log("empieza cargar usos");
     // si se ha creado un chart antes hay que destruirlo (sino hara cosas raras el canvas al pasar el raton)
-    if (this.chart03){
+    if (this.chart03) {
       this.chart03.destroy();
     }
-    this.chartServices.getUsosPrendas().then( (res)=>{
+    this.chartServices.getUsosPrendas().then((res) => {
 
       let prendas = res['prenda'];
       let usos = res['usos'];
       let nombres = res['nombres'];
       let aux, aux1, aux2;
 
-      for (let i = 0; i < usos.length-1; i++){
-        for (let j = i+1; j < usos.length; j++){
-          if(usos[j] > usos[i]) {
+      for (let i = 0; i < usos.length - 1; i++) {
+        for (let j = i + 1; j < usos.length; j++) {
+          if (usos[j] > usos[i]) {
             aux = usos[i];
             aux1 = prendas[i];
             aux2 = nombres[i];
             usos[i] = usos[j];
             prendas[i] = prendas[j];
-            nombres[i] = nombres [j];
+            nombres[i] = nombres[j];
             usos[j] = aux;
             prendas[j] = aux1;
             nombres[j] = aux2;
@@ -257,7 +270,7 @@ export class CuadroUsuarioComponent implements OnInit {
       let nombresM = [];
 
       let top = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-      for(let a = 0; a < prendas.length && a < 10; a++) {
+      for (let a = 0; a < prendas.length && a < 10; a++) {
         prendasM.push(prendas[a]);
         usosM.push(usos[a]);
         nombresM.push(nombres[a]);
@@ -265,38 +278,38 @@ export class CuadroUsuarioComponent implements OnInit {
       this.chart03 = new Chart(this.canvas03, {
         type: "bar",
         data: {
-            labels: nombresM, //eje x
-            datasets: [{
+          labels: nombresM, //eje x
+          datasets: [{
             label: 'Número de usos',
             data: usosM,
             backgroundColor: "rgba(251, 155, 2, 0.3)",
-            borderColor:"rgb(251, 155, 2)",
-            borderWidth:2
+            borderColor: "rgb(251, 155, 2)",
+            borderWidth: 2
 
           }]
         },
         options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 10,
-                    }
-                }]
-            }
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 0,
+                suggestedMax: 10,
+              }
+            }]
+          }
         }
       });
-    }).catch(error=>{
+    }).catch(error => {
       console.log(error);
     });
 
   }
 
-  async cargarMapaRegiones(){
+  async cargarMapaRegiones() {
 
     let datos = await this.GeoService.getRegiones();
 
-    if(datos[1] != null){
+    if (datos[1] != null) {
 
       console.log(datos);
 
@@ -304,15 +317,64 @@ export class CuadroUsuarioComponent implements OnInit {
         chartType: 'GeoChart',
         dataTable: datos,
         //firstRowIsData: true,
-        options: {region: 'ES',
-                  resolution:'provinces',
-                  colorAxis:{'colors:': ['#00853f', '#81d4fa', '#e31b23']},
-                  backgroundColor:'#81d4fa',
-                }
+        options: {
+          responsive: true,
+          region: 'ES',
+          resolution: 'provinces',
+          colorAxis: { 'colors:': ['#00853f', '#81d4fa', '#e31b23'] },
+          backgroundColor: '#81d4fa',
+        }
       };
 
     }
 
+  }
+
+  confirmacionActualizar() {
+    Swal.fire({
+      title: '¿Está seguro de querer actualizar los datos de Charts?',
+      text: 'Se eliminarán todos los datos registrados y se reharán con los datos de la base de datos.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.loading = true;
+
+        this.chartServices.actualizarCharts().then(res => {
+          Swal.fire({
+            title: 'Datos actualizados correctamente.',
+            icon: 'success',
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#3085d6',
+          });
+        }).catch(error => {
+          console.log('ha habido un error actualizando los datos', error);
+          Swal.fire({
+            title: 'Ups',
+            icon: 'error',
+            text: 'Parece que ha habido algún error. Por favor, inténtelo de nuevo.',
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#3085d6',
+          });
+        }).finally(() => {
+
+          this.cargarValores();
+
+          this.loading = false;
+
+          console.log('aqui habrá que recargar la página, imagino, para que los datos salgan actualizados, porque si no...');
+        });
+      }
+
+    });
   }
 
 }

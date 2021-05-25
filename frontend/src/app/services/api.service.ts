@@ -191,6 +191,12 @@ export class ApiService {
     });
     return this.http.get(this.url+'/chart/tallasCliente', { headers: headers });
   }
+  actualizarChartsTodoCall(token){
+    const headers = new HttpHeaders({
+      'x-token': token,
+    });
+    return this.http.get(this.url+'/chart/actualizar/', { headers: headers });
+  }
 
 
 
