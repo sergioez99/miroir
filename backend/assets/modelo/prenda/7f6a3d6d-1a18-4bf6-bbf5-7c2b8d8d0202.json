@@ -14,6 +14,18 @@
             "name": "base_color_texture",
             "type": "diffuse",
             "uvsIndex": 0,
+            "file": "algodon.jpg"
+        },
+        {
+            "name": "base_color_texture",
+            "type": "diffuse",
+            "uvsIndex": 0,
+            "file": "cuadritos.jpg"
+        },
+        {
+            "name": "base_color_texture",
+            "type": "diffuse",
+            "uvsIndex": 0,
             "file": "vaquero.jpg"
         }]
     }],
