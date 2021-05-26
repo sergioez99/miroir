@@ -26,6 +26,7 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
 
   private ticket = null;
   private modelosTicket: string[];
+  private fuera = false;
 
   //cosas pal ticket
   private clave; usuario; prendaID; talla;
@@ -53,19 +54,25 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
     if(this.animacion > 2)
       this.animacion = 0;
     let cambio = await this.webglService.initialiseAnimacion(this.animacion);
-    this.drawSceneInterval = setInterval(() => {
-      this.drawScene();
-    }, this._60fpsInterval)
+   
+    console.log(this.fuera)
+    if(!this.fuera){
+      this.drawSceneInterval = setInterval(() => {
+        this.drawScene();
+      }, this._60fpsInterval)
+    }
   }
 
   ngOnInit(): void {
     setTimeout(() =>{this.funcionCanvas(0)}, 1000);
+    this.fuera = false;
   }
 
 
   @HostListener('unloaded')
   ngOnDestroy(): void {
     clearInterval(this.drawSceneInterval);
+    this.fuera = true;
   }
 
   drawScene() {
