@@ -308,7 +308,7 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                 if (!cliente) {
                     cliente = await Usuario.findById(clienteID);
                 }
-                
+
 
                 if (!cliente) {
                     console.log('no tenemos cliente');
@@ -404,13 +404,13 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                 }*/
 
                 // aqui ya tenemos el modelo del avatar
-                
+
                 const avatarFichero = `${modelo}.json`;
 
                 const prendaProbador = await Prenda.findById(prendaID);
                 let identificadorPrenda = prendaProbador.identificador;
                 console.log(identificadorPrenda)
-                switch(identificadorPrenda) {
+                switch (identificadorPrenda) {
                     case "11111111":
                         switch (modelo) {
                             case 11:
@@ -472,57 +472,57 @@ const validacionTicket = async(req, res = response) => { //ya no es siempre defa
                             case 19:
                                 prendaID = '222222219';
                                 break;
-                            
+
 
                         }
                         break;
-                        case "33333333":
-                            switch (modelo) {
-                                case 11:
-                                    prendaID = '333333311';
-                                    break;
-                                case 12:
-                                    prendaID = '333333312';
-                                    break;
-                                case 13:
-                                    prendaID = '333333313';
-                                    break;
-                                case 14:
-                                    prendaID = '333333314';
-                                    break;
-                                case 15:
-                                    prendaID = '333333315';
-                                    break;
-                                case 16:
-                                    prendaID = '333333316';
-                                    break;
-                                case 17:
-                                    prendaID = '333333317';
-                                    break;
-                                case 18:
-                                    prendaID = '33333333';
-                                    break;
-                                case 19:
-                                    prendaID = '333333319';
-                                    break;
+                    case "33333333":
+                        switch (modelo) {
+                            case 11:
+                                prendaID = '333333311';
+                                break;
+                            case 12:
+                                prendaID = '333333312';
+                                break;
+                            case 13:
+                                prendaID = '333333313';
+                                break;
+                            case 14:
+                                prendaID = '333333314';
+                                break;
+                            case 15:
+                                prendaID = '333333315';
+                                break;
+                            case 16:
+                                prendaID = '333333316';
+                                break;
+                            case 17:
+                                prendaID = '333333317';
+                                break;
+                            case 18:
+                                prendaID = '33333333';
+                                break;
+                            case 19:
+                                prendaID = '333333319';
+                                break;
 
-                            }
-                            break;
-                        default:
-                            prendaID = identificadorPrenda
-                            break;
-                            
-                        
+                        }
+                        break;
+                    default:
+                        prendaID = identificadorPrenda
+                        break;
+
+
 
                 }
-                
+
 
                 // ahora la prenda, con la talla averiguaremos el modelo que tenemos que devolver
                 let prendaFichero = 'default.json';
                 console.log(prendaID)
-                // habrá que buscar el modelo de esta prenda con esta talla
+                    // habrá que buscar el modelo de esta prenda con esta talla
                 prenda = await Prenda.findOne({ identificador: prendaID });
-                console.log("prenda final",prenda)
+                console.log("prenda final", prenda)
                 const modelosPrenda = prenda.modelo;
 
                 if (modelosPrenda) {
@@ -583,7 +583,7 @@ const modeloTicket = async(req, res = response) => {
 
                 let prendaID = ticketBD.prenda;
                 const usuarioID = ticketBD.usuario;
-               
+
                 const talla = ticketBD.talla;
                 console.log(prendaID)
 
@@ -605,7 +605,7 @@ const modeloTicket = async(req, res = response) => {
 
                         console.log('devolver un avatar');
 
-                        
+
 
                         //comprobar que el usuario existe
                         if (!usuario) {
@@ -623,15 +623,15 @@ const modeloTicket = async(req, res = response) => {
                         }
 
                         // aqui el usuario es valido, recoger las medidas y con ellas escoger el tipo de avatar
-                        
+
                         const pecho = usuario.pecho;
-                        
+
                         const cadera = usuario.cadera;
 
                         console.log('IMC calculado: ...', imc);
 
                         // aqui habra que definir las condiciones que diferencian un modelo de otro
-                        
+
                         if (altura > 170) {
                             modelo += 3;
                         }
@@ -648,7 +648,7 @@ const modeloTicket = async(req, res = response) => {
                             modelo += 10;
                         }*/
 
-                        
+
                         ruta = path.join(__dirname, '../assets/modelo/avatar', `${modelo}.json`);
                         // console.log(path);
 
@@ -667,7 +667,7 @@ const modeloTicket = async(req, res = response) => {
                         let identificadorPrenda = prendaProbador.identificador;
                         console.log('devolver una prenda');
 
-                        if(altura > 170) {
+                        if (altura > 170) {
                             modelo += 3;
                         }
                         if (altura > 180) {
@@ -681,7 +681,7 @@ const modeloTicket = async(req, res = response) => {
                         }
                         console.log("id antes" + prendaID + "modelo " + modelo)
                         console.log(altura)
-                        switch(identificadorPrenda) {
+                        switch (identificadorPrenda) {
                             case "11111111":
                                 switch (modelo) {
                                     case 11:
@@ -743,45 +743,45 @@ const modeloTicket = async(req, res = response) => {
                                     case 19:
                                         prendaID = '222222219';
                                         break;
-                                    
+
 
                                 }
                                 break;
-                                case "33333333":
-                                    switch (modelo) {
-                                        case 11:
-                                            prendaID = '333333311';
-                                            break;
-                                        case 12:
-                                            prendaID = '333333312';
-                                            break;
-                                        case 13:
-                                            prendaID = '333333313';
-                                            break;
-                                        case 14:
-                                            prendaID = '333333314';
-                                            break;
-                                        case 15:
-                                            prendaID = '333333315';
-                                            break;
-                                        case 16:
-                                            prendaID = '333333316';
-                                            break;
-                                        case 17:
-                                            prendaID = '333333317';
-                                            break;
-                                        case 18:
-                                            prendaID = '33333333';
-                                            break;
-                                        case 19:
-                                            prendaID = '333333319';
-                                            break;
-    
-                                    }
-                                    break;
-                                default:
-                                    prendaID = identificadorPrenda;
-                                    break;
+                            case "33333333":
+                                switch (modelo) {
+                                    case 11:
+                                        prendaID = '333333311';
+                                        break;
+                                    case 12:
+                                        prendaID = '333333312';
+                                        break;
+                                    case 13:
+                                        prendaID = '333333313';
+                                        break;
+                                    case 14:
+                                        prendaID = '333333314';
+                                        break;
+                                    case 15:
+                                        prendaID = '333333315';
+                                        break;
+                                    case 16:
+                                        prendaID = '333333316';
+                                        break;
+                                    case 17:
+                                        prendaID = '333333317';
+                                        break;
+                                    case 18:
+                                        prendaID = '33333333';
+                                        break;
+                                    case 19:
+                                        prendaID = '333333319';
+                                        break;
+
+                                }
+                                break;
+                            default:
+                                prendaID = identificadorPrenda;
+                                break;
                         }
 
                         // devolver prenda
@@ -828,7 +828,7 @@ const modeloTicket = async(req, res = response) => {
                                 }
                             }
                         }
-                        
+
 
 
                         //comprobar si existe el archivo

@@ -171,7 +171,13 @@ export class PrendasComponent implements OnInit {
   obtenerTicketPrevisualizar(prenda, talla) {
 
     // let usuario = 'usuario12@usuario.com';
-    let usuario = 'sergi@gmail.com';
+    // let usuario = 'sergi@gmail.com';
+
+    let identificador = prenda.substring(7,9);
+    if (identificador.length < 2){
+      identificador = 18;
+    }
+    let usuario = 'usuario' + identificador + '@usuario.com';
 
     this.ticketService.obtenerTicketPrevisualizar(prenda, talla, usuario).then((res) => {
 
