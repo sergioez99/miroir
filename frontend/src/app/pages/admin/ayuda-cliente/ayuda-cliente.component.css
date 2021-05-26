@@ -1,19 +1,18 @@
-*{
+* {
     font-family: 'Bree Serif', serif;
     font-weight: bold;
     text-align: center;
 }
-body, html {
-    height: 100%;
-  
-}
-.btn1{
+
+.btn1 {
     background-color: #b388ff;
 }
-.btn2{
+
+.btn2 {
     background-color: #fb9b02;
 }
-h1{
+
+h1 {
     line-height: 1.66;
     margin: 0;
     padding: 0;
@@ -23,9 +22,10 @@ h1{
     font-size: 24px;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 40px; 
+    margin-bottom: 40px;
 }
-h2{
+
+h2 {
     line-height: 1.66;
     margin: 0;
     padding: 0;
@@ -35,7 +35,7 @@ h2{
     text-align: center;
 }
 
-h3{
+h3 {
     line-height: 1.66;
     margin: 0;
     padding: 0;
@@ -44,7 +44,8 @@ h3{
     font-size: 18px;
     text-align: center;
 }
-p{
+
+p {
     margin: 0;
     padding: 0;
     color: #222;
@@ -53,14 +54,15 @@ p{
     text-align: justify;
     text-justify: inter-word;
 }
+
 img {
     width: 400px;
     height: 200px;
 }
-.fondo{
-    margin: auto;
 
-    height: 100vh;
+.fondo {
+    margin: auto;
+    height: 100%;
     width: 100%;
     background-image: url("../../../../assets/fondo-ayuda.jpg");
     background-repeat: no-repeat;
@@ -70,21 +72,33 @@ img {
     -o-background-size: cover;
     -ms-background-size: cover;
     background-position: center center;
-    padding: 115px 0; 
+    padding: 5% 0;
 }
-.caja{
-    margin: auto;
 
+.caja {
+    margin: auto;
     background: #fff;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -o-border-radius: 10px;
     -ms-border-radius: 10px;
-    padding: 50px 85px; 
-    width: 130vh;
+    padding: 20px 30px;
+    width: 90%;
 }
 
 .desplegable {
     margin-bottom: 10px;
+}
+
+@media (max-width:1330px) {
+    p {
+        font-size: 14px;
+    }
+    h2 {
+        font-size: 16px;
+    }
+    h3 {
+        font-size: 14px;
+    }
 }

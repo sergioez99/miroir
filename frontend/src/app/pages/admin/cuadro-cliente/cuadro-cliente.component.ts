@@ -35,7 +35,7 @@ export class CuadroClienteComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.uid);
-    
+
     this.canvas01 = <HTMLCanvasElement> document.querySelector('#chartPrendasUsadas');
     this.canvas02 = <HTMLCanvasElement> document.querySelector('#chartPrendasUsadas2');
     this.cargarChartUsos();
@@ -57,7 +57,7 @@ export class CuadroClienteComponent implements OnInit {
       this.chart02.destroy();
     }
     this.chartServices.getUsosPrendasCliente().then( (res)=>{
-  
+
       let prendas = res['prenda'];
       let usos = res['usos'];
       let nombres = res['nombres'];
@@ -72,9 +72,9 @@ export class CuadroClienteComponent implements OnInit {
             usos[i] = usos[j];
             prendas[i] = prendas[j];
             nombres[i] = nombres [j];
-            usos[j] = aux; 
-            prendas[j] = aux1; 
-            nombres[j] = aux2; 
+            usos[j] = aux;
+            prendas[j] = aux1;
+            nombres[j] = aux2;
           }
         }
       }
@@ -99,7 +99,7 @@ export class CuadroClienteComponent implements OnInit {
             backgroundColor: "rgba(251, 155, 2, 0.3)",
             borderColor:"rgb(251, 155, 2)",
             borderWidth:2
-  
+
           }]
         },
         options: {
@@ -117,7 +117,7 @@ export class CuadroClienteComponent implements OnInit {
       prendas = res['prenda'];
       usos = res['usos'];
       nombres = res['nombres'];
-      
+
 
       for (let i = 0; i < usos.length-1; i++){
         for (let j = i+1; j < usos.length; j++){
@@ -128,9 +128,9 @@ export class CuadroClienteComponent implements OnInit {
             usos[i] = usos[j];
             prendas[i] = prendas[j];
             nombres[i] = nombres [j];
-            usos[j] = aux; 
-            prendas[j] = aux1; 
-            nombres[j] = aux2; 
+            usos[j] = aux;
+            prendas[j] = aux1;
+            nombres[j] = aux2;
           }
         }
       }
@@ -155,7 +155,7 @@ export class CuadroClienteComponent implements OnInit {
             backgroundColor: "rgba(179, 136, 255, 0.3)",
             borderColor:"rgb(179, 136, 255)",
             borderWidth:2
-  
+
           }]
         },
         options: {
@@ -181,7 +181,7 @@ export class CuadroClienteComponent implements OnInit {
       this.chart02.destroy();
     }
     this.chartServices.getUsosPrendasCliente().then( (res)=>{
-  
+
       let prendas = res['prenda'];
       let usos = res['usos'];
       let nombres = res['nombres'];
@@ -196,9 +196,9 @@ export class CuadroClienteComponent implements OnInit {
             usos[i] = usos[j];
             prendas[i] = prendas[j];
             nombres[i] = nombres [j];
-            usos[j] = aux; 
-            prendas[j] = aux1; 
-            nombres[j] = aux2; 
+            usos[j] = aux;
+            prendas[j] = aux1;
+            nombres[j] = aux2;
           }
         }
       }
@@ -223,7 +223,7 @@ export class CuadroClienteComponent implements OnInit {
             backgroundColor: "rgba(179, 136, 255, 0.3)",
             borderColor:"rgb(179, 136, 255)",
             borderWidth:2
-  
+
           }]
         },
         options: {
@@ -240,7 +240,7 @@ export class CuadroClienteComponent implements OnInit {
     }).catch(error=>{
       console.log(error);
     });
-  
+
   }*/
 
 
@@ -268,9 +268,9 @@ cargarChartTallas(){
           usos[i] = usos[j];
           tallas[i] = tallas[j];
           nombres[i] = nombres [j];
-          usos[j] = aux; 
-          tallas[j] = aux1; 
-          nombres[j] = aux2; 
+          usos[j] = aux;
+          tallas[j] = aux1;
+          nombres[j] = aux2;
         }
       }
     }
@@ -309,7 +309,7 @@ cargarChartTallas(){
           }
       }
     });
-  
+
     tallas = res['talla'];
     usos = res['usos'];
     nombres = res['nombres'];
@@ -323,9 +323,9 @@ cargarChartTallas(){
           usos[i] = usos[j];
           tallas[i] = tallas[j];
           nombres[i] = nombres [j];
-          usos[j] = aux; 
-          tallas[j] = aux1; 
-          nombres[j] = aux2; 
+          usos[j] = aux;
+          tallas[j] = aux1;
+          nombres[j] = aux2;
         }
       }
     }
@@ -364,13 +364,13 @@ cargarChartTallas(){
           }
       }
     });
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
   }).catch(error=>{
     console.log(error);
   });
@@ -399,9 +399,9 @@ cargarChartTallas(){
           usos[i] = usos[j];
           tallas[i] = tallas[j];
           nombres[i] = nombres [j];
-          usos[j] = aux; 
-          tallas[j] = aux1; 
-          nombres[j] = aux2; 
+          usos[j] = aux;
+          tallas[j] = aux1;
+          nombres[j] = aux2;
         }
       }
     }

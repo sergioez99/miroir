@@ -68,7 +68,7 @@ export class SceneComponent implements OnInit {
     this.modelosTicket = [];
 
     this.ticket = this.route.snapshot.params['ticket'];
-    
+
     this.canjearTicket();
 
   }
@@ -230,8 +230,10 @@ export class SceneComponent implements OnInit {
         canvas.toBlob((res: Blob) => {
 
           let proporcion = res.size / (canvas.width * canvas.height);
+          console.log('contador: ', contador);
+          console.log('proporcion: ', proporcion);
 
-          if (proporcion < 0.08 && contador < 20) {
+          if (proporcion < 0.06 && contador < 20) {
             contador++;
             this.canvasToBlob(canvas, contador).then((res) => {
               resolve(res);

@@ -1,35 +1,62 @@
-canvas { 
-    border: 1px solid black; 
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    margin-bottom: 10px;
-    
-}
+    canvas {
+        border: solid 1px black;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: -201px;
+        margin-right: auto;
+        display: block;
+        margin-bottom: 10px;
+        height: 100%;
+        width: 100vw;
+        position: fixed;
+        bottom: -10px;
+        z-index: -1;
+        position: absolute;
+        left: 0;
+        z-index: -1;
+    }
 
-div {
-    display: grid;
-    grid-template-columns: 100px 100px 100px;
-    grid-column: auto auto auto;
-    grid-column-gap: 20px;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-}
+    .mir-botones-grid {
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-column: auto auto auto;
+        grid-column-gap: 20px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
 
-button {
-    
-    background-color: #b388ff;
-    border-color: #b388ff;
-    color: white;
-    height: 40px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
+    button {
+        background-color: #b388ff;
+        border-color: #b388ff;
+        color: white;
+        height: 40px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
 
-button:hover {
-    background-color: #fb9b02;
-    border-color: #fb9b02;
-}
+    button:hover {
+        background-color: #fb9b02;
+        border-color: #fb9b02;
+    }
+
+    .mir-botones-textura {
+        position: absolute;
+        top: 0;
+        left: 15px;
+    }
+
+    h2 {
+        line-height: 1.66;
+        margin-bottom: 20px;
+        padding: 0;
+        font-weight: 900;
+        color: #222;
+        font-family: 'Montserrat';
+        font-size: 24px;
+        text-transform: uppercase;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        margin-top: 35px;
+    }

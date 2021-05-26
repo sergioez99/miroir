@@ -1,3 +1,7 @@
 mat-sidenav-content {
     height: 82.2vh;
 }
+
+.mir-sidebar {
+    background-color: #f4ebff;
+}

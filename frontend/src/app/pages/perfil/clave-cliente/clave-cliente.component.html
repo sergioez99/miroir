@@ -1,17 +1,31 @@
-<div>
-    <button mat-raised-button class="mir-button" color="primary" (click)="obtenerClave()">cargar clave</button>
+<div class="row animate__animated animate__fadeIn animate__faster mir-ancho">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
 
-    <button mat-raised-button class="mir-button" color="accent" (click)="cambiarClave()">nueva clave</button>
+                <h1> Gestión de la clave </h1>
 
-    <hr>
+                <div>
+                    <div class="mir-centrar">
+                        <button mat-raised-button class="mir-button mir-recovery-button" color="primary" (click)="obtenerClave()">Ver clave</button>
 
-    <mat-form-field appearance="outline" class="mir-block">
-        <mat-label>Clave Actual</mat-label>
-        <input type="password" #claveInput disabled matInput [type]="hide ? 'password' : 'text'" value='{{clave}}'>
-        <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
+                        <button mat-raised-button class="mir-button mir-recovery-button" color="accent" (click)="cambiarClave()">Obtener nueva clave</button>
+                    </div>
+                    <hr>
 
-    </mat-form-field>
-    <button mat-raised-button class="mir-button" (click)="copiarClave()"> Copiar clave </button>
+                    <div class="mir-centrar">
+                        <mat-form-field appearance="outline" class="mir-block">
+                            <mat-label>Clave Actual</mat-label>
+                            <input type="password" #claveInput disabled matInput [type]="hide ? 'password' : 'text'" value='{{clave}}'>
+                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                        </button>
+
+                        </mat-form-field>
+                        <button mat-raised-button class="mir-button mir-copiar-button" (click)="copiarClave()"> Copiar clave </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

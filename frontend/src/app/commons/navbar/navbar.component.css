@@ -8,9 +8,9 @@
 
 nav {
     background-color: rgb(43, 43, 43);
-    -webkit-box-shadow: 0px 4px 7px 1px rgba(0,0,0,0.7);
-    -moz-box-shadow: 0px 4px 7px 1px rgba(0,0,0,0.7);
-    box-shadow: 0px 4px 7px 1px rgba(0,0,0,0.7);
+    -webkit-box-shadow: 0px 4px 7px 1px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 0px 4px 7px 1px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 4px 7px 1px rgba(0, 0, 0, 0.7);
 }
 
 .navbar-light .navbar-brand {
@@ -83,4 +83,32 @@ button:hover {
     text-decoration: none;
     color: #fff;
     font-size: 25px;
+}
+
+.mir-sesion {
+    position: absolute;
+    top: 10px;
+    right: 200px;
+    /* width: 140px; */
+    height: 45px;
+    background-color: rgba(115, 78, 155, 0.5);
+    border-color: rgba(115, 78, 155, 0.5);
+    color: #d4bbff;
+}
+
+.mir-sesion:hover {
+    background-color: #fb9c0280;
+    border-color: #fb9b0280;
+}
+
+.mir-perfil {
+    position: absolute;
+    top: 10px;
+    right: 100px;
+    /* width: 140px; */
+    height: 45px;
+}
+
+.mir-contenedor {
+    vertical-align: top;
 }

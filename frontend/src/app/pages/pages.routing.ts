@@ -21,7 +21,6 @@ import { ClienteComponent } from './admin/cliente/cliente.component';
 import { ClienteGuard } from '../services/guards/cliente.guard';
 import { UsuarioGuard } from '../services/guards/usuario.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
-import { Pruebas2Component } from './pruebasMotor/pruebas2/pruebas2.component';
 import { CrearDatosComponent } from './admin/crear-datos/crear-datos.component';
 import { CuadroUsuarioComponent } from './admin/cuadro-usuario/cuadro-usuario.component';
 import { CuadroClienteComponent } from './admin/cuadro-cliente/cuadro-cliente.component';
@@ -33,9 +32,7 @@ import { SceneComponent } from '../scene/scene.component';
 
 
 const routes: Routes = [
-  {
-    path: 'pruebas2', component: Pruebas2Component,
-  },
+
   {
     path: 'probador', component: BaseLayoutComponent,
     children: [
@@ -65,12 +62,12 @@ const routes: Routes = [
       { path: '', component: NotAuthComponent },
       { path:'cliente', canActivate: [ ClienteGuard ], canActivateChild: [ ClienteGuard ],
         children: [
-          { path: '', component: CuadroClienteComponent },
           { path:'prendas', component: PrendasComponent },
           { path:'prendas/prenda/:uid', component: PrendaComponent },
           { path:'clave', component: ClaveClienteComponent },
           { path:'ayuda', component: AyudaClienteComponent },
-          { path: '**', component: NotAuthComponent }
+          { path:'cuadro', component: CuadroClienteComponent },
+          { path: '**', redirectTo:'cuadro' }
         ]
       },
       { path:'usuario', canActivate: [ UsuarioGuard ], canActivateChild: [ UsuarioGuard ],
@@ -109,7 +106,7 @@ const routes: Routes = [
       { path:'crear-datos', component: CrearDatosComponent },
       { path: 'cuadro', component: CuadroUsuarioComponent },
       { path:'perfil', component: PerfilUsuarioComponent },//added, not working
-      { path: '**', redirectTo: '' }
+      { path: '**', redirectTo: 'cuadro' }
     ]
   },
 

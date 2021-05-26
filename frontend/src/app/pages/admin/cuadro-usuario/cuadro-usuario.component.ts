@@ -88,6 +88,7 @@ export class CuadroUsuarioComponent implements OnInit {
     this.cargarChartFechasAlta();
     this.cargarChartHorasAlta();
     this.cargarChartUsos();
+    this.GeoService.getRegiones();
     this.cargarMapaRegiones();
   }
 

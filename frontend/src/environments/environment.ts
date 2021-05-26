@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   registros_por_pagina: 5,
   base_url: 'http://localhost:3000/api',
-  url_front: 'http://localhost:4200',
+  url_front: 'http://localhost:4200/',
 };
 
 /*
