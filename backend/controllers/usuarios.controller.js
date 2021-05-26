@@ -7,6 +7,7 @@ const Cliente = require('../models/clientes.model');
 const Token = require('../models/validaciontoken.model');
 const Medidas = require('../models/medidas.model');
 const { infoToken } = require('../helpers/infotoken');
+//const environment = require('../../frontend/src/environments/environment')
 
 //KPI
 const { sumarUsuarioKPI, restarUsuarioKPI, insertarfechahoraUsuarioCliente } = require('./charts.controller');
@@ -245,7 +246,7 @@ const crearUsuario = async(req, res) => {
             });
 
             //var link = 'https://miroir.ovh/verificado/' + verificationToken;
-            var link = 'http://localhost:4200/verificado/' + verificationToken;
+            var link = 'https://miroir.ovh/' + 'verificado/' + verificationToken;
             var mensaje = '<h2>¡Hola,' + usuario.email + '!<h2>' +
                 '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?</h3>' +
                 '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +

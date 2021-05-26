@@ -26,6 +26,7 @@ export class Probador01Component implements OnInit, OnDestroy {
   private ticket = null;
   private modelosTicket: string[];
   private drawSceneInterval;
+  private recarga = false;
 
   //cosas pal ticket
   private clave; usuario; prendaID; talla;
@@ -37,7 +38,7 @@ export class Probador01Component implements OnInit, OnDestroy {
     private usuarioService: UsuarioService) { }
 
 
-    async funcionCanvas() {
+    async funcionCanvas(recarga?) {
       if (!this.canvas) {
         alert("canvas not supplied! cannot bind WebGL context!");
         return;
@@ -46,8 +47,17 @@ export class Probador01Component implements OnInit, OnDestroy {
         this.gl = await this.webglService.initialiseWebGLContext(this.canvas.nativeElement);
         this.iniciarEvents();
       }
+
+      if(recarga) {
+        
+        
+      }
       this.cargarProbador = await this.webglService.cargarModelos(this.ticket, this.modelosTicket);
       this.dibujar();
+
+
+
+      this.recarga = false;
     }
 
     async cambiarTextura(textura){
@@ -81,6 +91,14 @@ export class Probador01Component implements OnInit, OnDestroy {
 
 
 
+    }
+
+    recargar() {
+      clearInterval(this.drawSceneInterval);
+      this.recarga = true;
+      this.canjearTicket();
+      
+      //this.funcionCanvas(this.recarga);
     }
 
     @HostListener('unloaded')

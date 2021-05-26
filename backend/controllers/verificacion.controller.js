@@ -13,6 +13,7 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
 const clientesModel = require('../models/clientes.model');
+//const environment = require('../../frontend/src/environments/environment');
 
 const verificarEmail = async(req, res = response) => {
     try {
@@ -134,7 +135,7 @@ const reenviarToken = async(req, res = response) => {
 
 
         //var link = 'https://miroir.ovh/verificado/'+verificationToken;
-        var link = 'http://localhost:4200/verificado/'+verificationToken;
+        var link = 'https://miroir.ovh/' + 'verificado/'+verificationToken;
         var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
         '<h3>¿Estás preparado para todo lo que tiene preparado Miroir para tí?<h3>' +
         '<h4>Primero, necesitas completar tu registro pinchando en el botón de abajo</h4>' +

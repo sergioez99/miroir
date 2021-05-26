@@ -156,8 +156,10 @@ export class TMotorTAG {
     let RMalla = this.gestorRecursos.dibujarMallas();
 
     let mallas = RMalla.getMallas();
+    let cambios = false;
 
     if (this.nombreAvatar.localeCompare(modelos[0]) != 0) {
+      cambios = true;
       this.nombreAvatar = modelos[0];
       let avatarNodo = await this.crearModelo(null, null, null, null, modelos[0], ticket, "avatar");
     }
@@ -169,15 +171,12 @@ export class TMotorTAG {
       let size1 = ["tirantes11.json", "pantalon11.json", "tirantes12.json", "pantalon12.json","tirantes13.json", "pantalon13.json"];
       let size2 = ["pantalon14.json"];
       let size3 = ["tirantes15.json", "tirantes14.json", "tirantes16.json"];
-      let size4 = [];
       if(size1.includes(modelos[1]))
         this.size = 1;
       else if (size2.includes(modelos[1]))
         this.size = 2;
       else if (size3.includes(modelos[1]))
         this.size = 3;
-      else if (size4.includes(modelos[1]))
-        this.size = 4;
       else
         this.size = 0;
       this.nombrePrenda = modelos[1];
@@ -192,6 +191,28 @@ export class TMotorTAG {
         mallas[i].setDibujado(false);
       }
     }
+    if(mallas.length >= 5 && cambios) {
+      switch(mallas.length) {
+        case 5:
+          mallas[0] = mallas[3];
+          mallas[2] = mallas[4];
+          mallas.pop(); mallas.pop();
+          break;
+        case 6: 
+          mallas[0] = mallas[4];
+          mallas[2] = mallas[5];
+          mallas.pop(); mallas.pop(); mallas.pop();
+          break;
+        case 7:
+          mallas[0] = mallas[5];
+          mallas[2] = mallas[6];
+          mallas.pop(); mallas.pop(); mallas.pop(); mallas.pop();
+          
+      }
+      
+      cambios = false;
+    }
+    console.log(mallas)
   }
 
   cambioTexturas(textura){
