@@ -13,7 +13,7 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
 const clientesModel = require('../models/clientes.model');
-import { environment } from '../../frontend/src/environments/environment';
+const environment = require('../../frontend/src/environments/environment');
 
 const verificarEmail = async(req, res = response) => {
     try {
