@@ -12,7 +12,7 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const fs = require('fs');
-const environment = require('../../frontend/src/environments/environment');
+//const environment = require('../../frontend/src/environments/environment');
 
 const recuperarPassword = async(req, res = response) => {
 
@@ -69,7 +69,7 @@ const recuperarPassword = async(req, res = response) => {
 
         //Mensaje personalizado + links
         //var link = 'https://miroir.ovh/recuperar/cambiarpassword';
-        var link = environment.url_front + '/recuperar/cambiarpassword';
+        var link = 'https://miroir.ovh/' + 'recuperar/cambiarpassword';
         var mensaje = '<h2>¡Hola,'+usuario.email+'<h2>' +
         '<h3>¿Has olvidado tu contraseña?<h3>' +
         '<h4>Si es así, por favor, pulsa en el siguiente botón para obtener una contraseña nueva</h4>' +
