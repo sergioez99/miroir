@@ -17,8 +17,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log("HOLITA");
-    this.GeoService.guardarDatoGeo("cacasota");
     this.GeoService.getRegiones();
 
   }

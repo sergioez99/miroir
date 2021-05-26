@@ -1,12 +1,11 @@
-canvas { 
-    border: 1px solid black; 
+canvas {
+    /* border: 1px solid black;  */
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
     display: block;
     margin-bottom: 20px;
-    
 }
 
 div {
@@ -20,7 +19,6 @@ div {
 }
 
 button {
-    
     background-color: #b388ff;
     border-color: #b388ff;
     color: white;
