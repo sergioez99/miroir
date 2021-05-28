@@ -47,7 +47,6 @@ export class UsuarioService{
 
     this.rol = this.usuario['rol'];
     this.id = this.usuario['uid'];
-    console.log('usuario iniciado',this.usuario['email']);
     if (tokenRecibido){
       this.actualizarToken(tokenRecibido);
       //guardar token en localstorage
@@ -73,7 +72,7 @@ export class UsuarioService{
     return new Promise ( (resolve, reject) => {
 
 
-     console.log('estamos modificando las medidas del usuario: ', formData);
+
 
      let form :UsuarioForm = {
        rol: formData.rol,
@@ -90,12 +89,12 @@ export class UsuarioService{
      };
 
 
-     console.log(form);
+
 
      this.apiService.actualizarMedidasCall(this.token, this.id, form).subscribe( (res) => {
 
         // medidas modificadas correctamente
-        console.log(res);
+
 
         this.usuario = res['usuario'];
         resolve(true);
@@ -190,7 +189,7 @@ export class UsuarioService{
     return new Promise ( (resolve, reject) => {
 
 
-      console.log('estamos modificando las medidas del usuario: ', formData);
+
  
       let form :UsuarioForm = {
         //email: this.usuario['email'],
@@ -209,13 +208,12 @@ export class UsuarioService{
       };
  
  
-      console.log(form);
+
 
       if(form.id!=='nuevo'){
         this.apiService.actualizarMedidasUsuariosCall(this.token, form.id, form).subscribe( (res) => {
  
           // medidas modificadas correctamente
-          console.log(res);
   
           this.usuario = res['usuario'];
           resolve(true);
@@ -231,7 +229,6 @@ export class UsuarioService{
         this.apiService.crearUsuarioCall(this.token, form.id, form).subscribe( (res) => {
  
           // medidas modificadas correctamente
-          console.log(res);
   
           this.usuario = res['usuario'];
           resolve(true);

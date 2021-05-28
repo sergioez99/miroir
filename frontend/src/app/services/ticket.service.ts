@@ -87,8 +87,6 @@ export class TicketService {
 
      this.apiService.validarTicketCall(ticket).subscribe((res) => {
 
-        console.log('respuesta validar ticket: ', res);
-
         resolve(res);
 
       }, (err) => {
@@ -113,8 +111,6 @@ export class TicketService {
           });
         }
 
-        // debugger;
-        console.log('respuesta conseguir ' + tipo + ': ', res);
         resolve(res);
 
       }, (err) => {
@@ -139,14 +135,12 @@ export class TicketService {
       // obtener la clave del cliente
       this.obtenerClave().then( (res)=>{
 
-        console.log('hemos obtenido la clave: ', res);
 
         cliente = res;
 
         this.obtenerTicket(cliente, usuario, prenda, talla, this.usuarioService.getID()).then( (res)=>{
         //this.obtenerTicket().then( (res)=>{
 
-          console.log('hemos obtenido el ticket: ', res);
 
           resolve(res);
 

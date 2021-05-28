@@ -20,7 +20,6 @@ export class PerfilGuard implements CanActivate, CanActivateChild {
       return new Promise<boolean> ( (resolve, reject) => {
         this.authService.validarToken().then( (res)=> {
 
-          console.log('estoy logueado');
           resolve(true);
 
         }).catch( (error) => {
@@ -42,7 +41,6 @@ export class PerfilGuard implements CanActivate, CanActivateChild {
       return new Promise<boolean> ( (resolve, reject) => {
         this.authService.validarToken().then( (res)=> {
 
-          console.log('estoy logueado');
           resolve(true);
 
         }).catch( (error) => {

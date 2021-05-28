@@ -16,7 +16,6 @@ export class AuthService {
                private usuarioService :UsuarioService,
                private clienteService :ClienteService ) {
 
-    console.log('hola, soy el constructor de auth service');
     this.isLogged = false;
 
     this.validarToken().then( () =>{} ).catch( ()=>{} );
@@ -27,7 +26,6 @@ export class AuthService {
 
     const key = 'token';
     const token = this.usuarioService.getToken();
-    console.log('validando token, ', token);
 
     return new Promise ( (resolve, reject) => {
 
@@ -35,7 +33,6 @@ export class AuthService {
 
         this.apiService.tokenCall(token).subscribe( (res) => {
           // token valido
-          console.log(res);
 
           this.usuarioService.inicializar(res['usuario'], token);
           this.setIsLogged(true);
@@ -68,7 +65,6 @@ export class AuthService {
 
       this.apiService.loginCall(formData).subscribe(res => {
 
-        console.log('respuesta al subscribe:', res);
 
         // decir que nos hemos logueado
         this.usuarioService.inicializar(res['usuario'], res['token']);
@@ -100,9 +96,6 @@ export class AuthService {
 
       this.apiService.loginCall(formData).subscribe(res => {
 
-        console.log('respuesta al subscribe:', res);
-
-        console.log('ahora no va... ', formData);
         // decir que nos hemos logueado
         this.usuarioService.inicializar(res['usuario'], res['token']);
         this.usuarioService.login(formData.remember);
@@ -124,8 +117,6 @@ export class AuthService {
     return new Promise( (resolve, reject) =>{
 
       this.apiService.registerCall(formData).subscribe(res => {
-
-        console.log('Respuesta del servidor: ', res);
 
         resolve(true);
 
@@ -154,7 +145,6 @@ export class AuthService {
 
       this.apiService.registerClientCall(form).subscribe(res => {
 
-        console.log('Respuesta de backend al intentar crear un cliente: ', res);
         resolve(true);
 
       }, (err) =>{
@@ -174,7 +164,6 @@ export class AuthService {
 
       this.apiService.loginGoogleCall(tokenGoogle).subscribe(res => {
         localStorage.setItem('tokenGoogle', res['token']);
-        console.log("guardo token en localstorage")
         
         this.usuarioService.inicializar(res['usuario'], res['token']);
         this.clienteService.inicializar(res['usuario'], res['token']);

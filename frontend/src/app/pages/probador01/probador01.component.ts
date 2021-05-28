@@ -79,7 +79,6 @@ export class Probador01Component implements OnInit, OnDestroy {
      
        this.usuario = localStorage.getItem("email");
 
-       console.log(this.usuario)
       this.clave = "JcLs5aa1V6nF.HwfrI7_1CrIOGTgHLkBF8z6d7SM-QKx3Vyuz." // default
 
       //this.ticket = this.route.snapshot.params['ticket'];

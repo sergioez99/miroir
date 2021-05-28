@@ -212,7 +212,6 @@ export class TMotorTAG {
       
       cambios = false;
     }
-    console.log(mallas)
   }
 
   cambioTexturas(textura){

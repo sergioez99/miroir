@@ -55,7 +55,6 @@ export class ProbadorPruebaComponent implements OnInit, OnDestroy {
       this.animacion = 0;
     let cambio = await this.webglService.initialiseAnimacion(this.animacion);
    
-    console.log(this.fuera)
     if(!this.fuera){
       this.drawSceneInterval = setInterval(() => {
         this.drawScene();
