@@ -9,4 +9,4 @@ Hemos realizado el proyecto bajo un método de desarrollo ágil similar al Scrum
 # Demo
 El proyecto se podía explorar en https://miroir.ovh, pero ya no está activo 😥. Sin embargo, podeis ver aquí un video demo/presentación de Miroir.
 
-[![Miroir](https://imgur.com/amAjMYu)](https://www.youtube.com/watch?v=PmcFGLyH4FM&t=9s&ab_channel=sergioespinosa7)
+[![Miroir](frontend/src/assets/1.jpg)](https://www.youtube.com/watch?v=PmcFGLyH4FM&t=9s&ab_channel=sergioespinosa7)
