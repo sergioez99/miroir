@@ -7,6 +7,6 @@ Para este proyecto hemos utilizado la metodología ABP, que significa Aprendizaj
 Hemos realizado el proyecto bajo un método de desarrollo ágil similar al Scrum, pasando por todas las fáses de desarrollo: requeremientos, diseño, implementación, testeo y despliegue. Esto incluye crear nuestro propios frontend y backend (API, DBs, UX, UI), despliegue en un servidor real, organización del equipo (sprints, tareas, reuniones, gestión del tiempo...), marketing de la plataforma (SEO, redes sociales, presentaciones) y también aprender diversas tecnologías (Angular, WebGL, Dialogflow, TypeScript, Node...). 
 
 # Demo
-El proyecto se podía explorar en https://miroir.ovh, pero ya no está activo 😥. Sin embargo, podeis ver aquí una demo/presentación de Miroir.
+El proyecto se podía explorar en https://miroir.ovh, pero ya no está activo 😥. Sin embargo, podeis ver aquí un video demo/presentación de Miroir.
 
-[![Miroir](https://img.youtube.com/vi/PmcFGLyH4FM&t=9s&ab_channel=sergioespinosa7/0.jpg)](https://www.youtube.com/watch?v=PmcFGLyH4FM&t=9s&ab_channel=sergioespinosa7)
+[![Miroir](https://imgur.com/amAjMYu)](https://www.youtube.com/watch?v=PmcFGLyH4FM&t=9s&ab_channel=sergioespinosa7)
